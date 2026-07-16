@@ -15,7 +15,7 @@
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .header{background:var(--red);color:#fff;padding:16px 20px 18px;}
 .header-row{display:flex;justify-content:space-between;align-items:flex-start;}
-.brand{font-size:20px;font-weight:900;letter-spacing:.04em;}
+.brand{font-size:20px;font-weight:900;letter-spacing Ram:.04em;}
 .brand-sub{font-size:11px;opacity:.7;margin-top:1px;}
 .live-wrap{text-align:right;}
 .live-pill{display:flex;align-items:center;gap:5px;justify-content:flex-end;font-size:12px;font-weight:700;}
@@ -239,23 +239,48 @@ document.getElementById("headerDate").textContent=
 
 function getSubs(){return JSON.parse(localStorage.getItem("isuzu_submissions")||"[]");}
 
+// ----------------------------------------------------
+// ⚙️ ลอจิกไม้ตายใหม่: ดึงข้อมูลสำรองจากแถวคอลัมน์ดิบตรงๆ ถ้าแกะข้อมูลจากช่อง JSON บนมือถือแล้วไม่เจอ
+// ----------------------------------------------------
 function parseRows(rows){
   return rows.map(row=>{
     let j=row["JSON เต็ม"]||"";
-    if(!j||j==="{}"||j==="null"){
-      for(const k of Object.keys(row)){
-        const v=String(row[k]||"");
-        if(v.startsWith("{")&&v.includes('"id"')&&v.includes('"stage"')){j=v;break;}
-      }
+    let e = null;
+    
+    if(j && j!=="{}" && j!=="null"){
+      try{ e=JSON.parse(j); }catch(err){}
     }
-    if(!j) return null;
-    try{
-      const e=JSON.parse(j);
-      if(!e||!e.id) return null;
+    
+    // หากแกะ JSON ไม่สำเร็จ หรือเป็นข้อมูลที่มาจากฟอร์มมือถือรุ่นแปลกๆ ให้บังคับสร้าง Object ขึ้นมาจากหัวคอลัมน์ตารางกลางตรงๆ เลย
+    if(!e || !e.stage || !e.group){
+      e = {
+        id: row["ID"] || ("id_" + Math.random().toString(36).substr(2, 9)),
+        date: row["วันที่"] ? String(row["วันที่"]).split("T")[0] : "",
+        shift: row["กะ"] || "",
+        group: row["Group"] || "",
+        type: row["ประเภท"] || "",
+        stage: row["Stage"] || "",
+        worker: row["Worker"] || "",
+        foreman: row["Foreman"] || "",
+        status: row["สถานะ"] || "pending",
+        timestamp_worker: row["Timestamp Worker"] || "",
+        timestamp_foreman: row["Timestamp Foreman"] || "",
+        proxy_by: row["อนุมัติแทนโดย"] || "",
+        proxy_for_group: row["กลุ่มที่ทำแทน"] || "",
+        remark: row["หมายเหตุ"] || "",
+        checks: [] // ดึงเฉพาะสเตตัสภาพรวมขึ้นบอร์ด
+      };
+    }
+    
+    // บังคับทำความสะอาดข้อความ ป้องกันการสะกดผิดเคสบนมือถือ
+    if(e) {
       if(!e.foreman && row["Foreman"]) e.foreman = String(row["Foreman"]);
       if(!e.status && row["สถานะ"]) e.status = String(row["สถานะ"]);
-      return e;
-    }catch(err){return null;}
+      if(e.status) e.status = String(e.status).trim().toLowerCase();
+      if(e.stage) e.stage = String(e.stage).trim();
+      if(e.group) e.group = String(e.group).trim();
+    }
+    return e;
   }).filter(Boolean);
 }
 
@@ -322,7 +347,6 @@ function renderDashboard(){
         const anyDone=sortedSubs.length>0;
         
         if(anyDone){
-          // 🔎 ปรับปรุงลอจิก: บังคับให้ตรวจสอบสเตตัสแบบ Lowercase ทั้งระบบ เพื่อแก้บั๊กตัวสะกด approved หลุดคิว
           const currentStatus = String(sortedSubs[0].status || "pending").toLowerCase();
           const isApproved = (currentStatus === "approved");
           const anyFail = (sortedSubs[0].checks||[]).some(c=>c.result==="fail");
@@ -464,8 +488,8 @@ function openModal(typeKey,meta,subs){
       const checks=r.sub?(r.sub.checks||[]):[];
       let checksHTML="";
       
-      if(checks.length && r.status!=="wait"){
-        let displayFmName = r.sub.foreman || "-";
+      if(r.status!=="wait"){
+        let displayFmName = (r.sub && r.sub.foreman) ? r.sub.foreman : "-";
         const dbKey = r.sub.group + "_" + r.sub.shift;
         if (MASTER_FOREMAN_MAP[dbKey]) { displayFmName = MASTER_FOREMAN_MAP[dbKey]; }
         
@@ -494,13 +518,13 @@ function openModal(typeKey,meta,subs){
           } catch(err){}
         }
 
-        if(r.status==="fail" || r.status==="pending") {
+        if(r.status==="fail" || r.status==="pending" || !checks.length) {
           checksHTML=`
             <div class="si-checks" id="${uniqueId}" style="display:block;">`+
-              checks.map(c=>`<div class="ck ${c.result ==="fail"?"ck-fail":""}">
+              (checks.length ? checks.map(c=>`<div class="ck ${c.result ==="fail"?"ck-fail":""}">
                 <span>${c.name}</span>
                 <span class="ck-val">${c.value?c.value+" · ":""}<span style="color:${c.result==="pass"?"var(--pass)":"var(--red)"}">${c.result==="pass"?"O":"✗"}</span></span>
-              </div>`).join("")+
+              </div>`).join("") : `<div class="ck"><span>สถานะภาพรวมด่าน</span><span class="ck-val" style="color:var(--pass)">ส่งตรวจแล้ว</span></div>`)+
               `<div class="si-meta">👷 Worker: ${r.sub.worker||""}${workerTimeString}<br>👔 Foreman: ${fmDisplayLine}</div>`
             +`</div>`;
         } else {
