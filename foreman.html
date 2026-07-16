@@ -6,55 +6,184 @@
 <title>Foreman Portal</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
-:root{--red:#CC0000:#CC0000;--pass:#057A55;--bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);}
+:root{--red:#CC0000;--red-dark:#A00000;--pass:#057A55;--pass-bg:#ECFDF5;--pass-border:#6EE7B7;--fail-bg:#FFF5F5;--fail-border:#FFBABA;--bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;}
-.header{background:var(--CC0000);color:#fff;padding:18px 16px 30px;}
-.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.logo{font-size:18px;font-weight:800;letter-spacing:.06em;}
-.user-pill{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;}
-.tabs{display:flex;background:var(--card);margin:0 14px;}
-.tab{flex:1;padding:11px 6px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);}
-.tab.active{color:var(--CC0000);border-bottom-color:var(--CC0000);}
-.section{margin:14px 14px 0;}
-.sub-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
-.approve-btn{background:var(--pass);color:#fff;border:none;border-radius:8px;padding:9px 16px;width:100%;font-weight:700;cursor:pointer;margin-top:10px;}
-.approved-banner{background:#ECFDF5;color:var(--pass);padding:9px;text-align:center;font-weight:600;border-radius:8px;margin-top:10px;}
-.page{display:none;}.page.active{display:block;}
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
 .login-box{background:var(--card);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,.12);padding:32px 24px;width:100%;max-width:360px;text-align:center;}
+.login-logo{font-size:28px;font-weight:800;color:var(--red);letter-spacing:.06em;margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.login-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;margin-bottom:5px;}
+.login-input{width:100%;border:2px solid var(--border);border-radius:10px;padding:13px 14px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;letter-spacing:.25em;text-align:center;outline:none;background:#F9FAFB;transition:border-color .15s;margin-bottom:16px;}
+.login-input:focus{border-color:var(--red);background:#fff;}
+.login-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:background .15s;}
+.login-btn:hover{background:var(--red-dark);}
+.login-err{color:var(--red);font-size:13px;margin-top:10px;min-height:20px;}
+.header{background:var(--red);color:#fff;padding:18px 16px 30px;}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.logo{font-size:18px;font-weight:800;letter-spacing:.06em;}
+.logo span{display:block;font-size:10px;font-weight:500;opacity:.6;}
+.user-pill{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;}
+.header-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;opacity:.65;margin-bottom:2px;}
+.header-name{font-size:20px;font-weight:800;}
+.header-sub{font-size:13px;opacity:.75;margin-top:2px;}
+.tabs{display:flex;background:var(--card);margin:0 14px;}
+.tab{flex:1;padding:11px 6px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);transition:all .15s;user-select:none;}
+.tab:first-child{border-radius:12px 0 0 0;}.tab:last-child{border-radius:0 12px 0 0;}
+.tab.active{color:var(--red);border-bottom-color:var(--red);}
+.badge{display:inline-block;background:var(--red);color:#fff;border-radius:99px;font-size:10px;padding:1px 6px;margin-left:4px;vertical-align:middle;}
+.badge-warn{background:#D97706;}
+.hold-btn{background:#D97706;color:#fff;border:none;border-radius:8px;padding:9px 14px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.hold-btn:hover{background:#B45309;}
+.hold-card{background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.hold-stage{font-size:15px;font-weight:700;margin-bottom:4px;}
+.hold-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
+.hold-fails{font-size:13px;color:var(--red);font-weight:600;margin-bottom:10px;}
+.section{margin:14px 14px 0;}
+.section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px;}
+.sub-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
+.sub-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.sub-title{font-size:15px;font-weight:700;}
+.sub-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.chip{font-size:11px;font-weight:700;border-radius:99px;padding:3px 10px;flex-shrink:0;}
+.chip-pending{background:#FEF3C7;color:#92400E;}
+.chip-pass{background:var(--pass-bg);color:var(--pass);}
+.chip-fail{background:var(--fail-bg);color:var(--red);}
+.check-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid var(--border);font-size:13px;}
+.check-row-name{flex:1;padding-right:8px;line-height:1.3;}
+.rtag{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;flex-shrink:0;}
+.rtag-pass{background:var(--pass-bg);color:var(--pass);}
+.rtag-fail{background:var(--fail-bg);color:var(--red);}
+.approve-row{display:flex;gap:8px;margin-top:12px;}
+.approve-row input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;background:#F9FAFB;transition:border-color .15s;}
+.approve-row input:focus{border-color:var(--pass);background:#fff;}
+.approve-btn{background:var(--pass);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;}
+.approve-btn:hover{background:#046040;}
+.approve-btn:disabled{background:#9CA3AF;cursor:not-allowed;}
+.approved-banner{background:var(--pass-bg);color:var(--pass);border-radius:8px;padding:9px 12px;font-size:13px;font-weight:600;text-align:center;margin-top:10px;}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
+.empty-state .icon{font-size:40px;margin-bottom:10px;}
+.type-group-header{font-size:12px;font-weight:700;color:var(--text);margin:14px 0 6px;display:flex;align-items:center;gap:6px;}
+.station-row{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:12px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+.station-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dot-done{background:var(--pass);} .dot-issue{background:var(--red);} .dot-pending{background:#D1D5DB;}
+.station-name{font-size:14px;font-weight:600;flex:1;}
+.station-status{font-size:12px;font-weight:600;}
+.page{display:none;}.page.active{display:block;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--card);border-radius:16px;padding:24px 20px;width:calc(100% - 32px);max-width:360px;box-shadow:0 12px 40px rgba(0,0,0,.2);}
+.modal-title{font-size:17px;font-weight:800;margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.modal-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
+.modal-select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;background:var(--card);margin-bottom:16px;}
+.modal-row{display:flex;gap:8px;}
+.modal-btn{flex:1;padding:11px;border-radius:8px;border:none;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+.modal-btn-cancel{background:#F3F4F6;color:var(--text);}
+.modal-btn-ok{background:var(--red);color:#fff;}
+.proxy-bar{background:#FEF3C7;border-bottom:2px solid #FCD34D;padding:8px 16px;font-size:12px;font-weight:700;color:#92400E;display:none;align-items:center;gap:8px;}
+.proxy-bar.show{display:flex;}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-box">
-    <h2 style="color:var(--CC0000);margin-bottom:20px;">ISUZU Foreman Portal</h2>
-    <input id="codeInput" type="text" placeholder="รหัสพนักงาน" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;margin-bottom:15px;text-align:center;">
-    <button onclick="doLogin()" style="width:100%;padding:12px;background:var(--CC0000);color:#fff;border:none;border-radius:8px;cursor:pointer;">เข้าสู่ระบบ</button>
+    <div class="login-logo">ISUZU</div>
+    <div class="login-sub">Foreman</div>
+    <div class="login-label">รหัสพนักงาน Foreman (ตัวเลขเท่านั้น)</div>
+    <input class="login-input" id="codeInput" type="text" maxlength="5" placeholder="xxxxx" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<div class="proxy-bar" id="proxyBar">
+  <span>⚠</span>
+  <span id="proxyBarText">กำลังอนุมัติแทน Group — —</span>
+  <button onclick="exitProxy()" style="margin-left:auto;background:rgba(0,0,0,.1);border:none;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif;">ออกจากโหมดแทน</button>
+</div>
+
+<div class="modal-overlay" id="proxyModal">
+  <div class="modal-box">
+    <div class="modal-title">🔄 อนุมัติแทน Foreman</div>
+    <div class="modal-sub">Login แล้วในฐานะตัวเอง ระบบจะบันทึกว่าคุณมาอนุมัติแทน</div>
+    <div class="modal-label">Group ที่จะดูแทน</div>
+    <select class="modal-select" id="proxyGroupSelect">
+      <option value="">-- เลือก Group --</option>
+      <option value="FRC">FRC</option>
+      <option value="FRF">FRF</option>
+      <option value="FRR">FRR</option>
+      <option value="FRU">FRU</option>
+      <option value="FRX">FRX</option>
+      <option value="FXC">FXC</option>
+    </select>
+    <div class="modal-label">Shift ที่ต้องการดูแทน</div>
+    <select class="modal-select" id="proxyShiftSelect">
+      <option value="A">SHIFT A</option>
+      <option value="B">SHIFT B</option>
+    </select>
+    <div class="modal-row">
+      <button class="modal-btn modal-btn-cancel" onclick="closeProxyModal()">ยกเลิก</button>
+      <button class="modal-btn modal-btn-ok" onclick="confirmProxy()">เริ่มอนุมัติแทน</button>
+    </div>
   </div>
 </div>
 
 <div id="mainScreen" style="display:none;">
   <div class="header">
     <div class="header-top">
-      <div class="logo">ISUZU <span>Foreman Portal</span></div>
-      <div class="user-pill" onclick="location.reload()">ออก</div>
+      <div><div class="logo">ISUZU <span>FRG · Foreman Portal</span></div></div>
+      <div class="user-pill" onclick="logout()" id="userPill">FM001 ▾</div>
     </div>
-    <div id="fmName" style="font-size:20px;font-weight:800;">—</div>
+    <div class="header-label">หน้าอนุมัติ Foreman</div>
+    <div class="header-name" id="fmName">—</div>
+    <div class="header-sub" id="fmStations">—</div>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" id="tab-approve" onclick="switchTab('approve')">✅ อนุมัติ</div>
-    <div class="tab" id="tab-stations" onclick="switchTab('stations')">📊 Station</div>
+  <div style="background:var(--card);margin:0 14px;">
+    <div class="tabs" style="margin:0;">
+      <div class="tab active" id="tab-approve" onclick="switchTab('approve')">
+        ✅ อนุมัติ <span class="badge" id="pendingBadge" style="display:none">0</span>
+      </div>
+      <div class="tab" id="tab-stations" onclick="switchTab('stations')">📊 Station ของฉัน</div>
+      <div class="tab" id="tab-hold" onclick="switchTab('hold')">⏸ รอแก้ไข <span class="badge badge-warn" id="holdBadge" style="display:none">0</span></div>
+      <div class="tab" id="tab-proxy" onclick="openProxyModal()" style="color:#D97706; font-weight:700;">🔄 แทน</div>
+    </div>
   </div>
 
-  <div class="page active" id="page-approve"><div class="section"><div id="approveList"></div></div></div>
-  <div class="page" id="station-list"><div class="section"><div id="stationGrid"></div></div></div>
+  <div class="page active" id="page-approve">
+    <div class="section">
+      <div class="section-title" id="approveTitle">รายการรอการอนุมัติ (วันนี้)</div>
+      <div id="approveList"></div>
+    </div>
+  </div>
+
+  <div class="page" id="station-list">
+    <div class="section">
+      <div class="section-title">สถานะ Station ที่ดูแล (วันนี้)</div>
+      <div id="stationGrid"></div>
+    </div>
+  </div>
+
+  <div class="page" id="page-hold">
+    <div class="section">
+      <div class="section-title">รายการรอแก้ไข (ยังไม่ผ่าน)</div>
+      <div id="holdList"></div>
+    </div>
+  </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
+
 const FOREMAN_DB = {
   "25019": { name:"นาย สุพัฒน์ คำชนะ", shift:"A", group:"FRC" },
   "05135": { name:"นาย สมพงศ์ พุ่มแก้ว", shift:"A", group:"FRE" },
@@ -74,37 +203,72 @@ const FOREMAN_DB = {
   "94037": { name:"นาย วิบูลย์ อาจหาญ", shift:"B", group:"FXC" },
 };
 
-let currentFM = null;
+const STATION_DATA = { /* STATION_DATA ดั้งเดิมของคุณพิงค์วางตรงนี้ */ };
+const TYPE_ICONS = { HOIST:"⚙️", CO2:"🔥", JIG:"🔧", AIR:"💨", FANUC:"🤖", YASKAWA:"🤖", CONTACT_TIP:"🔌" };
+
+let currentFM = null, proxyMode = false, originalGroup = null, originalShift = null;
 
 function doLogin(){
   const code = document.getElementById("codeInput").value.trim();
-  if(!FOREMAN_DB[code]){ alert("รหัสไม่ถูกต้อง"); return; }
-  currentFM = { code, ...FOREMAN_DB[code] };
+  const fm = FOREMAN_DB[code];
+  if(!fm){ document.getElementById("loginErr").textContent="รหัสพนักงานไม่ถูกต้อง กรุณาลองใหม่"; return; }
+  currentFM = { code, ...fm };
+  document.getElementById("loginErr").textContent="";
   document.getElementById("loginScreen").style.display="none";
   document.getElementById("mainScreen").style.display="block";
-  document.getElementById("fmName").textContent = currentFM.name;
-  syncFromSheets().then(renderAll);
+  document.getElementById("userPill").textContent = code+" ▾";
+  document.getElementById("fmName").textContent = fm.name;
+  exitProxy();
+  renderAll();
 }
 
-async function syncFromSheets(){
-  try{
-    const r = await fetch(SHEETS_URL+"?t="+Date.now());
-    const data = await r.json();
-    if(data.rows) localStorage.setItem("isuzu_submissions", JSON.stringify(data.rows.map(r=>JSON.parse(r["JSON เต็ม"])).filter(Boolean)));
-  }catch(e){}
+function syncFromSheets(){
+  return fetch(SHEETS_URL+"?t="+Date.now()).then(r=>r.json()).then(data=>{
+    if(data.result==="success" && data.rows){
+      const entries = parseRowsFromSheets(data.rows);
+      localStorage.setItem("isuzu_submissions", JSON.stringify(entries));
+    }
+  }).catch(()=>{});
+}
+
+function parseRowsFromSheets(rows){
+  return rows.map(r=>{
+    try{ return JSON.parse(r["JSON เต็ม"]); } catch(e){ return null; }
+  }).filter(Boolean);
 }
 
 function getSubs(){ return JSON.parse(localStorage.getItem("isuzu_submissions")||"[]"); }
 
 function renderAll(){
+  if(!currentFM) return;
+  _renderApprove();
+  renderStations();
+  renderHold();
+  updateBadge();
+}
+
+function _renderApprove(){
   const list = document.getElementById("approveList");
-  const subs = getSubs().filter(s=>s.group===currentFM.group && s.shift===currentFM.shift);
-  list.innerHTML = subs.length ? subs.map(s=>`
-    <div class="sub-card">
-      <div class="sub-title">${s.type_label||s.type} — ${s.stage}</div>
-      <div class="sub-meta">${s.worker} | ${s.status}</div>
-      ${s.status==="approved" ? `<div class="approved-banner">อนุมัติแล้ว</div>` : `<button class="approve-btn" onclick="approve('${s.id}')">อนุมัติ</button>`}
-    </div>`).join("") : "ไม่มีรายการ";
+  const subs = getSubs().filter(s=>s.group===currentFM.group && s.shift===currentFM.shift && String(s.date||"").split("T")[0]===getToday());
+  const pending = subs.filter(s=>s.status==="pending" && !isHeld(s.id));
+  const done = subs.filter(s=>s.status==="approved");
+  list.innerHTML = "";
+  if(!pending.length && !done.length) list.innerHTML = `<div class="empty-state">ไม่มีรายการ</div>`;
+  else {
+    pending.forEach(s=>list.appendChild(buildApproveCard(s,false)));
+    done.forEach(s=>list.appendChild(buildApproveCard(s,true)));
+  }
+}
+
+function buildApproveCard(s, isDone){
+  const card = document.createElement("div");
+  card.className="sub-card";
+  card.innerHTML=`
+    <div class="sub-title">${s.type_label||s.type} — ${s.stage}</div>
+    <div class="sub-meta">${s.worker} | ${s.status}</div>
+    ${!isDone ? `<button class="approve-btn" onclick="approve('${s.id}')">อนุมัติ</button>` : `<div class="approved-banner">อนุมัติแล้ว</div>`}
+  `;
+  return card;
 }
 
 function approve(id){
@@ -117,14 +281,11 @@ function approve(id){
   renderAll();
 }
 
-function switchTab(t){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-  document.getElementById(t==="stations"?"station-list":"page-"+t).classList.add("active");
-  document.getElementById("tab-"+t).classList.add("active");
-}
+function getToday(){ return new Date().toISOString().split("T")[0]; }
+function isHeld(id){ return JSON.parse(localStorage.getItem("isuzu_held_"+getToday())||"[]").includes(id); }
+function logout(){ location.reload(); }
 
-// ระบบอัปเดตอัตโนมัติ
+// --- อัปเดตอัตโนมัติ (แก้ไขปัญหาค้าง) ---
 window.addEventListener('focus', () => { if(currentFM) syncFromSheets().then(renderAll); });
 setInterval(()=>{ if(currentFM) syncFromSheets().then(renderAll); }, 10000);
 </script>
