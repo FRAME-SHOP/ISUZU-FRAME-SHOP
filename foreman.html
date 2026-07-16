@@ -39,6 +39,9 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .hold-stage{font-size:15px;font-weight:700;margin-bottom:4px;}
 .hold-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
 .hold-fails{font-size:13px;color:var(--red);font-weight:600;margin-bottom:10px;}
+.hold-status{font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px;display:inline-block;}
+.hold-status-wait{background:#FEF3C7;color:#92400E;}
+.hold-status-fixed{background:var(--pass-bg);color:var(--pass);}
 .section{margin:14px 14px 0;}
 .section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px;}
 .sub-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
@@ -166,7 +169,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 
-  <div class="page" id="station-list">
+  <div class="page" id="page-stations">
     <div class="section">
       <div class="section-title">สถานะ Station ที่ดูแล (วันนี้)</div>
       <div id="stationGrid"></div>
@@ -346,8 +349,7 @@ function switchTab(t){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
   
-  const targetPageId = (t === "stations") ? "station-list" : "page-" + t;
-  const targetPage = document.getElementById(targetPageId);
+  const targetPage = document.getElementById("page-"+t);
   if(targetPage) targetPage.classList.add("active");
   
   const targetTab = document.getElementById("tab-"+t);
@@ -443,9 +445,6 @@ function isHeld(id){
   return held.includes(id);
 }
 
-// ----------------------------------------------------
-// แก้ไขลอจิกการคำนวณจำนวนด่านที่เสร็จจริง (ป้องกันการนับซ้ำ)
-// ----------------------------------------------------
 function getMyDoneCount(){
   const all = getSubs();
   const today = getToday();
@@ -457,7 +456,6 @@ function getMyDoneCount(){
     String(s.date||"").split("T")[0]===today
   );
 
-  // คัดแยกเพื่อนับเฉพาะคู่สเตชั่น (Type + Stage) ที่ไม่ซ้ำกัน
   const uniqueDoneStages = new Set();
   myDoneSubs.forEach(s => {
     uniqueDoneStages.add(s.type + "|" + s.stage);
@@ -479,7 +477,7 @@ function getMyDone(){
 
 function updateApproveCount(){
   if(!currentFM) return;
-  const doneCount = getMyDoneCount(); // เรียกใช้ลอจิกคัดแยกนับสถานีแบบไม่ซ้ำ
+  const doneCount = getMyDoneCount(); 
   const stages = getAllStagesForGroup(currentFM.group).length;
   const el = document.getElementById("fmStations");
   el.textContent = `SHIFT ${currentFM.shift} · Group ${currentFM.group}${proxyMode?" (แทน)":""} · อนุมัติแล้ว ${doneCount}/${stages}`;
