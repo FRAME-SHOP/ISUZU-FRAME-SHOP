@@ -33,9 +33,26 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .subtype-chip{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;cursor:pointer;flex:1;text-align:center;min-width:100px;transition:all .15s;}
 .subtype-chip:active{transform:scale(.97);}
 .subtype-chip.active{background:var(--red);border-color:var(--red);color:#fff;}
-.meta-card{background:var(--card);margin:0 14px;border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;border:1px solid var(--border);}
-.meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
-.meta-item input,.meta-item select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Sarabun',sans-serif;font-size:14px;background:#F9FAFB;outline:none;transition:border-color .15s;}
+
+/* 🛠️ ปรับปรุงสไตล์ตรงนี้: แก้บั๊กกล่องวันที่กับกะเบียดซ้อนกันบนหน้าจอมือถือ */
+.meta-card{
+  background:var(--card);
+  margin:0 14px;
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  padding:14px;
+  display:flex;      /* เปลี่ยนจาก grid เป็น flex */
+  flex-wrap:wrap;    /* เปิดตัดแถวอัตโนมัติเมื่อพิกัดความกว้างจอมือถือแคบเกินไป */
+  gap:12px;
+  border:1px solid var(--border);
+}
+.meta-item{
+  flex: 1 1 130px;   /* บังคับขยายเต็มอัตราส่วนขั้นต่ำ 130px ป้องกันการขี่ทับกัน */
+  min-width: 0;
+}
+
+.meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
+.meta-item input,.meta-item select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:14px;background:#F9FAFB;outline:none;transition:border-color .15s;}
 .meta-item input:focus,.meta-item select:focus{border-color:var(--red);background:#fff;}
 .progress-wrap{margin:14px 14px 0;}
 .progress-bg{background:#E5E7EB;border-radius:99px;height:5px;overflow:hidden;}
@@ -287,8 +304,8 @@ const CO2_CHECKS = [
   {id:2, name:"การทำงานของเครื่อง",               method:"ประสาทสัมผัส", standard:"ไม่สั่น, ไม่มีเสียงหรือกลิ่น"},
   {id:3, name:"พัดลมระบายความร้อน",               method:"ประสาทสัมผัส", standard:"ทำงานปกติ"},
   {id:4, name:"โรลเลอร์, ลวดเชื่อม, ยี่ห้อลวดเชื่อม", method:"สายตา", standard:"ไม่เป็นสนิม LINE 1&4 KOBE, LINE 2 NIPPON"},
-  {id:5, name:"แรงกดลวดหน้า",                     method:"สายตา", standard:"แนะนำ แรงกดลวด 2-4"},
-  {id:6, name:"แรงกดลวดหลัง",                     method:"สายตา", standard:"แนะนำ แรงกดลวด 2-4"},
+  {id:5, name:"แรงกดลวดหน้า",                      method:"สายตา", standard:"แนะนำ แรงกดลวด 2-4"},
+  {id:6, name:"แรงกดลวดหลัง",                      method:"สายตา", standard:"แนะนำ แรงกดลวด 2-4"},
   {id:7, name:"คอนแทคทิป, นอสเซิล",               method:"สายตา", standard:"ไม่มี Spatter ติด, ไม่แตกร้าว"},
   {id:8, name:"กระแสไฟเชื่อม",                    method:"ปรับที่หน้าตู้", standard:"200-250 Amp", numeric:true, unit:"Amp", min:200, max:250},
   {id:9, name:"แรงดันไฟฟ้า",                      method:"ปรับที่หน้าตู้", standard:"20-26 Volt", numeric:true, unit:"Volt", min:20, max:26},
@@ -323,9 +340,9 @@ const AIR_CHECKS = [
 ];
 
 const HOIST_CHECKS = [
-  {id:1, name:"สภาพปุ่มกด, สายไฟ",                                        method:"สายตา",        standard:"ไม่ชำรุด, ปุ่มไม่แตก"},
+  {id:1, name:"สภาพปุ่มกด, สายไฟ",                                         method:"สายตา",        standard:"ไม่ชำรุด, ปุ่มไม่แตก"},
   {id:2, name:"สภาพตะขอ",                                                  method:"สายตา",        standard:"ไม่มีรอยแตกร้าว, HOOK LATCH ใช้งานได้"},
-  {id:3, name:"SAFETY สลิง (1),(2)&(3) สลิงพยุงสายรีโมท",                 method:"สายตา",        standard:"มี SAFETY สลิง, สภาพสลิงต้องไม่แตก และไม่มีเส้นสลิงแหลมยื่นออกมา"},
+  {id:3, name:"SAFETY สลิง (1),(2)&(3) สลิงพยุงสายรีโมท",                  method:"สายตา",        standard:"มี SAFETY สลิง, สภาพสลิงต้องไม่แตก และไม่มีเส้นสลิงแหลมยื่นออกมา"},
   {id:4, name:"สภาพ HANGER",                                               method:"สายตา",        standard:"ไม่สึกหรอ, ไม่มีรอยแตกร้าว"},
   {id:5, name:"การเคลื่อนที่ของ HOIST",                                   method:"เลื่อนซ้าย-ขวา", standard:"ไม่สะดุด"},
   {id:6, name:"การขึ้นลงของโซ่",                                           method:"กดปุ่มขึ้น-ลง", standard:"วิ่งขึ้น-ลงราบเรียบ, หยุดตามตำแหน่ง"},
@@ -447,7 +464,7 @@ function renderTypes(){
   const grid = document.getElementById("typeGrid");
   grid.innerHTML="";
   const types = STATION_DATA[nav.group];
-  Object.entries(types).forEach(([typeKey, typeData])=>{
+  Object.entries(types).forEach(([typeKey, typeData]) => {
     const stageCount = Object.keys(typeData.stages).length;
     const el=document.createElement("div");
     el.className="nav-card";
@@ -461,7 +478,7 @@ function renderStages(){
   const grid = document.getElementById("stageGrid");
   grid.innerHTML="";
   const stages = STATION_DATA[nav.group][nav.type].stages;
-  Object.entries(stages).forEach(([stageName, subtypes])=>{
+  Object.entries(stages).forEach(([stageName, subtypes]) => {
     const el=document.createElement("div");
     el.className="nav-card";
     const subInfo = subtypes.length ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
@@ -599,7 +616,7 @@ function setCTVal(w, val){
   updateProgress();
 }
 
-function setR(id,v){checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
+function setR(id,v){ Richmond=checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
 function setC(id,v){checkState[id].comment=v;}
 
 let _vDebounceTimers = {};
@@ -720,7 +737,7 @@ function submitWorker(){
 
   fetch(SHEETS_URL, {
     method: "POST",
-    mode: "no-cors",
+    type: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(entry)
   }).then(() => {
