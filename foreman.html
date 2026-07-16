@@ -39,9 +39,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .hold-stage{font-size:15px;font-weight:700;margin-bottom:4px;}
 .hold-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
 .hold-fails{font-size:13px;color:var(--red);font-weight:600;margin-bottom:10px;}
-.hold-status{font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px;display:inline-block;}
-.hold-status-wait{background:#FEF3C7;color:#92400E;}
-.hold-status-fixed{background:var(--pass-bg);color:var(--pass);}
 .section{margin:14px 14px 0;}
 .section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px;}
 .sub-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
@@ -169,7 +166,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 
-  <div class="page" id="page-stations">
+  <div class="page" id="station-list">
     <div class="section">
       <div class="section-title">สถานะ Station ที่ดูแล (วันนี้)</div>
       <div id="stationGrid"></div>
@@ -187,7 +184,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <div class="toast" id="toast"></div>
 
 <script>
-const SHEETS_URL = "https://script.google.com/macros/s/AKfycbxFpwj3ZzsQK6CbbyiS-kyuiFPQd_3dNge_VE_7qgjxs5JsbaUN6eGjYkEXS7UfC6Mk/exec";
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
 const FOREMAN_DB = {
   "25019": { name:"นาย สุพัฒน์ คำชนะ",      shift:"A", group:"FRC" },
@@ -349,8 +346,8 @@ function switchTab(t){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
   
-  // ซ่อมแซมลอจิกชี้ ID หน้าให้ตรงตาม Class หลักเดิม เพื่อล็อคสไตล์ดั้งเดิมไว้
-  const targetPage = document.getElementById("page-"+t);
+  const targetPageId = (t === "stations") ? "station-list" : "page-" + t;
+  const targetPage = document.getElementById(targetPageId);
   if(targetPage) targetPage.classList.add("active");
   
   const targetTab = document.getElementById("tab-"+t);
@@ -446,6 +443,9 @@ function isHeld(id){
   return held.includes(id);
 }
 
+// ----------------------------------------------------
+// แก้ไขลอจิกการคำนวณจำนวนด่านที่เสร็จจริง (ป้องกันการนับซ้ำ)
+// ----------------------------------------------------
 function getMyDoneCount(){
   const all = getSubs();
   const today = getToday();
@@ -457,6 +457,7 @@ function getMyDoneCount(){
     String(s.date||"").split("T")[0]===today
   );
 
+  // คัดแยกเพื่อนับเฉพาะคู่สเตชั่น (Type + Stage) ที่ไม่ซ้ำกัน
   const uniqueDoneStages = new Set();
   myDoneSubs.forEach(s => {
     uniqueDoneStages.add(s.type + "|" + s.stage);
@@ -478,7 +479,7 @@ function getMyDone(){
 
 function updateApproveCount(){
   if(!currentFM) return;
-  const doneCount = getMyDoneCount(); 
+  const doneCount = getMyDoneCount(); // เรียกใช้ลอจิกคัดแยกนับสถานีแบบไม่ซ้ำ
   const stages = getAllStagesForGroup(currentFM.group).length;
   const el = document.getElementById("fmStations");
   el.textContent = `SHIFT ${currentFM.shift} · Group ${currentFM.group}${proxyMode?" (แทน)":""} · อนุมัติแล้ว ${doneCount}/${stages}`;
