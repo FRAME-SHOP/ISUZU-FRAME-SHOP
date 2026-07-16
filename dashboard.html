@@ -286,8 +286,8 @@ function parseRows(rows){
       if(row["วันที่"]) e.date = String(row["วันที่"]);
       if(e.stage) e.stage = String(e.stage).trim();
       if(e.group) e.group = String(e.group).trim();
-      // 🛠️ ล็อกแปลงประเภทงานเพื่อป้องกันช่องว่าง ขีดล่าง หรือตัวสะกดพลาด
-      if(row["ประเภท"]) e.type = String(row["ประเภท"]).trim().replace(/\s+/g, '_').toUpperCase();
+      // 🛠️ ถอดระบบแกะตัวสะกดอังกฤษออก ปล่อยให้ระบบใช้ชื่อประเภทไทย/อังกฤษดั้งเดิมจากชีต
+      if(row["ประเภท"]) e.type = String(row["ประเภท"]).trim();
     }
     return e;
   }).filter(Boolean);
@@ -381,11 +381,13 @@ function renderDashboard(){
       
       stages.forEach(stage=>{
         totalAll++;typeStats[typeKey].total++;
-        // 🛠️ ปรับลอจิกคัดกรองให้แมปคีย์ดิบกับคีย์ขีดล่างของ CONTACT_TIP ได้แม่นยำ 100%
         const stageSubs=subs.filter(s=>{
+          // 🛠️ ลอจิกเปรียบเทียบชื่อประเภทอัจฉริยะ: คัดกรองผ่านป้ายชื่อฉลากหรือคีย์ดิบ เพื่อซัพพอร์ตภาษาไทยและ CONTACT_TIP ขีดล่างได้ครบถ้วน
           const sTypeClean = String(s.type || "").replace(/[\s_]+/g, '').toUpperCase();
           const keyClean = String(typeKey).replace(/[\s_]+/g, '').toUpperCase();
-          return s.stage===stage && s.group===group && sTypeClean === keyClean;
+          const labelClean = String(TYPE_META[typeKey]?.label || "").replace(/[\s_]+/g, '').toUpperCase();
+          
+          return s.stage===stage && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
         });
         
         const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
@@ -480,7 +482,8 @@ function openModal(typeKey,meta,subs){
       const stageSubs=subs.filter(s=>{
         const sTypeClean = String(s.type || "").replace(/[\s_]+/g, '').toUpperCase();
         const keyClean = String(typeKey).replace(/[\s_]+/g, '').toUpperCase();
-        return s.stage===stage && s.group===group && sTypeClean === keyClean;
+        const labelClean = String(TYPE_META[typeKey]?.label || "").replace(/[\s_]+/g, '').toUpperCase();
+        return s.stage===stage && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
       });
       
       const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
