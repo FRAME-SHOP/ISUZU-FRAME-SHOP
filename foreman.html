@@ -99,7 +99,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="login-box">
     <div class="login-logo">ISUZU</div>
     <div class="login-sub">Foreman</div>
-    <label class="login-label">รหัสพนักงาน Foreman (ตัวเลขเท่านั้น)</label>
+    <div class="login-label">รหัสพนักงาน Foreman (ตัวเลขเท่านั้น)</div>
     <input class="login-input" id="codeInput" type="text" maxlength="5" placeholder="xxxxx" inputmode="numeric" pattern="[0-9]*"
       oninput="this.value = this.value.replace(/[^0-9]/g, '');"
       onkeydown="if(event.key==='Enter')doLogin()">
@@ -348,8 +348,11 @@ function logout(){
 function switchTab(t){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  
+  // ซ่อมแซมลอจิกชี้ ID หน้าให้ตรงตาม Class หลักเดิม เพื่อล็อคสไตล์ดั้งเดิมไว้
   const targetPage = document.getElementById("page-"+t);
   if(targetPage) targetPage.classList.add("active");
+  
   const targetTab = document.getElementById("tab-"+t);
   if(targetTab) targetTab.classList.add("active");
   
