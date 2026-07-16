@@ -34,21 +34,28 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .subtype-chip:active{transform:scale(.97);}
 .subtype-chip.active{background:var(--red);border-color:var(--red);color:#fff;}
 
-/* 🛠️ ปรับปรุงสไตล์ตรงนี้: แก้บั๊กกล่องวันที่กับกะเบียดซ้อนกันบนหน้าจอมือถือ */
+/* 🛠️ ปรับแก้ตรงนี้: ตั้งค่าเริ่มต้นของกล่องวันที่และกะทำงานให้เรียงจากซ้ายไปขวาในคอมพิวเตอร์ */
 .meta-card{
   background:var(--card);
   margin:0 14px;
   border-radius:12px;
   box-shadow:var(--shadow);
   padding:14px;
-  display:flex;      /* เปลี่ยนจาก grid เป็น flex */
-  flex-wrap:wrap;    /* เปิดตัดแถวอัตโนมัติเมื่อพิกัดความกว้างจอมือถือแคบเกินไป */
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:12px;
   border:1px solid var(--border);
 }
 .meta-item{
-  flex: 1 1 130px;   /* บังคับขยายเต็มอัตราส่วนขั้นต่ำ 130px ป้องกันการขี่ทับกัน */
   min-width: 0;
+}
+
+/* 🛠️ เพิ่มระบบคัดกรองขนาดหน้าจอ: ถ้าเปิดบน "มือถือที่มีความกว้างจอแคบ" ให้ปรับกล่องมาต่อเป็นแนวตั้งทันที หมดปัญหาซ้อนกันร้อยเปอร์เซ็นต์ */
+@media (max-width: 480px) {
+  .meta-card {
+    grid-template-columns: 1fr; /* บังคับให้วันที่อยู่บน กะทำงานอยู่ล่าง */
+    gap: 10px;                  /* เพิ่มระยะห่างไม่ให้ขอบเบียดกัน */
+  }
 }
 
 .meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
@@ -616,7 +623,7 @@ function setCTVal(w, val){
   updateProgress();
 }
 
-function setR(id,v){ Richmond=checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
+function setR(id,v){ checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
 function setC(id,v){checkState[id].comment=v;}
 
 let _vDebounceTimers = {};
@@ -737,7 +744,7 @@ function submitWorker(){
 
   fetch(SHEETS_URL, {
     method: "POST",
-    type: "no-cors",
+    mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(entry)
   }).then(() => {
