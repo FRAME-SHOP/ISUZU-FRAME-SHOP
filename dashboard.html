@@ -159,16 +159,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const SHEETS_URL="https://script.google.com/macros/s/AKfycbxFpwj3ZzsQK6CbbyiS-kyuiFPQd_3dNge_VE_7qgjxs5JsbaUN6eGjYkEXS7UfC6Mk/exec";
 
-const TYPE_META={
-  HOIST:{label:"ELECTRIC HOIST",icon:"⚙️"},
-  CO2:{label:"เครื่องเชื่อม CO2",icon:"🔥"},
-  JIG:{label:"JIG",icon:"🔧"},
-  AIR:{label:"AIR SERVICE UNIT",icon:"💨"},
-  FANUC:{label:"หุ่นยนต์ FANUC",icon:"🤖"},
-  YASKAWA:{label:"หุ่นยนต์ YASKAWA",icon:"🤖"},
-  CONTACT_TIP:{label:"CONTACT TIP",icon:"🔌"},
-};
-
 const STATION_DATA={
   FRC:{
     CO2:{stages:{"CP1-02":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-04":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-05":["FRT-LH","RR-LH","FRT-RH","RR-RH"]}},
@@ -280,8 +270,10 @@ function parseRows(rows){
     
     if(e) {
       if(!e.foreman && row["Foreman"]) e.foreman = String(row["Foreman"]);
-      if(!e.status && row["สถานะ"]) e.status = String(row["สถานะ"]);
-      if(e.status) e.status = String(e.status).trim().toLowerCase();
+      // 🛠️ จุดแก้ไขสำคัญ: บังคับแปลงค่าสเตตัสจากแถวตรง ๆ ของ Sheets เป็นพิมพ์เล็ก (.toLowerCase()) เสมอเพื่อตัดปัญหาจับคำไม่เจอ
+      let rawStatus = row["สถานะ"] ? String(row["สถานะ"]) : e.status;
+      e.status = String(rawStatus || "pending").trim().toLowerCase();
+      
       if(e.stage) e.stage = String(e.stage).trim();
       if(e.group) e.group = String(e.group).trim();
     }
@@ -523,11 +515,10 @@ function openModal(typeKey,meta,subs){
           } catch(err){}
         }
 
-        // 🛠️ ซ่อมเงื่อนไขลบล้างโค้ดส่วนที่เกิน (loneliness หายไปแล้ว)
         if(r.status==="fail" || r.status==="pending" || !checks.length) {
           checksHTML=`
             <div class="si-checks" id="${uniqueId}" style="display:block;">`+
-              (checks.length ? checks.map(c=>`<div class="ck ${c.result ==="fail"?"ck-fail":""}">
+              (checks.length ? checks.map(c=>`<div class="ck" style="${c.result ==="fail"?"color:var(--red); font-weight:600;":""}">
                 <span>${c.name}</span>
                 <span class="ck-val">${c.value?c.value+" · ":""}<span style="color:${c.result==="pass"?"var(--pass)":"var(--red)"}">${c.result==="pass"?"O":"✗"}</span></span>
               </div>`).join("") : `<div class="ck"><span>สถานะภาพรวมด่าน</span><span class="ck-val" style="color:var(--pass)">ส่งตรวจแล้ว</span></div>`)+
