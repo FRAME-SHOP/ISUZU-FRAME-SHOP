@@ -41,11 +41,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .refresh-btn{margin-left:auto;background:var(--card);border:1.5px solid var(--border);border-radius:8px;
   padding:4px 12px;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
 /* TYPE CARDS */
-.type-grid{display:flex;gap:10px;padding:12px 14px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.type-grid{display:flex;gap:10px;padding:12px 14px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-top:10px;}
 .type-grid::-webkit-scrollbar{display:none;}
 .tc{background:var(--card);border-radius:16px;padding:18px 16px;cursor:pointer;
   border:2px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .15s;
-  position:relative;overflow:hidden;flex:0 0 150px;min-width:150px;}
+  position:relative;overflow:hidden;flex:0 0 160px;min-width:160px;}
 .tc:active{transform:scale(.97);}
 .tc.tc-pass{border-color:var(--pass-border);background:var(--pass-bg);}
 .tc.tc-fail{border-color:var(--fail-border);background:var(--fail-bg);}
@@ -270,7 +270,6 @@ function parseRows(rows){
     
     if(e) {
       if(!e.foreman && row["Foreman"]) e.foreman = String(row["Foreman"]);
-      // 🛠️ จุดแก้ไขสำคัญ: บังคับแปลงค่าสเตตัสจากแถวตรง ๆ ของ Sheets เป็นพิมพ์เล็ก (.toLowerCase()) เสมอเพื่อตัดปัญหาจับคำไม่เจอ
       let rawStatus = row["สถานะ"] ? String(row["สถานะ"]) : e.status;
       e.status = String(rawStatus || "pending").trim().toLowerCase();
       
@@ -328,6 +327,11 @@ function renderDashboard(){
   });
 
   const typeStats={};
+  // ⚙️ ล็อกตั้งค่าเริ่มต้นให้คีย์หลักของประเภทงานมีค่ารอสแตนด์บายไว้ก่อนเสมอ ป้องกันกล่องการ์ดหาย
+  Object.keys(TYPE_META).forEach(k => {
+    typeStats[k] = {total:0,pass:0,fail:0,wait:0};
+  });
+
   let totalAll=0,passAll=0,failAll=0;
   const alerts=[];
 
@@ -387,11 +391,13 @@ function renderDashboard(){
   const grid=document.getElementById("typeGrid");
   grid.innerHTML="";
 
-  Object.keys(typeStats).forEach(typeKey=>{
-    const st=typeStats[typeKey];
-    const meta=TYPE_META[typeKey]||{label:typeKey,icon:"📋"};
+  // 🛠️ แก้จุดตาย: วนลูปวาดกล่องตามลิสต์ของ TYPE_META เพื่อไม่ให้กล่องหายไปไหน
+  Object.keys(TYPE_META).forEach(typeKey=>{
+    const st=typeStats[typeKey] || {total:0,pass:0,fail:0,wait:0};
+    const meta=TYPE_META[typeKey];
     const done=st.pass+st.fail;
     let cls="",badge="";
+    
     if(st.fail>0){cls="tc-fail";badge="⚠ พบปัญหา";}
     else if(done===st.total&&st.total>0){cls="tc-pass";badge="ผ่านครบ";}
     else if(done>0 || st.total - st.wait > 0){cls="tc-warn";badge="กำลังดำเนินการ";}
