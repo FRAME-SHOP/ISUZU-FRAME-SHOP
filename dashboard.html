@@ -15,7 +15,7 @@
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .header{background:var(--red);color:#fff;padding:16px 20px 18px;}
 .header-row{display:flex;justify-content:space-between;align-items:flex-start;}
-.brand{font-size:20px;font-weight:900;letter-spacing Ram:.04em;}
+.brand {font-size:20px;font-weight:900;letter-spacing:.04em;}
 .brand-sub{font-size:11px;opacity:.7;margin-top:1px;}
 .live-wrap{text-align:right;}
 .live-pill{display:flex;align-items:center;gap:5px;justify-content:flex-end;font-size:12px;font-weight:700;}
@@ -159,6 +159,16 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const SHEETS_URL="https://script.google.com/macros/s/AKfycbxFpwj3ZzsQK6CbbyiS-kyuiFPQd_3dNge_VE_7qgjxs5JsbaUN6eGjYkEXS7UfC6Mk/exec";
 
+const TYPE_META={
+  HOIST:{label:"ELECTRIC HOIST",icon:"⚙️"},
+  CO2:{label:"เครื่องเชื่อม CO2",icon:"🔥"},
+  JIG:{label:"JIG",icon:"🔧"},
+  AIR:{label:"AIR SERVICE UNIT",icon:"💨"},
+  FANUC:{label:"หุ่นยนต์ FANUC",icon:"🤖"},
+  YASKAWA:{label:"หุ่นยนต์ YASKAWA",icon:"🤖"},
+  CONTACT_TIP:{label:"CONTACT TIP",icon:"🔌"},
+};
+
 const STATION_DATA={
   FRC:{
     CO2:{stages:{"CP1-02":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-04":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-05":["FRT-LH","RR-LH","FRT-RH","RR-RH"]}},
@@ -239,9 +249,6 @@ document.getElementById("headerDate").textContent=
 
 function getSubs(){return JSON.parse(localStorage.getItem("isuzu_submissions")||"[]");}
 
-// ----------------------------------------------------
-// ⚙️ ลอจิกไม้ตายใหม่: ดึงข้อมูลสำรองจากแถวคอลัมน์ดิบตรงๆ ถ้าแกะข้อมูลจากช่อง JSON บนมือถือแล้วไม่เจอ
-// ----------------------------------------------------
 function parseRows(rows){
   return rows.map(row=>{
     let j=row["JSON เต็ม"]||"";
@@ -251,7 +258,6 @@ function parseRows(rows){
       try{ e=JSON.parse(j); }catch(err){}
     }
     
-    // หากแกะ JSON ไม่สำเร็จ หรือเป็นข้อมูลที่มาจากฟอร์มมือถือรุ่นแปลกๆ ให้บังคับสร้าง Object ขึ้นมาจากหัวคอลัมน์ตารางกลางตรงๆ เลย
     if(!e || !e.stage || !e.group){
       e = {
         id: row["ID"] || ("id_" + Math.random().toString(36).substr(2, 9)),
@@ -268,11 +274,10 @@ function parseRows(rows){
         proxy_by: row["อนุมัติแทนโดย"] || "",
         proxy_for_group: row["กลุ่มที่ทำแทน"] || "",
         remark: row["หมายเหตุ"] || "",
-        checks: [] // ดึงเฉพาะสเตตัสภาพรวมขึ้นบอร์ด
+        checks: []
       };
     }
     
-    // บังคับทำความสะอาดข้อความ ป้องกันการสะกดผิดเคสบนมือถือ
     if(e) {
       if(!e.foreman && row["Foreman"]) e.foreman = String(row["Foreman"]);
       if(!e.status && row["สถานะ"]) e.status = String(row["สถานะ"]);
@@ -518,6 +523,7 @@ function openModal(typeKey,meta,subs){
           } catch(err){}
         }
 
+        // 🛠️ ซ่อมเงื่อนไขลบล้างโค้ดส่วนที่เกิน (loneliness หายไปแล้ว)
         if(r.status==="fail" || r.status==="pending" || !checks.length) {
           checksHTML=`
             <div class="si-checks" id="${uniqueId}" style="display:block;">`+
