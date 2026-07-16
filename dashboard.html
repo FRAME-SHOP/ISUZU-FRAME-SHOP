@@ -217,6 +217,16 @@ const MASTER_FOREMAN_MAP = {
   "FXC_B": "นาย วิบูลย์ อาจหาญ"
 };
 
+const TYPE_META={
+  HOIST:{label:"ELECTRIC HOIST",icon:"⚙️"},
+  CO2:{label:"เครื่องเชื่อม CO2",icon:"🔥"},
+  JIG:{label:"JIG",icon:"🔧"},
+  AIR:{label:"AIR SERVICE UNIT",icon:"💨"},
+  FANUC:{label:"หุ่นยนต์ FANUC",icon:"🤖"},
+  YASKAWA:{label:"หุ่นยนต์ YASKAWA",icon:"🤖"},
+  CONTACT_TIP:{label:"CONTACT TIP",icon:"🔌"},
+};
+
 function getAllStages(group,typeKey){
   const t=STATION_DATA[group]&&STATION_DATA[group][typeKey];
   if(!t) return [];
@@ -315,19 +325,32 @@ function resetCountdown(){
   },1000);
 }
 
+// ⚙️ ฟังก์ชันช่วยแปลงและสกัดรูปแบบวันที่ให้เสถียร รองรับพ.ศ. และ ค.ศ. สลับกันได้
+function cleanDateStr(str) {
+  if(!str) return "";
+  let parts = str.split("T")[0].split("-");
+  if(parts.length !== 3) return str;
+  let year = parseInt(parts[0]);
+  if(year > 2500) year = year - 543; // ตบปีพ.ศ. กลับมาเป็นค.ศ. เพื่อให้สอดคล้องกับอินพุต
+  let month = parts[1].padStart(2, '0');
+  let day = parts[2].padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function renderDashboard(){
-  const dateVal=document.getElementById("filterDate").value;
+  const filterDateInput = document.getElementById("filterDate").value; // รูปแบบ yyyy-mm-dd
+  const targetDateCleaned = cleanDateStr(filterDateInput);
+
   document.getElementById("lastUpdate").textContent=
     new Date().toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 
   const subs=allSubs.filter(s=>{
-    const d=String(s.date||"").split("T")[0];
-    const shiftOk=currentShift==="ALL"||s.shift===currentShift;
-    return d===dateVal&&shiftOk;
+    const itemDateCleaned = cleanDateStr(s.date);
+    const shiftOk = currentShift==="ALL"||s.shift===currentShift;
+    return itemDateCleaned === targetDateCleaned && shiftOk; // ดึงเงื่อนไขเปรียบเทียบจากฟังก์ชันความสะอาดวันที่ตัวใหม่
   });
 
   const typeStats={};
-  // ⚙️ ล็อกตั้งค่าเริ่มต้นให้คีย์หลักของประเภทงานมีค่ารอสแตนด์บายไว้ก่อนเสมอ ป้องกันกล่องการ์ดหาย
   Object.keys(TYPE_META).forEach(k => {
     typeStats[k] = {total:0,pass:0,fail:0,wait:0};
   });
@@ -391,7 +414,6 @@ function renderDashboard(){
   const grid=document.getElementById("typeGrid");
   grid.innerHTML="";
 
-  // 🛠️ แก้จุดตาย: วนลูปวาดกล่องตามลิสต์ของ TYPE_META เพื่อไม่ให้กล่องหายไปไหน
   Object.keys(TYPE_META).forEach(typeKey=>{
     const st=typeStats[typeKey] || {total:0,pass:0,fail:0,wait:0};
     const meta=TYPE_META[typeKey];
@@ -566,15 +588,9 @@ function openModal(typeKey,meta,subs){
   document.body.style.overflow="hidden";
 }
 
-function closeModal(){
-  document.getElementById("overlay").classList.remove("show");
-  document.body.style.overflow="";
-}
-function tryClose(e){if(e.target===document.getElementById("overlay"))closeModal();}
-
 function exportCSV(){
   const dateVal=document.getElementById("filterDate").value;
-  const subs=allSubs.filter(s=>String(s.date||"").split("T")[0]===dateVal&&String(s.status).toLowerCase()==="approved");
+  const subs=allSubs.filter(s=>cleanDateStr(s.date)===cleanDateStr(dateVal)&&String(s.status).toLowerCase()==="approved");
   if(!subs.length){alert("ไม่มีข้อมูล");return;}
   let csv="\uFEFF";
   csv+="วันที่,กะ,Group,ประเภท,Stage,Worker,Foreman,ผ่าน,ไม่ผ่าน,รายการไม่ผ่าน,หมายเหตุ\n";
