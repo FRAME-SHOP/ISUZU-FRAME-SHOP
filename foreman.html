@@ -5,35 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foreman Portal</title>
 <style>
-/* นำสไตล์ CSS เดิมของคุณพิงค์มาวางได้เลยครับเพื่อให้หน้าตาสวยเหมือนเดิม */
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
-:root{--red:#CC0000;--red-dark:#A00000;--pass:#057A55;--pass-bg:#ECFDF5;--pass-border:#6EE7B7;--fail-bg:#FFF5F5;--fail-border:#FFBABA;--bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);}
+:root{--red:#CC0000:#CC0000;--pass:#057A55;--bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;}
-.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
-.login-box{background:var(--card);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,.12);padding:32px 24px;width:100%;max-width:360px;text-align:center;}
-.login-logo{font-size:28px;font-weight:800;color:var(--red);letter-spacing:.06em;margin-bottom:4px;}
-.login-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;}
-.header{background:var(--red);color:#fff;padding:18px 16px 30px;}
+.header{background:var(--CC0000);color:#fff;padding:18px 16px 30px;}
 .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.logo{font-size:18px;font-weight:800;}
-.user-pill{background:rgba(255,255,255,.18);padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;}
+.logo{font-size:18px;font-weight:800;letter-spacing:.06em;}
+.user-pill{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;}
 .tabs{display:flex;background:var(--card);margin:0 14px;}
 .tab{flex:1;padding:11px 6px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);}
-.tab.active{color:var(--red);border-bottom-color:var(--red);}
-.sub-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px;margin-bottom:10px;}
+.tab.active{color:var(--CC0000);border-bottom-color:var(--CC0000);}
+.section{margin:14px 14px 0;}
+.sub-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
 .approve-btn{background:var(--pass);color:#fff;border:none;border-radius:8px;padding:9px 16px;width:100%;font-weight:700;cursor:pointer;margin-top:10px;}
-.approved-banner{background:var(--pass-bg);color:var(--pass);padding:9px;text-align:center;font-weight:600;border-radius:8px;margin-top:10px;}
+.approved-banner{background:#ECFDF5;color:var(--pass);padding:9px;text-align:center;font-weight:600;border-radius:8px;margin-top:10px;}
 .page{display:none;}.page.active{display:block;}
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:var(--card);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,.12);padding:32px 24px;width:100%;max-width:360px;text-align:center;}
 </style>
 </head>
 <body>
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-box">
-    <div class="login-logo">ISUZU</div>
-    <input class="login-input" id="codeInput" type="text" placeholder="รหัสพนักงาน" style="width:100%;padding:10px;margin-top:20px;text-align:center;">
-    <button class="login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <h2 style="color:var(--CC0000);margin-bottom:20px;">ISUZU Foreman Portal</h2>
+    <input id="codeInput" type="text" placeholder="รหัสพนักงาน" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;margin-bottom:15px;text-align:center;">
+    <button onclick="doLogin()" style="width:100%;padding:12px;background:var(--CC0000);color:#fff;border:none;border-radius:8px;cursor:pointer;">เข้าสู่ระบบ</button>
   </div>
 </div>
 
@@ -43,7 +41,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
       <div class="logo">ISUZU <span>Foreman Portal</span></div>
       <div class="user-pill" onclick="location.reload()">ออก</div>
     </div>
-    <div class="header-name" id="fmName">—</div>
+    <div id="fmName" style="font-size:20px;font-weight:800;">—</div>
   </div>
 
   <div class="tabs">
@@ -92,7 +90,7 @@ async function syncFromSheets(){
   try{
     const r = await fetch(SHEETS_URL+"?t="+Date.now());
     const data = await r.json();
-    if(data.rows) localStorage.setItem("isuzu_submissions", JSON.stringify(data.rows.map(r=>JSON.parse(r["JSON เต็ม"]))));
+    if(data.rows) localStorage.setItem("isuzu_submissions", JSON.stringify(data.rows.map(r=>JSON.parse(r["JSON เต็ม"])).filter(Boolean)));
   }catch(e){}
 }
 
@@ -105,7 +103,7 @@ function renderAll(){
     <div class="sub-card">
       <div class="sub-title">${s.type_label||s.type} — ${s.stage}</div>
       <div class="sub-meta">${s.worker} | ${s.status}</div>
-      ${s.status==="pending" ? `<button class="approve-btn" onclick="approve('${s.id}')">อนุมัติ</button>` : `<div class="approved-banner">อนุมัติแล้ว</div>`}
+      ${s.status==="approved" ? `<div class="approved-banner">อนุมัติแล้ว</div>` : `<button class="approve-btn" onclick="approve('${s.id}')">อนุมัติ</button>`}
     </div>`).join("") : "ไม่มีรายการ";
 }
 
@@ -126,6 +124,7 @@ function switchTab(t){
   document.getElementById("tab-"+t).classList.add("active");
 }
 
+// ระบบอัปเดตอัตโนมัติ
 window.addEventListener('focus', () => { if(currentFM) syncFromSheets().then(renderAll); });
 setInterval(()=>{ if(currentFM) syncFromSheets().then(renderAll); }, 10000);
 </script>
