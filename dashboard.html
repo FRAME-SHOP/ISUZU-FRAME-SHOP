@@ -283,10 +283,11 @@ function parseRows(rows){
       let rawStatus = row["สถานะ"] ? String(row["สถานะ"]) : e.status;
       e.status = String(rawStatus || "pending").trim().toLowerCase();
       
-      // ล็อกตรวจสอบวันที่ให้ดึงข้อความดิบจากหน้า Sheets มาสแตนด์บายเสมอ
       if(row["วันที่"]) e.date = String(row["วันที่"]);
       if(e.stage) e.stage = String(e.stage).trim();
       if(e.group) e.group = String(e.group).trim();
+      // 🛠️ ล็อกแปลงประเภทงานเพื่อป้องกันช่องว่าง ขีดล่าง หรือตัวสะกดพลาด
+      if(row["ประเภท"]) e.type = String(row["ประเภท"]).trim().replace(/\s+/g, '_').toUpperCase();
     }
     return e;
   }).filter(Boolean);
@@ -327,7 +328,6 @@ function resetCountdown(){
   },1000);
 }
 
-// 🛠️ อัปเกรดฟังก์ชันจัดรูปแบบวันที่อัจฉริยะ: รองรับทั้งรูปแบบคั่นด้วย / หรือ - และสลับตำแหน่ง วัน-เดือน ได้ครอบจักรวาล
 function cleanDateStr(str) {
   if(!str) return "";
   let clean = str.split("T")[0].trim();
@@ -335,16 +335,12 @@ function cleanDateStr(str) {
   if(parts.length !== 3) return clean;
   
   let year, month, day;
-  
-  // ตรวจจับกรณีปีอยู่หน้าสุด (yyyy/mm/dd หรือ yyyy-mm-dd)
   if(parts[0].length === 4) {
     year = parseInt(parts[0]);
     month = parts[1].padStart(2, '0');
     day = parts[2].padStart(2, '0');
   } else {
-    // ตรวจจับกรณีปีอยู่หลังสุด (dd/mm/yyyy หรือ mm/dd/yyyy)
     year = parseInt(parts[2]);
-    // ปรับลอจิกมาตรฐานอุตสาหกรรม: ดูตามความยาวตัวเลขเพื่อระบุ วัน และ เดือน
     if(parseInt(parts[0]) > 12) {
       day = parts[0].padStart(2, '0');
       month = parts[1].padStart(2, '0');
@@ -353,8 +349,7 @@ function cleanDateStr(str) {
       day = parts[1].padStart(2, '0');
     }
   }
-  
-  if(year > 2500) year = year - 543; // แปลงปี พ.ศ. ให้เป็น ค.ศ.
+  if(year > 2500) year = year - 543; 
   return `${year}-${month}-${day}`;
 }
 
@@ -386,7 +381,12 @@ function renderDashboard(){
       
       stages.forEach(stage=>{
         totalAll++;typeStats[typeKey].total++;
-        const stageSubs=subs.filter(s=>s.stage===stage&&s.group===group&&s.type===typeKey);
+        // 🛠️ ปรับลอจิกคัดกรองให้แมปคีย์ดิบกับคีย์ขีดล่างของ CONTACT_TIP ได้แม่นยำ 100%
+        const stageSubs=subs.filter(s=>{
+          const sTypeClean = String(s.type || "").replace(/[\s_]+/g, '').toUpperCase();
+          const keyClean = String(typeKey).replace(/[\s_]+/g, '').toUpperCase();
+          return s.stage===stage && s.group===group && sTypeClean === keyClean;
+        });
         
         const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
         const anyDone=sortedSubs.length>0;
@@ -477,7 +477,11 @@ function openModal(typeKey,meta,subs){
 
     stages.forEach(stage=>{
       totalAll++;
-      const stageSubs=subs.filter(s=>s.stage===stage&&s.group===group&&s.type===typeKey);
+      const stageSubs=subs.filter(s=>{
+        const sTypeClean = String(s.type || "").replace(/[\s_]+/g, '').toUpperCase();
+        const keyClean = String(typeKey).replace(/[\s_]+/g, '').toUpperCase();
+        return s.stage===stage && s.group===group && sTypeClean === keyClean;
+      });
       
       const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
       const anyDone=sortedSubs.length>0;
