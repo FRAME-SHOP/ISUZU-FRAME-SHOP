@@ -34,32 +34,40 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .subtype-chip:active{transform:scale(.97);}
 .subtype-chip.active{background:var(--red);border-color:var(--red);color:#fff;}
 
-/* 🛠️ ปรับแก้ตรงนี้: ตั้งค่าเริ่มต้นของกล่องวันที่และกะทำงานให้เรียงจากซ้ายไปขวาในคอมพิวเตอร์ */
+/* 🛠️ ล้างระบบโครงสร้าง Grid ของเดิมเพื่อตัดปัญหาล้นหน้าจอโทรศัพท์แบบถาวร */
 .meta-card{
   background:var(--card);
   margin:0 14px;
   border-radius:12px;
   box-shadow:var(--shadow);
-  padding:14px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
+  padding:14px 16px; /* บังคับสเปซขอบแผ่นขาวซ้ายขวาให้หักเข้ามาสม่ำเสมอ */
+  display: flex !important;
+  flex-direction: column !important; /* จัดแบบต่อแถวแนวตั้งเรียงลงมาตรงระดับสายตา */
+  gap: 12px;
   border:1px solid var(--border);
 }
 .meta-item{
+  width: 100% !important;
   min-width: 0;
-}
-
-/* 🛠️ เพิ่มระบบคัดกรองขนาดหน้าจอ: ถ้าเปิดบน "มือถือที่มีความกว้างจอแคบ" ให้ปรับกล่องมาต่อเป็นแนวตั้งทันที หมดปัญหาซ้อนกันร้อยเปอร์เซ็นต์ */
-@media (max-width: 480px) {
-  .meta-card {
-    grid-template-columns: 1fr; /* บังคับให้วันที่อยู่บน กะทำงานอยู่ล่าง */
-    gap: 10px;                  /* เพิ่มระยะห่างไม่ให้ขอบเบียดกัน */
-  }
+  box-sizing: border-box !important;
 }
 
 .meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
-.meta-item input,.meta-item select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:14px;background:#F9FAFB;outline:none;transition:border-color .15s;}
+
+/* 🛠️ บังคับควบคุมเส้นผ่านศูนย์กลางขนาดกว้างสุดของอินพุตวันที่และกล่องกะทำงานให้สยบอยู่ในเฟรม */
+.meta-item input, .meta-item select {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important; /* ห้ามตัวแปร Padding ดันกล่องปลิ้นออกขวา */
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 14px;
+  background: #F9FAFB;
+  outline: none;
+  transition: border-color .15s;
+}
 .meta-item input:focus,.meta-item select:focus{border-color:var(--red);background:#fff;}
 .progress-wrap{margin:14px 14px 0;}
 .progress-bg{background:#E5E7EB;border-radius:99px;height:5px;overflow:hidden;}
@@ -156,11 +164,15 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- PAGE 5: กรอกแบบฟอร์ม -->
 <div class="page" id="page-form">
-  <div class="meta-card" style="margin-top: 14px;">
-    <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate"></div>
-    <div class="meta-item">
+  <!-- 🛠️ ตรึง Inline CSS เสริมความปลอดภัยขั้นเด็ดขาด ล็อกพื้นที่กล่องไม่ให้ขยับล้นแนวขวาบนมือถือ -->
+  <div class="meta-card" style="margin-top: 14px; box-sizing: border-box !important;">
+    <div class="meta-item" style="width: 100% !important; box-sizing: border-box !important;">
+      <label>วันที่</label>
+      <input type="date" id="inputDate" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
+    </div>
+    <div class="meta-item" style="width: 100% !important; box-sizing: border-box !important;">
       <label>กะทำงาน</label>
-      <select id="inputShift">
+      <select id="inputShift" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
         <option value="A">SHIFT A</option>
         <option value="B">SHIFT B</option>
       </select>
@@ -265,7 +277,7 @@ const STATION_DATA = {
       "MA2-09": ["H8", "H9"],
     }},
     FANUC: { label:"หุ่นยนต์ FANUC", stages:{ "SA2-01,02": [], "MA2-02": [], "MA2-04": [], "MA2-06": [] }},
-    CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA2-02": ["W1","W2","W3","W4"], "MA2-04": ["W1","W2","W3","W4","W5","W6"], "MA2-06": ["W1","W2","W3","W4"], "SA2-01": ["W1","W2"], "SA2-02": ["W1","W2"] }},
+    CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA2-02": ["W1","W2","W3","W4"], "MA2-04": ["W1","W2","W3","W4","W5","W6"], "MA2-06":["W1","W2","W3","W4"], "SA2-01": ["W1","W2"], "SA2-02": ["W1","W2"] }},
   },
   FRX: {
     HOIST: { label:"ELECTRIC HOIST", stages:{ "SC2-01": [] }},
@@ -611,6 +623,7 @@ function renderChecks(){
   updateProgress();
 }
 
+// โค้ดส่วนสคริปต์ที่เหลือคงเดิมสมบูรณ์แบบเพื่อความเสถียร
 function setCTVal(w, val){
   checkState[w] = val === "" ? null : val;
   const row = document.querySelector(`.ct-row[data-ct="${w}"]`);
