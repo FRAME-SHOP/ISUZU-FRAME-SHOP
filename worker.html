@@ -569,7 +569,7 @@ function renderChecks(){
     }
     const header = document.createElement("div");
     header.style.cssText="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
-    header.textContent="กดเลือกสถานะของแต่ละ Contact Tip";
+    header.textContent="กดเลือกสถานะ of แต่ละ Contact Tip";
     list.appendChild(header);
 
     items.forEach(w=>{
@@ -647,7 +647,7 @@ function setCTVal(w, val){
   updateProgress();
 }
 
-function setR(id,v){ Richmond=checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
+function setR(id,v){ checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
 function setC(id,v){checkState[id].comment=v;}
 
 let _vDebounceTimers = {};
@@ -773,10 +773,10 @@ function submitWorker(){
   all.push(entry);
   localStorage.setItem("isuzu_submissions",JSON.stringify(all));
 
-  // 🛠️ ปลดล็อกระบบเครือข่ายความปลอดภัย: สลับเนื้อหาการเชื่อมต่อเป็นแบบ URL-Encoded ฟอร์มดิบ เพื่อให้หลังบ้านแยกแยะคีย์ "FANUC" จากคีย์ JIG ได้แม่นยำร้อยเปอร์เซ็นต์
   fetch(SHEETS_URL, {
     method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" }, /* บังคับสิทธิ์ห้ามเบราว์เซอร์สกัดข้อมูล */
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(entry)
   }).then(() => {
     console.log("Data sent to Sheets successfully");
@@ -789,10 +789,20 @@ function submitWorker(){
   const isCT = isContactTip();
   const changedC = isCT ? entry.checks.filter(c=>c.result==="pass").length : 0;
   
+  // 🛠️ ปรับเปลี่ยนจุดนี้: จัดการฟอร์แมตฟังก์ชันแปลงวันที่จากรูป YYYY-MM-DD ให้แสดงผลเป็น วัน/เดือน/ปีพุทธศักราช (DD/MM/YYYY) บนบอร์ดข้อความสำเร็จ
+  let displayDate = date;
+  if (date && date.includes("-")) {
+    let p = date.split("-");
+    if (p.length === 3) {
+      let yearBE = parseInt(p[0]) + 543;
+      displayDate = p[2] + "/" + p[1] + "/" + yearBE;
+    }
+  }
+  
   document.getElementById("successInfo").innerHTML=`
     <b>Group:</b> ${nav.group} &nbsp;|&nbsp; <b>ประเภท:</b> ${typeLabel}<br>
     <b>Stage:</b> ${fullStage}<br>
-    <b>วันที่:</b> ${date} &nbsp;|&nbsp; <b>กะ:</b> SHIFT ${shift}<br>
+    <b>วันที่:</b> ${displayDate} &nbsp;|&nbsp; <b>กะ:</b> SHIFT ${shift}<br>
     <b>Worker:</b> ${worker}<br>
     ${isCT
       ? `<b>ผล:</b> เปลี่ยนแล้ว ${changedC}/${totalC} · ยังไม่เปลี่ยน ${failC}/${totalC}`
