@@ -220,6 +220,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
+// 🛠️ ซ่อมแซมโครงสร้างสถิติ FRC: เติมคำว่า label:"CONTACT TIP" เพื่อแก้ไขปัญหาข้อมูลรวนไปบันทึกทับตาราง JIG CP1-03
 const STATION_DATA = {
   FRC: {
     CO2: { label:"เครื่องเชื่อม CO2", stages:{
@@ -650,11 +651,12 @@ function setCTVal(w, val){
 function setR(id,v){ checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
 function setC(id,v){checkState[id].comment=v;}
 
+// 🛠️ หน่วงเวลาอัปเดตสถานะ: ปรับสปีดลดเหลือ 1,000 มิลลิวินาที (1 วินาทีพอดีเป๊ะ) ตามที่คุณพิงค์ระบุครับ
 let _vDebounceTimers = {};
 function setVQuiet(id,v){
   checkState[id].value = v;
   clearTimeout(_vDebounceTimers[id]);
-  _vDebounceTimers[id] = setTimeout(()=>{ setV(id, v); }, 1500); 
+  _vDebounceTimers[id] = setTimeout(()=>{ setV(id, v); }, 1000); 
 }
 
 function setV(id,v){
@@ -750,16 +752,15 @@ function submitWorker(){
   const typeLabel = TYPE_META[nav.type]?.label || nav.type;
   const fullStage = buildFullStageName();
 
-  // 🛠️ ล็อกแกนข้อมูลความกว้างของด่านหลัก: บังคับยิงคีย์ประเภทดิบ (เช่น FANUC) คู่กับด่านตรงตัว เพื่อไม่ให้ชื่อหลงทางไปกลุ่ม JIG
   const entry={
     id:"W"+Date.now(),
     timestamp_worker:new Date().toISOString(),
     timestamp_foreman:null,
     date,shift,
     group:nav.group,
-    type:nav.type, // ยิงคีย์ดิบ "FANUC" ตรง ๆ เข้าตัวแปรหลัก
+    type:nav.type, 
     type_label:typeLabel,
-    stage:fullStage, // จะได้ค่าเต็ม "CP1-03-RH-no.2"
+    stage:fullStage, 
     stage_base:nav.stage, 
     subtype:nav.subtype,
     worker, foreman:null,
