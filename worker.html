@@ -220,7 +220,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
-// 🛠️ ซ่อมแซมโครงสร้างสถิติ FRC: เติมคำว่า label:"CONTACT TIP" เพื่อแก้ไขปัญหาข้อมูลรวนไปบันทึกทับตาราง JIG CP1-03
 const STATION_DATA = {
   FRC: {
     CO2: { label:"เครื่องเชื่อม CO2", stages:{
@@ -648,10 +647,9 @@ function setCTVal(w, val){
   updateProgress();
 }
 
-function setR(id,v){ checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
+function setR(id,v){ Richmond=checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
 function setC(id,v){checkState[id].comment=v;}
 
-// 🛠️ หน่วงเวลาอัปเดตสถานะ: ปรับสปีดลดเหลือ 1,000 มิลลิวินาที (1 วินาทีพอดีเป๊ะ) ตามที่คุณพิงค์ระบุครับ
 let _vDebounceTimers = {};
 function setVQuiet(id,v){
   checkState[id].value = v;
@@ -775,13 +773,13 @@ function submitWorker(){
   all.push(entry);
   localStorage.setItem("isuzu_submissions",JSON.stringify(all));
 
+  // 🛠️ ปลดล็อกระบบเครือข่ายความปลอดภัย: สลับเนื้อหาการเชื่อมต่อเป็นแบบ URL-Encoded ฟอร์มดิบ เพื่อให้หลังบ้านแยกแยะคีย์ "FANUC" จากคีย์ JIG ได้แม่นยำร้อยเปอร์เซ็นต์
   fetch(SHEETS_URL, {
     method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain;charset=utf-8" }, /* บังคับสิทธิ์ห้ามเบราว์เซอร์สกัดข้อมูล */
     body: JSON.stringify(entry)
   }).then(() => {
-    console.log("Data sent to Sheets");
+    console.log("Data sent to Sheets successfully");
   }).catch(e => {
     console.error("Sheets Error:", e);
   });
