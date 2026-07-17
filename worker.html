@@ -315,7 +315,6 @@ const TYPE_ICONS = {
   FANUC: "🤖", YASKAWA: "🤖", CONTACT_TIP: "🔌",
 };
 
-// ตารางกลางประจำคีย์หน้า Dashboard เพื่อดึงแมปชื่อสลักลง Sheets
 const TYPE_META = {
   HOIST: {label:"ELECTRIC HOIST"},
   CO2: {label:"เครื่องเชื่อม CO2"},
@@ -748,18 +747,21 @@ function submitWorker(){
   if(undoneCount>0){showToast("ยังตรวจไม่ครบ "+undoneCount+" รายการ","err");return;}
   if(!worker){showToast("กรุณาใส่ชื่อ Worker","err");return;}
 
-  // 🛠️ แก้ไขจุดตายตรงนี้: บังคับดึงป้ายชื่อสากลจากตาราง TYPE_META ประจำตำแหน่งคีย์หลัก เพื่อป้องกันตัวแปรคีย์ย่อยภาษาไทยหลุดเพี้ยนไปเป็น JIG
   const typeLabel = TYPE_META[nav.type]?.label || nav.type;
   const fullStage = buildFullStageName();
 
+  // 🛠️ ล็อกแกนข้อมูลความกว้างของด่านหลัก: บังคับยิงคีย์ประเภทดิบ (เช่น FANUC) คู่กับด่านตรงตัว เพื่อไม่ให้ชื่อหลงทางไปกลุ่ม JIG
   const entry={
     id:"W"+Date.now(),
     timestamp_worker:new Date().toISOString(),
     timestamp_foreman:null,
     date,shift,
     group:nav.group,
-    type:nav.type, type_label:typeLabel,
-    stage:fullStage, stage_base:nav.stage, subtype:nav.subtype,
+    type:nav.type, // ยิงคีย์ดิบ "FANUC" ตรง ๆ เข้าตัวแปรหลัก
+    type_label:typeLabel,
+    stage:fullStage, // จะได้ค่าเต็ม "CP1-03-RH-no.2"
+    stage_base:nav.stage, 
+    subtype:nav.subtype,
     worker, foreman:null,
     remark:document.getElementById("remarkText").value.trim(),
     checks: isContactTip()
@@ -790,7 +792,7 @@ function submitWorker(){
   
   document.getElementById("successInfo").innerHTML=`
     <b>Group:</b> ${nav.group} &nbsp;|&nbsp; <b>ประเภท:</b> ${typeLabel}<br>
-    <b>Stage:</b> ${isCT ? nav.stage : fullStage}<br>
+    <b>Stage:</b> ${fullStage}<br>
     <b>วันที่:</b> ${date} &nbsp;|&nbsp; <b>กะ:</b> SHIFT ${shift}<br>
     <b>Worker:</b> ${worker}<br>
     ${isCT
