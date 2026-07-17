@@ -34,34 +34,43 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .subtype-chip:active{transform:scale(.97);}
 .subtype-chip.active{background:var(--red);border-color:var(--red);color:#fff;}
 
-/* 🛠️ ล้างระบบโครงสร้าง Grid ของเดิมเพื่อตัดปัญหาล้นหน้าจอโทรศัพท์แบบถาวร */
+/* 💻 สำหรับหน้าจอคอมพิวเตอร์: ให้แสดงผลเรียงซ้าย-ขวา 2 คอลัมน์เหมือนเดิมตามปกติ */
 .meta-card{
   background:var(--card);
   margin:0 14px;
   border-radius:12px;
   box-shadow:var(--shadow);
-  padding:14px 16px; /* บังคับสเปซขอบแผ่นขาวซ้ายขวาให้หักเข้ามาสม่ำเสมอ */
-  display: flex !important;
-  flex-direction: column !important; /* จัดแบบต่อแถวแนวตั้งเรียงลงมาตรงระดับสายตา */
-  gap: 12px;
+  padding:12px 14px;
+  display:grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap:10px;
   border:1px solid var(--border);
+  box-sizing: border-box !important;
 }
 .meta-item{
-  width: 100% !important;
   min-width: 0;
   box-sizing: border-box !important;
 }
 
-.meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
+/* 📱 สำหรับหน้าจอมือถือ (ความกว้างจอไม่เกิน 600px): บังคับสลับเป็นแนวตั้งทันที ไม่ทับและไม่ล้น */
+@media (max-width: 600px) {
+  .meta-card {
+    grid-template-columns: 1fr !important; /* เปลี่ยนเป็นแถวเดี่ยวแนวตั้ง */
+    gap: 12px !important;                 /* เพิ่มระยะห่างระหว่างแถว */
+    padding: 14px !important;
+  }
+}
 
-/* 🛠️ บังคับควบคุมเส้นผ่านศูนย์กลางขนาดกว้างสุดของอินพุตวันที่และกล่องกะทำงานให้สยบอยู่ในเฟรม */
+.meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
+
+/* ควบคุมขนาดอินพุตภายในให้คำนวณพื้นที่ถูกต้อง ไม่ดันปลิ้นล้นขอบการ์ด */
 .meta-item input, .meta-item select {
   width: 100% !important;
   max-width: 100% !important;
-  box-sizing: border-box !important; /* ห้ามตัวแปร Padding ดันกล่องปลิ้นออกขวา */
+  box-sizing: border-box !important; /* ป้องกัน Padding ดันกล่องปลิ้น */
   border: 1.5px solid var(--border);
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 7px 10px;
   font-family: 'Sarabun', sans-serif;
   font-size: 14px;
   background: #F9FAFB;
@@ -164,15 +173,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- PAGE 5: กรอกแบบฟอร์ม -->
 <div class="page" id="page-form">
-  <!-- 🛠️ ตรึง Inline CSS เสริมความปลอดภัยขั้นเด็ดขาด ล็อกพื้นที่กล่องไม่ให้ขยับล้นแนวขวาบนมือถือ -->
-  <div class="meta-card" style="margin-top: 14px; box-sizing: border-box !important;">
-    <div class="meta-item" style="width: 100% !important; box-sizing: border-box !important;">
-      <label>วันที่</label>
-      <input type="date" id="inputDate" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-    </div>
-    <div class="meta-item" style="width: 100% !important; box-sizing: border-box !important;">
+  <div class="meta-card" style="margin-top: 14px;">
+    <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate"></div>
+    <div class="meta-item">
       <label>กะทำงาน</label>
-      <select id="inputShift" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
+      <select id="inputShift">
         <option value="A">SHIFT A</option>
         <option value="B">SHIFT B</option>
       </select>
@@ -623,7 +628,6 @@ function renderChecks(){
   updateProgress();
 }
 
-// โค้ดส่วนสคริปต์ที่เหลือคงเดิมสมบูรณ์แบบเพื่อความเสถียร
 function setCTVal(w, val){
   checkState[w] = val === "" ? null : val;
   const row = document.querySelector(`.ct-row[data-ct="${w}"]`);
