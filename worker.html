@@ -34,7 +34,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .subtype-chip:active{transform:scale(.97);}
 .subtype-chip.active{background:var(--red);border-color:var(--red);color:#fff;}
 
-/* 💻 สำหรับหน้าจอคอมพิวเตอร์: ให้แสดงผลเรียงซ้าย-ขวา 2 คอลัมน์เหมือนเดิมตามปกติ */
 .meta-card{
   background:var(--card);
   margin:0 14px;
@@ -52,22 +51,20 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   box-sizing: border-box !important;
 }
 
-/* 📱 สำหรับหน้าจอมือถือ (ความกว้างจอไม่เกิน 600px): บังคับสลับเป็นแนวตั้งทันที ไม่ทับและไม่ล้น */
 @media (max-width: 600px) {
   .meta-card {
-    grid-template-columns: 1fr !important; /* เปลี่ยนเป็นแถวเดี่ยวแนวตั้ง */
-    gap: 12px !important;                 /* เพิ่มระยะห่างระหว่างแถว */
+    grid-template-columns: 1fr !important; 
+    gap: 12px !important;                 
     padding: 14px !important;
   }
 }
 
 .meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
 
-/* ควบคุมขนาดอินพุตภายในให้คำนวณพื้นที่ถูกต้อง ไม่ดันปลิ้นล้นขอบการ์ด */
 .meta-item input, .meta-item select {
   width: 100% !important;
   max-width: 100% !important;
-  box-sizing: border-box !important; /* ป้องกัน Padding ดันกล่องปลิ้น */
+  box-sizing: border-box !important; 
   border: 1.5px solid var(--border);
   border-radius: 8px;
   padding: 7px 10px;
@@ -592,11 +589,12 @@ function renderChecks(){
     div.className="check-item"+(s.result==="pass"?" pass":s.result==="fail"?" fail":"");
     div.setAttribute("data-id", c.id);
 
+    // 🛠️ แก้ไขจุดนี้: ถอดฟังก์ชัน oninput ย้ายลอจิกการคำนวณและวาดกล่องใหม่ไปไว้ที่ onblur (เมื่อพิมพ์เสร็จและกดจิ้มออกจากช่อง) แทน เพื่อหยุดอาการตัวเลขเด้ง
     const numericRow = c.numeric ? `
       <div class="comment-row" style="display:flex;align-items:center;gap:8px;margin-top:8px;margin-bottom:0;">
         <input type="number" inputmode="decimal" placeholder="ค่าที่วัดได้ (${c.min}-${c.max})"
           style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;"
-          value="${s.value||""}" oninput="setVQuiet(${c.id},this.value)" onblur="setV(${c.id},this.value)">
+          value="${s.value||""}" onblur="setV(${c.id},this.value)">
         <span style="font-size:13px;color:var(--muted);min-width:40px;">${c.unit||""}</span>
       </div>` : "";
 
@@ -643,13 +641,6 @@ function setCTVal(w, val){
 function setR(id,v){ checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
 function setC(id,v){checkState[id].comment=v;}
 
-let _vDebounceTimers = {};
-function setVQuiet(id,v){
-  checkState[id].value = v;
-  clearTimeout(_vDebounceTimers[id]);
-  _vDebounceTimers[id] = setTimeout(()=>{ setV(id, v); }, 800);
-}
-
 function setV(id,v){
   checkState[id].value=v;
   const c = currentChecks.find(x=>x.id===id);
@@ -665,18 +656,13 @@ function setV(id,v){
         const prevResult = checkState[id].result;
         checkState[id].result = (num>=c.min && num<=c.max) ? "pass" : "fail";
         if(checkState[id].result!=="fail") checkState[id].comment="";
-        needsCommentBox = (checkState[id].result !== prevResult);
+        needsCommentBox = true; // ย้ายลอจิกมาวาดใหม่ตรงนี้เพื่อให้ป้ายสีและกล่องหมายเหตุแสดงผลทันทีหลังจิ้มออกจากช่อง
       }
     }
   }
 
   if(needsCommentBox){
     renderChecks();
-    setTimeout(()=>{
-      const inputs = document.querySelectorAll(`.check-item input[type="number"]`);
-      const target = Array.from(inputs).find(inp => inp.getAttribute("oninput") === `setVQuiet(${id},this.value)`);
-      if(target){ target.focus(); }
-    }, 10);
   } else {
     updateNumericStatusUI(id);
   }
