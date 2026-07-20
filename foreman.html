@@ -125,12 +125,11 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; padding-bot
 <div class="toast" id="toast"></div>
 
 <script>
-// 🛠️ ลิงก์สคริปต์กลางซิงค์ข้อมูลตรงข้ามล็อกระบบ
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
-// 🔎 🛠️ อัปเดตสเปกจำนวนด่านคงที่ฝั่งแอป Foreman ให้ล็อก FRC = 27 ด่านตรงตามตารางชีตพุธศักราชล่าสุด
+// 🔎 ล็อก FRC แผนกคุณพิงค์ไว้ที่ 27 รายการตรงตามความจริงหน้างาน
 const STATION_SPECS = {
-  FRC: 27,  // ล็อกไว้ที่ 27 ด่านถ้วน ข้อมูลแกน สุพัฒน์ คำชนะ จะไม่โดนบวกเกินเป็น 32 อีกต่อไป
+  FRC: 27,  
   FRF: 31,
   FRR: 38,
   FRU: 26,
@@ -148,7 +147,6 @@ const MASTER_FOREMAN_LIST = {
 let currentGroup = "FRC";
 let allRows = [];
 
-// กำหนดวันที่ค่าเริ่มต้นเป็นวันนี้
 document.getElementById("filterDate").value = new Date().toISOString().split("T")[0];
 
 function showToast(msg) {
@@ -175,17 +173,15 @@ function renderSidebar() {
 
 function loadData() {
   const tbody = document.getElementById("submissionTableBody");
-  tbody.innerHTML = `<tr><td colspan="8" class="empty-state">กำลังดึงข้อมูลใบงานล่าสุุด...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="8" class="empty-state">กำลังดึงข้อมูลใบงานล่าสุด...</td></tr>`;
   
   const filterDate = document.getElementById("filterDate").value;
   
-  // อัปเดตรายชื่อผู้ควบคุมกลุ่ม
   document.getElementById("displayGroupName").textContent = `Group ${currentGroup}`;
   const fA = MASTER_FOREMAN_LIST[`${currentGroup}_A`] || "-";
   const fB = MASTER_FOREMAN_LIST[`${currentGroup}_B`] || "-";
   document.getElementById("displayForemanName").textContent = `Foreman กะ A: ${fA} | กะ B: ${fB}`;
 
-  // ดึงค่าประวัติผ่านระบบ Apps Script ลิงก์ตรง
   fetch(SHEETS_URL)
     .then(res => res.json())
     .then(data => {
@@ -205,7 +201,6 @@ function renderDashboard(filterDate) {
   const tbody = document.getElementById("submissionTableBody");
   tbody.innerHTML = "";
 
-  // กรองเอาเฉพาะข้อมูลประจำกลุ่ม และประจำวันที่เลือก
   const filtered = allRows.filter(r => r["Group"] === currentGroup && r["วันที่"] === filterDate);
 
   let pendingCount = 0;
@@ -213,7 +208,6 @@ function renderDashboard(filterDate) {
   let approvedStations = new Set();
 
   filtered.forEach(r => {
-    // ล้างและคลีนรหัสด่านเพื่อทำการนับสถิติภาพรวมไม่ให้ซ้อนกัน
     const cleanStage = String(r["Stage"] || "").toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
     
     if (r["สถานะ"] === "approved") {
@@ -258,7 +252,6 @@ function renderDashboard(filterDate) {
     tbody.innerHTML = `<tr><td colspan="8" class="empty-state">ยังไม่มีประวัติการส่งใบงานตรวจเช็คในวันที่เลือก</td></tr>`;
   }
 
-  // 🛠️ อัปเดตสถิติตัวเลขกล่องการ์ดด้านบน: ล็อกการนับด่านสูงสุดตามค่าคงที่ STATION_SPECS ประจำกลุ่มจริง
   const totalSpecs = STATION_SPECS[currentGroup] || 0;
   document.getElementById("statProgress").innerHTML = `${approvedStations.size} / ${totalSpecs} <span class="stat-unit">Station</span>`;
   document.getElementById("statPending").innerHTML = `${pendingCount} <span class="stat-unit">รายการ</span>`;
@@ -269,7 +262,6 @@ function approveRow(id) {
   const row = allRows.find(r => r["ID"] === id);
   if (!row) return;
 
-  // จำลองโครงสร้างการกดส่งข้อมูลยืนยันสีเขียวกลับไปที่ฐานข้อมูลกลาง
   const payload = {
     id: row["ID"],
     date: row["วันที่"],
@@ -280,7 +272,7 @@ function approveRow(id) {
     stage: row["Stage"],
     worker: row["Worker"],
     remark: row["หมายเหตุ"] || "",
-    status: "approved", // ปรับสถานะเป็นสำเร็จเพื่อระบายสีเขียว O ลงบนไฟล์ Excel ปฏิทินรายเดือน
+    status: "approved", 
     foreman: MASTER_FOREMAN_LIST[`${row["Group"]}_${row["กะ"]}`] || "Foreman ประจำกลุ่ม",
     timestamp_worker: row["JSON เต็ม"] ? JSON.parse(row["JSON เต็ม"]).timestamp_worker : new Date().toISOString(),
     timestamp_foreman: new Date().toISOString(),
@@ -301,7 +293,6 @@ function approveRow(id) {
   });
 }
 
-// รันครั้งแรกเมื่อโหลดหน้าจอ
 renderSidebar();
 loadData();
 </script>
