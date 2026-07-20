@@ -37,7 +37,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .hold-btn:hover{background:#B45309;}
 .hold-card{background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
 .hold-stage{font-size:15px;font-weight:700;margin-bottom:4px;}
-.hold-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
+.hold-meta">Worker: ${s.worker} · SHIFT ${s.shift}</div>
 .hold-fails{font-size:13px;color:var(--red);font-weight:600;margin-bottom:10px;}
 .hold-status{font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px;display:inline-block;}
 .hold-status-wait{background:#FEF3C7;color:#92400E;}
@@ -171,7 +171,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
   <div class="page" id="page-stations">
     <div class="section">
-      <div class="section-title">暗สถานะ Station ที่ดูแล (วันนี้)</div>
+      <div class="section-title">สถานะ Station ที่ดูแล (วันนี้)</div>
       <div id="stationGrid"></div>
     </div>
   </div>
@@ -208,7 +208,9 @@ const FOREMAN_DB = {
   "94037": { name:"นาย วิบูลย์ อาจหาญ",     shift:"B", group:"FXC" },
 };
 
-// 🔎 🛠️ ล็อกสเปกจำนวนด่านคงที่ฝั่งแอป Foreman ให้ล็อก FRC = 27 รายการถ้วน (ซ่อมระบบนับเกิน 32)
+// 🛠️ ประกาศดักตัวแปรคุมสเปกกลุ่มทำงานที่ขาดไป เพื่อฟื้นฟูระบบนับสรุปผลงาน
+let currentGroup = "FRC"; 
+
 const STATION_SPECS = {
   FRC: 27,  
   FRF: 31,
@@ -337,6 +339,7 @@ function doLogin(){
   const fm = FOREMAN_DB[code];
   if(!fm){ document.getElementById("loginErr").textContent="รหัสพนักงานไม่ถูกต้อง กรุณาลองใหม่"; return; }
   currentFM = { code, ...fm };
+  currentGroup = fm.group; // ซิงค์กลุ่มหลักเมื่อล็อกอิน
   document.getElementById("loginErr").textContent="";
   document.getElementById("loginScreen").style.display="none";
   document.getElementById("mainScreen").style.display="block";
@@ -468,7 +471,6 @@ function getMyDoneCount(){
 
   const uniqueDoneStages = new Set();
   myDoneSubs.forEach(s => {
-    // 🛠️ คลีนรหัสด่านก่อนนับประวัติอนุมัติ เพื่อแก้ปัญหาการนับซ้ำซ้อน
     const cleanStage = String(s.stage || "").toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
     uniqueDoneStages.add(s.type + "|" + cleanStage);
   });
@@ -490,7 +492,6 @@ function getMyDone(){
 function updateApproveCount(){
   if(!currentFM) return;
   const doneCount = getMyDoneCount(); 
-  // 🔎 ดึงโควตาจำนวนด่านจริงจากเป้าคงที่ STATION_SPECS ประจำกลุ่ม (FRC ล็อก 27 รายการ)
   const totalSpecs = STATION_SPECS[currentGroup] || getAllStagesForGroup(currentFM.group).length;
   const el = document.getElementById("fmStations");
   el.textContent = `SHIFT ${currentFM.shift} · Group ${currentFM.group}${proxyMode?" (แทน)":""} · อนุมัติแล้ว ${doneCount}/${totalSpecs}`;
@@ -713,7 +714,7 @@ function confirmProxy(){
   }
 
   proxyMode = true;
-  currentGroup = group; // ซิงค์กลุ่มปัจจุบันตามโหมดทำแทน
+  currentGroup = group; 
   currentFM.group = group; 
   currentFM.shift = shift;
 
@@ -732,7 +733,7 @@ function confirmProxy(){
 function exitProxy(){
   if(!proxyMode) return;
   proxyMode = false;
-  currentGroup = originalGroup; // คืนค่ากลุ่มหลัก
+  currentGroup = originalGroup; 
   currentFM.group = originalGroup;
   currentFM.shift = originalShift;
 
@@ -805,7 +806,7 @@ function renderHold(){
     );
 
     const pendingNew = all.find(x=>
-      x.status==="approved" && // แมตช์ตามสถานะล่าสุด
+      x.status==="approved" && 
       x.stage===s.stage && x.group===s.group &&
       x.shift===s.shift &&
       String(x.date||"").split("T")[0]===today &&
@@ -843,7 +844,6 @@ function showToast(msg,type=""){
   setTimeout(()=>t.className="toast",3000);
 }
 
-// 🛠️ ตรวจสอบการซิงค์ข้อมูลตามเงื่อนไขรอบเวลาให้รันระบายสีเสถียร
 setInterval(()=>{
   if(currentFM){
     syncFromSheets().then(()=>{
@@ -856,7 +856,6 @@ setInterval(()=>{
   }
 }, 30000);
 
-// เริ่มต้นกำหนดกลุ่มค่าดีฟอลต์เมื่อเปิดใช้งานแอปครั้งแรก
 if(currentFM) currentGroup = currentFM.group;
 </script>
 </body>
