@@ -208,7 +208,6 @@ const FOREMAN_DB = {
   "94037": { name:"นาย วิบูลย์ อาจหาญ",     shift:"B", group:"FXC" },
 };
 
-// 🛠️ ประกาศดักตัวแปรคุมสเปกกลุ่มทำงานที่ขาดไป เพื่อฟื้นฟูระบบนับสรุปผลงาน
 let currentGroup = "FRC"; 
 
 const STATION_SPECS = {
@@ -317,12 +316,14 @@ let proxyMode = false;
 let originalGroup = null;
 let originalShift = null;
 
+// 🛠️ ปรับปรุงลอจิกคัดแยกด่านหลัก: สั่งห้ามแกะรหัสย่อยของกลุ่ม CONTACT_TIP ออกมาโชว์ทีละบรรทัดเด็ดขาด เพื่อให้ซิงค์ล็อกตรงปฏิทินชีต
 function getAllStagesForGroup(group){
   const types = STATION_DATA[group] || {};
   const result = [];
   Object.entries(types).forEach(([typeKey, typeData]) => {
     Object.entries(typeData.stages).forEach(([stageName, subtypes]) => {
-      if(subtypes.length){
+      // 💡 จุดสำคัญ: ถ้าประเภทงานคือ CONTACT_TIP ให้ดึงเฉพาะชื่อด่านหลักมาใช้งานเลย ไม่ต้องวิ่งลูปแตกลูกหลานรหัส W
+      if(subtypes.length && typeKey !== "CONTACT_TIP"){
         subtypes.forEach(sub => {
           result.push({ type:typeKey, typeLabel:typeData.label, stage: stageName+"-"+sub, baseStage: stageName });
         });
@@ -339,7 +340,7 @@ function doLogin(){
   const fm = FOREMAN_DB[code];
   if(!fm){ document.getElementById("loginErr").textContent="รหัสพนักงานไม่ถูกต้อง กรุณาลองใหม่"; return; }
   currentFM = { code, ...fm };
-  currentGroup = fm.group; // ซิงค์กลุ่มหลักเมื่อล็อกอิน
+  currentGroup = fm.group; 
   document.getElementById("loginErr").textContent="";
   document.getElementById("loginScreen").style.display="none";
   document.getElementById("mainScreen").style.display="block";
