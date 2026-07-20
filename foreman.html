@@ -37,7 +37,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .hold-btn:hover{background:#B45309;}
 .hold-card{background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
 .hold-stage{font-size:15px;font-weight:700;margin-bottom:4px;}
-.hold-meta">Worker: ${s.worker} · SHIFT ${s.shift}</div>
+.hold-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
 .hold-fails{font-size:13px;color:var(--red);font-weight:600;margin-bottom:10px;}
 .hold-status{font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px;display:inline-block;}
 .hold-status-wait{background:#FEF3C7;color:#92400E;}
@@ -316,13 +316,11 @@ let proxyMode = false;
 let originalGroup = null;
 let originalShift = null;
 
-// 🛠️ ปรับปรุงลอจิกคัดแยกด่านหลัก: สั่งห้ามแกะรหัสย่อยของกลุ่ม CONTACT_TIP ออกมาโชว์ทีละบรรทัดเด็ดขาด เพื่อให้ซิงค์ล็อกตรงปฏิทินชีต
 function getAllStagesForGroup(group){
   const types = STATION_DATA[group] || {};
   const result = [];
   Object.entries(types).forEach(([typeKey, typeData]) => {
     Object.entries(typeData.stages).forEach(([stageName, subtypes]) => {
-      // 💡 จุดสำคัญ: ถ้าประเภทงานคือ CONTACT_TIP ให้ดึงเฉพาะชื่อด่านหลักมาใช้งานเลย ไม่ต้องวิ่งลูปแตกลูกหลานรหัส W
       if(subtypes.length && typeKey !== "CONTACT_TIP"){
         subtypes.forEach(sub => {
           result.push({ type:typeKey, typeLabel:typeData.label, stage: stageName+"-"+sub, baseStage: stageName });
@@ -638,6 +636,7 @@ function approve(id){
   });
 }
 
+// 🛠️ ปรับปรุงระบบระบายสีป้ายไฟหน้าวอร์ด: บังคับให้อ่านค่าสถานะจากใบงานแผ่นล่าสุดใบเดียวของด่านนั้น ๆ ป้องกันปัญหาป้ายสีแดงค้างคา
 function renderStations(){
   if(!currentFM) return;
   const grid = document.getElementById("stationGrid");
@@ -664,15 +663,25 @@ function renderStations(){
     grid.appendChild(header);
 
     typeInfo.stages.forEach(st=>{
+      // ดึงข้อมูลทั้งหมดของด่านประจำกะวันนี้
       const todaySubs = all.filter(s=>
         s.stage===st && s.type===typeKey &&
         s.group===currentFM.group &&
         s.shift===currentFM.shift &&
         String(s.date||"").split("T")[0]===today
       );
-      const approved = todaySubs.filter(s=>s.status==="approved");
-      const hasFail = approved.some(s=>(s.checks||[]).some(c=>c.result==="fail"));
-      const isDone = approved.length>0;
+      
+      // 🛠️ ไฮไลท์การแก้ไข: จัดเรียงข้อมูลเพื่อหาใบงานล่าสุดที่ส่งเข้ามาตัวเดียว
+      todaySubs.sort((a, b) => new Date(b.timestamp_worker) - new Date(a.timestamp_worker));
+      const latestSub = todaySubs[0]; // ดึงใบงานใบเดียวที่อัปเดตที่สุดล่าสุดของด่านนี้
+      
+      let isDone = false;
+      let hasFail = false;
+      
+      if (latestSub) {
+        isDone = (latestSub.status === "approved");
+        hasFail = (latestSub.checks || []).some(c => c.result === "fail");
+      }
       
       const row = document.createElement("div");
       row.className="station-row";
