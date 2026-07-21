@@ -427,7 +427,7 @@ function updateHeader(){
     document.getElementById("headerSub").textContent="กรุณาเลือก Stage";
     backBtn.style.display="block";
     bc.innerHTML=`<span>${nav.group}</span> › <span>${typeLabel}</span>`;
-  } else if(getSubtypes().length && !nav.subtype){
+  } else if(getSubtypes().length && !nav.subtype && !isContactTip()){
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     document.getElementById("headerLabel").textContent=typeLabel+" · "+nav.stage;
     document.getElementById("headerName").textContent="เลือกรายละเอียด";
@@ -450,7 +450,7 @@ function getSubtypes(){
   return STATION_DATA[nav.group][nav.type]?.stages[nav.stage] || [];
 }
 
-// 🛠️ แก้ไขปุ่มย้อนกลับ: ถ้ามีรายละเอียด (Subtypes) ให้ถอยกลับไปหน้าเลือกรายละเอียด ยกเว้น CONTACT_TIP ถอยกลับหน้า Stage
+// 🛠️ แก้ไขปุ่มย้อนกลับ: ถ้าเป็น Contact Tip ให้พาวิ่งกลับไปหน้าเลือก Stage หลักเสมอ
 function goBack(){
   const activePage = document.querySelector(".page.active");
   if(activePage && activePage.id === "page-form") {
@@ -472,7 +472,7 @@ function goBack(){
       renderStages(); 
       showPage("stage");
     }
-  } else if(nav.subtype !== null && getSubtypes().length){ 
+  } else if(nav.subtype !== null && getSubtypes().length && !isContactTip()){ 
     nav.subtype=null; updateHeader(); renderSubtypes(); showPage("subtype"); 
   } else if(nav.stage){ 
     nav.stage=null; nav.subtype=null; updateHeader(); renderStages(); showPage("stage"); 
@@ -519,6 +519,7 @@ function renderTypes(){
   });
 }
 
+// 🛠️ ปรับปรุงจุดสำคัญ: เมื่อเลือก Stage ของ CONTACT_TIP ให้วิ่งตรงเข้าหน้าฟอร์มหัวข้อตรวจสอบทันที ไม่ต้องมีหน้าเลือกรายละเอียดย่อย W1-W6
 function renderStages(){
   const grid = document.getElementById("stageGrid");
   grid.innerHTML="";
@@ -526,11 +527,19 @@ function renderStages(){
   Object.entries(stages).forEach(([stageName, subtypes]) => {
     const el=document.createElement("div");
     el.className="nav-card";
-    const subInfo = subtypes.length ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
+    const subInfo = (subtypes.length && !isContactTip()) ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
     el.innerHTML=`<div class="nav-icon">📍</div><div class="nav-info"><div class="nav-title">${stageName}</div><div class="nav-sub">${subInfo}</div></div><div class="nav-arrow">›</div>`;
     el.onclick=()=>{
       nav.stage=stageName; nav.subtype=null;
       updateHeader();
+      
+      // 💡 ถ้าเป็น CONTACT_TIP ให้ข้ามไปหน้าฟอร์มกรอกตัวเลข W1-W6 แต่ละหัวข้อทันที
+      if(isContactTip()){ 
+        initForm(); 
+        showPage("form"); 
+        return; 
+      }
+      
       const subs = getSubtypes();
       if(subs.length){ renderSubtypes(); showPage("subtype"); }
       else { initForm(); showPage("form"); }
@@ -582,7 +591,7 @@ function renderChecks(){
     }
     const header = document.createElement("div");
     header.style.cssText="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
-    header.textContent="กดเลือกสถานะ of แต่ละ Contact Tip";
+    header.textContent="กดเลือกสถานะของแต่ละ Contact Tip";
     list.appendChild(header);
 
     items.forEach(w=>{
@@ -612,7 +621,6 @@ function renderChecks(){
     div.className="check-item"+(s.result==="pass"?" pass":s.result==="fail"?" fail":"");
     div.setAttribute("data-id", c.id);
 
-    // 🛠️ ปรับปรุงระบบช่องพิมพ์ตัวเลข: ลบฟังก์ชันทำลาย HTML เดิมออก เพื่อไม่ให้เคอร์เซอร์กระโดดไปด้านหน้า
     const numericRow = c.numeric ? `
       <div class="comment-row" style="display:flex;align-items:center;gap:8px;margin-top:8px;margin-bottom:0;">
         <input type="number" inputmode="decimal" placeholder="ค่าที่วัดได้ (${c.min}-${c.max})"
@@ -666,7 +674,6 @@ function setCTVal(w, val){
 function setR(id,v){ checkState[id].result=checkState[id].result===v?null:v;if(checkState[id].result!=="fail")checkState[id].comment="";renderChecks();}
 function setC(id,v){checkState[id].comment=v;}
 
-// 🛠️ ฟังก์ชันประเมินค่าตัวเลขแบบเรียลไทม์โดยไม่อัปเดตทำลาย DOM อินพุต (เคอร์เซอร์จึงไม่หลุด)
 function setV(id,v){
   checkState[id].value = v;
   const c = currentChecks.find(x=>x.id===id);
@@ -708,7 +715,6 @@ function updateNumericStatusUI(id){
     }
   }
 
-  // ซ่อน/แสดง กล่องข้อความหมายเหตุตามสถานะจริงโดยตรง
   const cBox = document.getElementById(`commentBox_${id}`);
   if(cBox){
     cBox.style.display = (s.result === "fail") ? "block" : "none";
