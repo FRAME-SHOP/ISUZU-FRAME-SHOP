@@ -537,7 +537,7 @@ function renderDashboard(){
     
     if(st.fail>0){cls="tc-fail";badge="⚠ พบปัญหา";}
     else if(done===st.total&&st.total>0){cls="tc-pass";badge="ผ่านครบ";}
-    else if(done>0 || st.total - st.wait > 0){cls="tc-warn";badge="กำลังทำ";}
+    else if(done>0 || st.total - st.wait > 0){cls="tc-warn";badge="กำลังตรวจ";}
     else{badge="รอตรวจ";}
 
     const card=document.createElement("div");
