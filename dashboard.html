@@ -14,9 +14,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:16px;}
 
-/* ==========================================================================
-   📱 MOBILE STYLES (ขนาดหน้าจอมือถือ - เน้นกระชับ จบในหน้าเดียว)
-   ========================================================================== */
+/* 📱 MOBILE STYLES */
 .header{background:var(--red);color:#fff;padding:10px 12px 12px;}
 .header-row{display:flex;justify-content:space-between;align-items:center;}
 .brand {font-size:16px;font-weight:900;letter-spacing:.04em;}
@@ -78,13 +76,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:800;
   display:flex;align-items:center;justify-content:center;}
 
-/* ALERT */
 .alert-box{margin:6px 10px 0;background:var(--fail-bg);border:1px solid var(--fail-border);
   border-radius:8px;padding:6px 10px;}
 .alert-title{font-size:11px;font-weight:700;color:var(--red);}
 .alert-body{font-size:10px;color:var(--text);}
 
-/* MODAL DRAWER */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;
   align-items:flex-end;justify-content:center;}
 .overlay.show{display:flex;}
@@ -98,7 +94,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .drawer-close{float:right;background:none;border:none;font-size:24px;cursor:pointer;
   color:var(--muted);line-height:1;font-weight:bold;}
 
-/* GROUP ROW inside modal */
 .group-row{margin:8px 14px 0;}
 .group-label{font-size:11px;font-weight:800;text-transform:uppercase;
   color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
@@ -106,7 +101,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .group-prog-fill{height:100%;background:var(--pass);border-radius:99px;}
 .group-pct{font-size:10px;font-weight:700;color:var(--muted);}
 
-/* STAGE ITEMS */
 .stage-list{display:flex;flex-direction:column;gap:5px;margin-top:4px;}
 .si{border-radius:10px;padding:8px 10px;border:1px solid var(--border);background:#FAFAFA;}
 .si.si-pass{background:var(--pass-bg);border-color:var(--pass-border);cursor:pointer;}
@@ -124,13 +118,9 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .ck-val{font-weight:700;}
 .si-meta{font-size:10px;color:var(--muted);margin-top:4px;}
 
-
-/* ==========================================================================
-   💻 DESKTOP STYLES (สลับกลับไปใช้เลเอาต์เดิมเมื่อเปิดบนคอมพิวเตอร์ / หน้าจอใหญ่)
-   ========================================================================== */
+/* 💻 DESKTOP STYLES */
 @media (min-width: 768px) {
   body { padding-bottom: 40px; }
-  
   .header { padding: 16px 20px 18px; }
   .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
   .brand { font-size: 20px; }
@@ -153,26 +143,15 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
   .refresh-info { padding: 8px 14px 0; font-size: 12px; }
 
-  /* สลับกลับเป็นแถวการ์ดแนวนอนสโครลได้ หรือการ์ดใบใหญ่แบบดั้งเดิม */
   .type-grid {
-    display: flex;
-    gap: 10px;
-    padding: 12px 14px 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    margin-top: 10px;
+    display: flex; gap: 10px; padding: 12px 14px 0; overflow-x: auto;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-top: 10px;
   }
   .type-grid::-webkit-scrollbar { display: none; }
 
   .tc {
-    flex: 0 0 160px;
-    min-width: 160px;
-    padding: 18px 16px;
-    border-radius: 16px;
-    border-width: 2px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08);
-    display: block;
+    flex: 0 0 160px; min-width: 160px; padding: 18px 16px;
+    border-radius: 16px; border-width: 2px; box-shadow: 0 1px 4px rgba(0,0,0,.08); display: block;
   }
   .tc-top { display: block; margin-bottom: 0; }
   .tc-icon { font-size: 24px; margin-bottom: 6px; }
@@ -194,7 +173,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="header-row">
     <div>
       <span class="brand">ISUZU FRG</span>
-      <span class="brand-sub">Office Dashboard · Real-time</span>
+      <span class="brand-sub">Dashboard</span>
     </div>
     <div class="live-wrap">
       <div class="live-pill"><span class="live-dot"></span>LIVE</div>
@@ -208,17 +187,17 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="sc sc-total"><div class="sc-num" id="sTotal">0</div><div class="sc-label">ทั้งหมด</div></div>
   <div class="sc sc-pass"><div class="sc-num" id="sPass">0</div><div class="sc-label">ผ่านแล้ว</div></div>
   <div class="sc sc-fail"><div class="sc-num" id="sFail">0</div><div class="sc-label">พบปัญหา</div></div>
-  <div class="sc sc-wait"><div class="sc-num" id="sWait">0</div><div class="sc-label">รอตรวจ/รออนุมัติ</div></div>
+  <div class="sc sc-wait"><div class="sc-num" id="sWait">0</div><div class="sc-label">รอตรวจ/อนุมัติ</div></div>
 </div>
 
 <div class="filter-bar">
   <button class="fbtn active" onclick="setShift('ALL',this)">ทั้งหมด</button>
-  <button class="fbtn" onclick="setShift('A',this)">SHIFT A</button>
-  <button class="fbtn" onclick="setShift('B',this)">SHIFT B</button>
+  <button class="fbtn" onclick="setShift('A',this)">กะ A</button>
+  <button class="fbtn" onclick="setShift('B',this)">กะ B</button>
   <input type="date" class="date-input" id="filterDate" onchange="renderDashboard()">
   <div class="action-btns">
     <button class="export-btn" onclick="exportCSV()">📥 Export</button>
-    <button class="refresh-btn" onclick="refresh()">🔄 รีเฟรช</button>
+    <button class="refresh-btn" onclick="refresh()">🔄</button>
   </div>
 </div>
 
@@ -313,6 +292,7 @@ const TYPE_META={
   CONTACT_TIP:{label:"CONTACT TIP",icon:"🔌"},
 };
 
+// 🛠️ ล็อคฟังก์ชันแตก Stage ย่อย ให้ได้ยอดรวม 196 Stage เป๊ะ
 function getAllStages(group,typeKey){
   const t=STATION_DATA[group]&&STATION_DATA[group][typeKey];
   if(!t) return [];
@@ -438,6 +418,7 @@ function cleanDateStr(str) {
   return `${year}-${month}-${day}`;
 }
 
+// 🛠️ ล็อคลอจิกคำนวณเป้าหมายเพื่อไม่ให้มีการนับ Stage เบิ้ลซ้ำ ยอดรวมจะได้ 196 เป๊ะ
 function renderDashboard(){
   const filterDateInput = document.getElementById("filterDate").value; 
   const targetDateCleaned = cleanDateStr(filterDateInput);
@@ -474,7 +455,7 @@ function renderDashboard(){
           let cleanItemStage = String(s.stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
           let cleanTargetStage = String(stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
           
-          return (cleanItemStage===cleanTargetStage || cleanItemStage.split("-")[0]===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
+          return (cleanItemStage===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
         });
         
         const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
@@ -578,7 +559,7 @@ function openModal(typeKey,meta,subs){
         let cleanItemStage = String(s.stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
         let cleanTargetStage = String(stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
         
-        return (cleanItemStage===cleanTargetStage || cleanItemStage.split("-")[0]===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
+        return (cleanItemStage===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
       });
       
       const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
