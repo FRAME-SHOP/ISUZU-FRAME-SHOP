@@ -27,26 +27,16 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
 .nav-card:active{transform:scale(.98);}
 
-/* 🛠️ สไตล์สำหรับปุ่ม Stage ที่ตรวจเสร็จแล้ว (เปลี่ยนเป็นสีเขียว) */
+/* 🛠️ สีเขียวสำหรับ Stage หลักเมื่อตรวจครบทุก Subtype แล้ว */
 .nav-card.completed-stage {
   background: var(--pass-bg) !important;
   border-color: var(--pass-border) !important;
 }
-.nav-card.completed-stage .nav-title {
-  color: #065F46;
-}
-.nav-card.completed-stage .nav-sub {
-  color: #047857;
-  font-weight: 600;
-}
+.nav-card.completed-stage .nav-title { color: #065F46; }
+.nav-card.completed-stage .nav-sub { color: #047857; font-weight: 600; }
 .completed-badge {
-  font-size: 11px;
-  background: var(--pass);
-  color: #fff;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 700;
-  margin-left: auto;
+  font-size: 11px; background: var(--pass); color: #fff;
+  padding: 3px 8px; border-radius: 6px; font-weight: 700; margin-left: auto;
 }
 
 .nav-icon{font-size:26px;flex-shrink:0;}
@@ -54,62 +44,49 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-title{font-size:15px;font-weight:700;}
 .nav-sub{font-size:12px;color:var(--muted);margin-top:2px;}
 .nav-arrow{font-size:20px;color:var(--red);font-weight:700;flex-shrink:0;}
-.subtype-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 14px;}
-.subtype-chip{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;cursor:pointer;flex:1;text-align:center;min-width:100px;transition:all .15s;}
+
+/* 🛠️ ดีไซน์ปุ่ม Subtype (No.1, No.2...) แยกอิสระ */
+.subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px;}
+.subtype-chip{
+  background:var(--card);border:1.5px solid var(--border);border-radius:12px;
+  padding:16px 14px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;
+  box-shadow:var(--shadow);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
 .subtype-chip:active{transform:scale(.97);}
-.subtype-chip.active{background:var(--red);border-color:var(--red);color:#fff;}
+/* Subtype ที่ตรวจแล้วเปลี่ยนเป็นสีเขียว */
+.subtype-chip.completed-sub {
+  background: var(--pass-bg) !important;
+  border-color: var(--pass-border) !important;
+  color: #065F46;
+}
 
 .meta-card{
-  background:var(--card);
-  margin:0 14px;
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  padding:12px 14px;
-  display:grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap:10px;
-  border:1px solid var(--border);
-  box-sizing: border-box !important;
+  background:var(--card); margin:0 14px; border-radius:12px; box-shadow:var(--shadow);
+  padding:12px 14px; display:grid !important; grid-template-columns: 1fr 1fr !important;
+  gap:10px; border:1px solid var(--border); box-sizing: border-box !important;
 }
-.meta-card .meta-item{
-  min-width: 0;
-  box-sizing: border-box !important;
-}
+.meta-card .meta-item{ min-width: 0; box-sizing: border-box !important; }
 
 @media (max-width: 600px) {
-  .meta-card {
-    grid-template-columns: 1fr !important; 
-    gap: 12px !important;                 
-    padding: 14px !important;
-  }
+  .meta-card { grid-template-columns: 1fr !important; gap: 12px !important; padding: 14px !important; }
 }
 
 .meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
-
 .meta-item input, .meta-item select {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  display: block !important;
-  -webkit-appearance: none;
-  appearance: none;
-  box-sizing: border-box !important; 
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 7px 10px;
-  font-family: 'Sarabun', sans-serif;
-  font-size: 14px;
-  background: #F9FAFB;
-  outline: none;
-  transition: border-color .15s;
+  width: 100% !important; max-width: 100% !important; min-width: 0 !important; display: block !important;
+  -webkit-appearance: none; appearance: none; box-sizing: border-box !important; 
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 10px;
+  font-family: 'Sarabun', sans-serif; font-size: 14px; background: #F9FAFB; outline: none;
 }
 .meta-item input:focus,.meta-item select:focus{border-color:var(--red);background:#fff;}
+
 .progress-wrap{margin:14px 14px 0;}
 .progress-bg{background:#E5E7EB;border-radius:99px;height:5px;overflow:hidden;}
 .progress-fill{background:var(--red);height:100%;border-radius:99px;transition:width .3s;width:0%;}
 .progress-label{font-size:11px;color:var(--muted);text-align:right;margin-top:3px;}
+
 .check-list{display:flex;flex-direction:column;gap:8px;}
-.check-item{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:12px 14px;box-shadow:var(--shadow);transition:border-color .2s,background .2s;}
+.check-item{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:12px 14px;box-shadow:var(--shadow);}
 .check-item.pass{border-color:var(--pass-border);background:var(--pass-bg);}
 .check-item.fail{border-color:var(--fail-border);background:var(--fail-bg);}
 .check-top{display:flex;align-items:flex-start;gap:10px;}
@@ -118,19 +95,20 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .check-name{font-size:14px;font-weight:600;line-height:1.35;}
 .check-std{font-size:12px;color:var(--muted);margin-top:2px;}
 .toggle-group{display:flex;gap:6px;flex-shrink:0;margin-top:2px;}
-.tbtn{width:40px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.tbtn{width:40px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 .tbtn.ap{background:var(--pass);border-color:var(--pass);color:#fff;}
 .tbtn.af{background:var(--red);border-color:var(--red);color:#fff;}
 .comment-row{margin-top:8px;}
-.comment-row textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Sarabun',sans-serif;font-size:13px;resize:none;outline:none;background:#fff;min-height:56px;transition:border-color .15s;}
-.comment-row textarea:focus{border-color:var(--red);}
+.comment-row textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Sarabun',sans-serif;font-size:13px;resize:none;outline:none;background:#fff;min-height:56px;}
+
 .field-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:13px 14px;box-shadow:var(--shadow);}
 .field-card label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
-.field-card input,.field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;background:#F9FAFB;transition:border-color .15s;}
-.field-card input:focus,.field-card textarea:focus{border-color:var(--red);background:#fff;}
+.field-card input,.field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;background:#F9FAFB;}
 .field-card textarea{resize:none;min-height:64px;}
-.submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s;}
+
+.submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
+
 .success-screen{display:none;padding:40px 20px;text-align:center;}
 .success-screen.show{display:block;}
 .success-icon{font-size:64px;margin-bottom:12px;}
@@ -139,15 +117,16 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .success-info{background:#F9FAFB;border-radius:12px;padding:14px;text-align:left;font-size:14px;line-height:2;border:1.5px solid var(--border);margin-bottom:20px;}
 .reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px;}
 .home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
+
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
-.ct-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:12px 14px;box-shadow:var(--shadow);transition:border-color .2s,background .2s;}
+
+.ct-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:12px 14px;box-shadow:var(--shadow);}
 .ct-row.ct-done{border-color:var(--pass-border);background:var(--pass-bg);}
 .ct-row.ct-zero{border-color:var(--fail-border);background:var(--fail-bg);}
 .ct-label{flex:1;font-size:15px;font-weight:700;}
-.ct-input{width:70px;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;text-align:center;outline:none;transition:border-color .15s;}
-.ct-input:focus{border-color:var(--pass);}
+.ct-input{width:70px;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;text-align:center;outline:none;}
 .ct-unit{font-size:12px;color:var(--muted);white-space:nowrap;}
 .page{display:none;}.page.active{display:block;}
 </style>
@@ -189,10 +168,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- PAGE 4: เลือกรายละเอียด -->
+<!-- PAGE 4: เลือกรายละเอียด (Subtype) -->
 <div class="page" id="page-subtype">
   <div class="section">
-    <div class="section-title">เลือกรายละเอียด</div>
+    <div class="section-title">เลือกรายละเอียดย่อย</div>
     <div class="subtype-row" id="subtypeRow"></div>
   </div>
 </div>
@@ -203,7 +182,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate" onchange="checkAndAutoResetCache(); renderStages();"></div>
     <div class="meta-item">
       <label>กะทำงาน</label>
-      <!-- 🛠️ ให้พนักงานกดเลือก Shift A / Shift B ด้วยตนเอง -->
       <select id="inputShift" onchange="checkAndAutoResetCache(); renderStages();">
         <option value="">-- เลือกกะทำงาน --</option>
         <option value="A">SHIFT A</option>
@@ -345,7 +323,7 @@ const STATION_DATA = {
       "MC2-07": ["No.1", "No.2"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{
-      "MC2-02": ["W1","W2","W3","W4"], "MC2-04": ["W1","W2","W3","W4"], "MC2-05": ["W1","W2","W3","W4"], "MC2-07": ["W1","W2"], "SC2-01": ["W1","W2","W3"], "SC2-02": ["W1","W2","W3"],
+      "MC2-02": ["W1","W2","W3","W4"], "MC2-04": ["W1","W2","W3","W4"], "MC2-05": ["W1","W2","W3","W4"], "MC2-07": ["W1","W2"], "SC2-01": ["W1","W2","W3"], "SC2-02": ["W1","W2","W3"]
     }},
   },
   FXC: {
@@ -359,20 +337,8 @@ const STATION_DATA = {
   },
 };
 
-const TYPE_ICONS = {
-  HOIST: "⚙️", CO2: "🔥", JIG: "🔧", AIR: "💨",
-  FANUC: "🤖", YASKAWA: "🤖", CONTACT_TIP: "🔌",
-};
-
-const TYPE_META = {
-  HOIST: {label:"ELECTRIC HOIST"},
-  CO2: {label:"เครื่องเชื่อม CO2"},
-  JIG: {label:"JIG"},
-  AIR: {label:"AIR SERVICE UNIT"},
-  FANUC: {label:"หุ่นยนต์ FANUC"},
-  YASKAWA: {label:"หุ่นยนต์ YASKAWA"},
-  CONTACT_TIP: {label:"CONTACT TIP"},
-};
+const TYPE_ICONS = { HOIST:"⚙️", CO2:"🔥", JIG:"🔧", AIR:"💨", FANUC:"🤖", YASKAWA:"🤖", CONTACT_TIP:"🔌" };
+const TYPE_META = { HOIST:{label:"ELECTRIC HOIST"}, CO2:{label:"เครื่องเชื่อม CO2"}, JIG:{label:"JIG"}, AIR:{label:"AIR SERVICE UNIT"}, FANUC:{label:"หุ่นยนต์ FANUC"}, YASKAWA:{label:"หุ่นยนต์ YASKAWA"}, CONTACT_TIP:{label:"CONTACT TIP"} };
 
 const DEFAULT_CHECKS = [
   {id:1,name:"พื้นที่รอบๆ บริเวณ",  method:"สายตา", standard:"ไม่มีสิ่งของที่ไม่จำเป็นวางอยู่"},
@@ -442,7 +408,6 @@ let currentChecks = [];
 const today = new Date();
 document.getElementById("inputDate").value = today.toISOString().split("T")[0];
 
-// 🛠️ ตรวจสอบรอบเวลารีเซ็ทอัตโนมัติ (6:00 และ 18:00) ตามช่วงเปลี่ยนกะ
 function checkAndAutoResetCache() {
   const now = new Date();
   const currentDateStr = now.toISOString().split("T")[0];
@@ -454,7 +419,6 @@ function checkAndAutoResetCache() {
   const lastResetTime = parseInt(localStorage.getItem("isuzu_last_reset_time") || "-1");
   const lastResetDate = localStorage.getItem("isuzu_last_reset_date") || "";
   
-  // กำหนดช่วงเวลาเช็ค (รอบเช้า 6:00, รอบดึก 18:00)
   let targetResetSlot = (currentHour >= 6 && currentHour < 18) ? 6 : 18;
   
   if (currentDateStr !== lastResetDate || (currentHour >= targetResetSlot && lastResetTime < targetResetSlot)) {
@@ -501,8 +465,8 @@ function updateHeader(){
   } else if(getSubtypes().length && !nav.subtype && !isContactTip()){
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     document.getElementById("headerLabel").textContent=typeLabel+" · "+nav.stage;
-    document.getElementById("headerName").textContent="เลือกรายละเอียด";
-    document.getElementById("headerSub").textContent="กรุณาเลือกตำแหน่ง/รายละเอียด";
+    document.getElementById("headerName").textContent="เลือกรายละเอียดย่อย";
+    document.getElementById("headerSub").textContent="กรุณาเลือกตำแหน่งย่อย";
     backBtn.style.display="block";
     bc.innerHTML=`<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${nav.stage}</span>`;
   } else {
@@ -525,22 +489,11 @@ function goBack(){
   const activePage = document.querySelector(".page.active");
   if(activePage && activePage.id === "page-form") {
     if(isContactTip()) {
-      nav.stage = null; 
-      nav.subtype = null; 
-      updateHeader(); 
-      renderStages(); 
-      showPage("stage");
+      nav.stage = null; nav.subtype = null; updateHeader(); renderStages(); showPage("stage");
     } else if(getSubtypes().length) {
-      nav.subtype = null; 
-      updateHeader(); 
-      renderSubtypes(); 
-      showPage("subtype");
+      nav.subtype = null; updateHeader(); renderSubtypes(); showPage("subtype");
     } else {
-      nav.stage = null; 
-      nav.subtype = null; 
-      updateHeader(); 
-      renderStages(); 
-      showPage("stage");
+      nav.stage = null; nav.subtype = null; updateHeader(); renderStages(); showPage("stage");
     }
   } else if(nav.subtype !== null && getSubtypes().length && !isContactTip()){ 
     nav.subtype=null; updateHeader(); renderSubtypes(); showPage("subtype"); 
@@ -589,21 +542,22 @@ function renderTypes(){
   });
 }
 
-function getCompletedStagesMap() {
+// 🛠️ ตรวจสอบสถานะว่า Subtypes (No.1, No.2...) ครบทุกอันหรือยัง
+function getCompletedSubtypesMap() {
   const date = document.getElementById("inputDate").value;
   const shift = document.getElementById("inputShift").value || "A";
-  const key = `isuzu_completed_stages_${date}_${shift}`;
-  try {
-    return JSON.parse(localStorage.getItem(key) || "{}");
-  } catch(e) { return {}; }
+  const key = `isuzu_completed_subtypes_${date}_${shift}`;
+  try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch(e) { return {}; }
 }
 
-function markStageCompleted(stageName) {
+function markSubtypeCompleted(stageName, subtypeName) {
   const date = document.getElementById("inputDate").value;
   const shift = document.getElementById("inputShift").value || "A";
-  const key = `isuzu_completed_stages_${date}_${shift}`;
-  const map = getCompletedStagesMap();
-  map[stageName] = true;
+  const key = `isuzu_completed_subtypes_${date}_${shift}`;
+  const map = getCompletedSubtypesMap();
+  
+  if(!map[stageName]) map[stageName] = {};
+  map[stageName][subtypeName] = true;
   localStorage.setItem(key, JSON.stringify(map));
 }
 
@@ -611,22 +565,31 @@ function renderStages(){
   const grid = document.getElementById("stageGrid");
   grid.innerHTML="";
   const stages = STATION_DATA[nav.group][nav.type].stages;
-  const completedMap = getCompletedStagesMap();
+  const completedSubMap = getCompletedSubtypesMap();
 
   Object.entries(stages).forEach(([stageName, subtypes]) => {
     const el=document.createElement("div");
-    const subInfo = (subtypes.length && !isContactTip()) ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
     
-    const isDone = completedMap[stageName] === true;
-    el.className = "nav-card" + (isDone ? " completed-stage" : "");
+    // เช็คว่า Stage นี้มี Subtype ครบทุกอันแล้วหรือยัง (ถ้าครบหมด ถึงจะให้ Stage หลักขึ้นเขียว)
+    let isStageFullyCompleted = false;
+    if (subtypes && subtypes.length > 0 && !isContactTip()) {
+      const doneSubs = completedSubMap[stageName] || {};
+      isStageFullyCompleted = subtypes.every(sub => doneSubs[sub] === true);
+    } else {
+      const doneSubs = completedSubMap[stageName] || {};
+      isStageFullyCompleted = doneSubs["_DEFAULT_"] === true;
+    }
+
+    el.className = "nav-card" + (isStageFullyCompleted ? " completed-stage" : "");
+    const subInfo = (subtypes.length && !isContactTip()) ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
 
     el.innerHTML=`
-      <div class="nav-icon">${isDone ? "✅" : "📍"}</div>
+      <div class="nav-icon">${isStageFullyCompleted ? "✅" : "📍"}</div>
       <div class="nav-info">
         <div class="nav-title">${stageName}</div>
-        <div class="nav-sub">${isDone ? "ตรวจแล้วในกะนี้" : subInfo}</div>
+        <div class="nav-sub">${isStageFullyCompleted ? "ตรวจครบทุกส่วนแล้ว" : subInfo}</div>
       </div>
-      ${isDone ? '<div class="completed-badge">ตรวจแล้ว</div>' : '<div class="nav-arrow">›</div>'}
+      ${isStageFullyCompleted ? '<div class="completed-badge">ตรวจครบ</div>' : '<div class="nav-arrow">›</div>'}
     `;
 
     el.onclick=()=>{
@@ -634,9 +597,7 @@ function renderStages(){
       updateHeader();
       
       if(isContactTip()){ 
-        initForm(); 
-        showPage("form"); 
-        return; 
+        initForm(); showPage("form"); return; 
       }
       
       const subs = getSubtypes();
@@ -650,25 +611,25 @@ function renderStages(){
 function renderSubtypes(){
   const row = document.getElementById("subtypeRow");
   row.innerHTML="";
+  const completedSubMap = getCompletedSubtypesMap();
+  const doneSubs = completedSubMap[nav.stage] || {};
+
   getSubtypes().forEach(sub=>{
+    const isDone = doneSubs[sub] === true;
     const chip=document.createElement("div");
-    chip.className="subtype-chip";
-    chip.textContent=sub;
+    chip.className = "subtype-chip" + (isDone ? " completed-sub" : "");
+    chip.innerHTML = `<span>${isDone ? "✅" : "🔹"}</span><span>${sub}</span>`;
     chip.onclick=()=>{ nav.subtype=sub; updateHeader(); initForm(); showPage("form"); };
     row.appendChild(chip);
   });
 }
 
 function isContactTip(){ return nav.type === "CONTACT_TIP"; }
-
-function getContactTipItems(){
-  return STATION_DATA[nav.group]["CONTACT_TIP"].stages[nav.stage] || [];
-}
+function getContactTipItems(){ return STATION_DATA[nav.group]["CONTACT_TIP"].stages[nav.stage] || []; }
 
 function initForm(){
   if(isContactTip()){
-    currentChecks = [];
-    checkState = {};
+    currentChecks = []; checkState = {};
     getContactTipItems().forEach(w=>{ checkState[w] = null; });
   } else {
     currentChecks = CHECKS_BY_TYPE[nav.type] || DEFAULT_CHECKS;
@@ -776,21 +737,14 @@ function setC(id,v){checkState[id].comment=v;}
 function setV(id,v){
   checkState[id].value = v;
   const c = currentChecks.find(x=>x.id===id);
-
   if(c && c.numeric){
-    if(v===""){
-      checkState[id].result = null;
-    } else {
+    if(v===""){ checkState[id].result = null; } 
+    else {
       const num = parseFloat(v);
-      if(!isNaN(num)){
-        checkState[id].result = (num>=c.min && num<=c.max) ? "pass" : "fail";
-      } else {
-        checkState[id].result = null;
-      }
+      checkState[id].result = (!isNaN(num) && num>=c.min && num<=c.max) ? "pass" : "fail";
     }
     if(checkState[id].result!=="fail") checkState[id].comment="";
   }
-
   updateNumericStatusUI(id);
   updateProgress();
 }
@@ -813,11 +767,8 @@ function updateNumericStatusUI(id){
       statusBox.innerHTML = '<span style="font-size:11px;color:var(--muted);">รอกรอกค่า</span>';
     }
   }
-
   const cBox = document.getElementById(`commentBox_${id}`);
-  if(cBox){
-    cBox.style.display = (s.result === "fail") ? "block" : "none";
-  }
+  if(cBox) cBox.style.display = (s.result === "fail") ? "block" : "none";
 }
 
 function updateProgress(){
@@ -881,32 +832,24 @@ function submitWorker(){
   all.push(entry);
   localStorage.setItem("isuzu_submissions",JSON.stringify(all));
 
-  // 🛠️ บันทึกสถานะว่า Stage นี้ตรวจเสร็จแล้ว (เปลี่ยนปุ่มเป็นสีเขียว)
-  markStageCompleted(nav.stage);
+  // 🛠️ บันทึกสถานะ Subtype ว่าตรวจเสร็จแล้ว (เปลี่ยนปุ่ม No.1 เป็นสีเขียว)
+  const subKey = nav.subtype ? nav.subtype : "_DEFAULT_";
+  markSubtypeCompleted(nav.stage, subKey);
 
   fetch(SHEETS_URL, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(entry)
-  }).then(() => {
-    console.log("Data sent to Sheets successfully");
-  }).catch(e => {
-    console.error("Sheets Error:", e);
-  });
+  }).catch(e => console.error(e));
 
   const failC=entry.checks.filter(c=>c.result==="fail").length;
   const totalC=entry.checks.length;
-  const isCT = isContactTip();
-  const changedC = isCT ? entry.checks.filter(c=>c.result==="pass").length : 0;
   
   let displayDate = date;
   if (date && date.includes("-")) {
     let p = date.split("-");
-    if (p.length === 3) {
-      let yearBE = parseInt(p[0]) + 543;
-      displayDate = p[2] + "/" + p[1] + "/" + yearBE;
-    }
+    if (p.length === 3) displayDate = p[2] + "/" + p[1] + "/" + (parseInt(p[0]) + 543);
   }
   
   document.getElementById("successInfo").innerHTML=`
@@ -914,9 +857,7 @@ function submitWorker(){
     <b>Stage:</b> ${fullStage}<br>
     <b>วันที่:</b> ${displayDate} &nbsp;|&nbsp; <b>กะ:</b> SHIFT ${shift}<br>
     <b>Worker:</b> ${worker}<br>
-    ${isCT
-      ? `<b>ผล:</b> เปลี่ยนแล้ว ${changedC}/${totalC} · ยังไม่เปลี่ยน ${failC}/${totalC}`
-      : `<b>ผล:</b> ผ่าน ${totalC-failC}/${totalC} รายการ${failC?`<br><span style="color:var(--red);font-weight:600;">⚠ ไม่ผ่าน ${failC} รายการ</span>`:""}`}
+    <b>ผล:</b> ผ่าน ${totalC-failC}/${totalC} รายการ${failC?`<br><span style="color:var(--red);font-weight:600;">⚠ ไม่ผ่าน ${failC} รายการ</span>`:""}
   `;
   document.getElementById("page-form").style.display="none";
   document.getElementById("successScreen").classList.add("show");
