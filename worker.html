@@ -135,14 +135,34 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div class="logo">ISUZU FRG</div>
     <button class="back-btn" id="backBtn" onclick="goBack()" style="display:none;">← ย้อนกลับ</button>
   </div>
-  <div class="header-title" id="headerLabel">เลือก Group</div>
+  <div class="header-title" id="headerLabel">เริ่มต้นใช้งาน</div>
   <div class="header-name" id="headerName">Worker — ตรวจสอบ</div>
-  <div class="header-sub" id="headerSub">กรุณาเลือก Group ของคุณ</div>
+  <div class="header-sub" id="headerSub">กรุณาเลือกวันที่และกะทำงาน</div>
   <div class="breadcrumb" id="breadcrumb"></div>
 </div>
 
+<!-- PAGE 0: หน้าแรกบังคับเลือก วันที่ และ Shift A / B ก่อน -->
+<div class="page active" id="page-init">
+  <div class="section">
+    <div class="section-title">กำหนดข้อมูลการทำงาน</div>
+    <div class="field-card" style="margin-bottom: 12px;">
+      <label>วันที่ปฏิบัติงาน</label>
+      <input type="date" id="initDate" style="width:100%; border:1.5px solid var(--border); border-radius:8px; padding:10px; font-family:'Sarabun'; font-size:15px; background:#F9FAFB; outline:none;">
+    </div>
+    <div class="field-card" style="margin-bottom: 16px;">
+      <label>กะทำงาน (Shift)</label>
+      <select id="initShift" style="width:100%; border:1.5px solid var(--border); border-radius:8px; padding:10px; font-family:'Sarabun'; font-size:15px; background:#F9FAFB; outline:none;">
+        <option value="">-- เลือกกะทำงาน --</option>
+        <option value="A">SHIFT A (กะเช้า)</option>
+        <option value="B">SHIFT B (กะดึก)</option>
+      </select>
+    </div>
+    <button class="submit-btn" style="width:100%; margin:0;" onclick="startInspection()">ถัดไป: เลือก Group →</button>
+  </div>
+</div>
+
 <!-- PAGE 1: เลือก Group -->
-<div class="page active" id="page-group">
+<div class="page" id="page-group">
   <div class="section">
     <div class="section-title">เลือก Group</div>
     <div class="grid" id="groupGrid"></div>
@@ -175,17 +195,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- PAGE 5: กรอกแบบฟอร์ม -->
 <div class="page" id="page-form">
-  <div class="meta-card" style="margin-top: 14px;">
-    <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate" onchange="fetchSharedStatusAndRenderStages();"></div>
-    <div class="meta-item">
-      <label>กะทำงาน</label>
-      <select id="inputShift" onchange="fetchSharedStatusAndRenderStages();">
-        <option value="">-- เลือกกะทำงาน --</option>
-        <option value="A">SHIFT A</option>
-        <option value="B">SHIFT B</option>
-      </select>
-    </div>
-  </div>
   <div class="progress-wrap">
     <div class="progress-bg"><div class="progress-fill" id="pFill"></div></div>
     <div class="progress-label" id="pLabel">ตรวจแล้ว 0 / 0 รายการ</div>
@@ -365,7 +374,7 @@ const JIG_CHECKS = [
 ];
 
 const FANUC_CHECKS = [
-  {id:1, name:"สภาพทั่วไปหัว TORCH",                  method:"สายตา, สัมผัส",  standard:"notโยก, ไม่หลวมคลอน"},
+  {id:1, name:"สภาพทั่วไปหัว TORCH",                  method:"สายตา, สัมผัส",  standard:"ไม่โยก, ไม่หลวมคลอน"},
   {id:2, name:"คอนแทคทิป, นอสเซิล, ทิปบอดี้",        method:"สายตา",          standard:"ไม่มี Spatter ติด, ไม่แตกร้าว"},
   {id:3, name:"TEACH PENDANT",                          method:"สายตา",          standard:"สวิทช์อยู่โหมด AUTO, SPEED RATIO 100%"},
   {id:4, name:"แรงกดลวด",                              method:"สายตา",          standard:"แรงกดลวดอยู่ที่ค่า 2-4"},
@@ -398,21 +407,28 @@ const CHECKS_BY_TYPE = {
   CONTACT_TIP: "CONTACT_TIP_SPECIAL",
 };
 
-let nav = { group:null, type:null, stage:null, subtype:null };
+let nav = { group:null, type:null, stage:null, subtype:null, date:null, shift:null };
 let checkState = {};
 let currentChecks = [];
-let sharedCompletedMap = {}; // 🛠️ เก็บสถานะสีเขียวที่ดึงจาก Google Sheets ร่วมกัน
+let sharedCompletedMap = {};
 
-const today = new Date();
-document.getElementById("inputDate").value = today.toISOString().split("T")[0];
+const todayStr = new Date().toISOString().split("T")[0];
+document.getElementById("initDate").value = todayStr;
 
-// 🛠️ ฟังก์ชันดึงสถานะจาก Google Sheets มาร่วมกัน (แชร์หน่วยความจำ 100 พนักงาน)
-async function fetchSharedStatusAndRenderStages() {
-  const date = document.getElementById("inputDate").value;
-  const shift = document.getElementById("inputShift").value;
-  
-  if (!date || !shift || !nav.group) return;
+// เริ่มต้นกดปุ่มถัดไปจากหน้าเลือกวันที่/กะ
+function startInspection(){
+  const d = document.getElementById("initDate").value;
+  const s = document.getElementById("initShift").value;
+  if(!d){ showToast("กรุณาเลือกวันที่ปฏิบัติงาน","err"); return; }
+  if(!s){ showToast("กรุณาเลือกกะทำงาน (Shift A หรือ B)","err"); return; }
 
+  nav.date = d;
+  nav.shift = s;
+
+  fetchSharedStatusAndRenderGroups();
+}
+
+async function fetchSharedStatusAndRenderGroups() {
   try {
     const res = await fetch(SHEETS_URL + "?t=" + Date.now());
     const data = await res.json();
@@ -427,23 +443,23 @@ async function fetchSharedStatusAndRenderStages() {
         let rStage = String(row["Stage"] || "").trim();
         let rStatus = String(row["สถานะ"] || row["status"] || "").trim().toLowerCase();
 
-        // ถ้ายอดตรงกับ วัน, กะ, Group และสถานะผ่านหรือส่งตรวจแล้ว
-        if (rDate === date && rShift === shift && rGroup === nav.group && (rStatus === "approved" || rStatus === "pending")) {
-          // แยก Stage หลักและ Subtype ออกจากข้อความ (เช่น CP2-03-NO.1)
-          Object.keys(STATION_DATA[nav.group] || {}).forEach(typeKey => {
-            const stages = STATION_DATA[nav.group][typeKey].stages;
+        if (rDate === nav.date && rShift === nav.shift && (rStatus === "approved" || rStatus === "pending")) {
+          Object.keys(STATION_DATA[rGroup] || {}).forEach(typeKey => {
+            const stages = STATION_DATA[rGroup][typeKey].stages;
             Object.entries(stages).forEach(([baseStage, subs]) => {
               if (subs && subs.length > 0) {
                 subs.forEach(sub => {
                   if (rStage.toUpperCase() === (baseStage + "-" + sub).toUpperCase()) {
-                    if (!sharedCompletedMap[baseStage]) sharedCompletedMap[baseStage] = {};
-                    sharedCompletedMap[baseStage][sub] = true;
+                    if (!sharedCompletedMap[rGroup]) sharedCompletedMap[rGroup] = {};
+                    if (!sharedCompletedMap[rGroup][baseStage]) sharedCompletedMap[rGroup][baseStage] = {};
+                    sharedCompletedMap[rGroup][baseStage][sub] = true;
                   }
                 });
               } else {
                 if (rStage.toUpperCase() === baseStage.toUpperCase()) {
-                  if (!sharedCompletedMap[baseStage]) sharedCompletedMap[baseStage] = {};
-                  sharedCompletedMap[baseStage]["_DEFAULT_"] = true;
+                  if (!sharedCompletedMap[rGroup]) sharedCompletedMap[rGroup] = {};
+                  if (!sharedCompletedMap[rGroup][baseStage]) sharedCompletedMap[rGroup][baseStage] = {};
+                  sharedCompletedMap[rGroup][baseStage]["_DEFAULT_"] = true;
                 }
               }
             });
@@ -454,10 +470,10 @@ async function fetchSharedStatusAndRenderStages() {
   } catch (e) {
     console.log("Fetch shared status error:", e);
   }
-  
-  if (nav.group && nav.type) {
-    renderStages();
-  }
+
+  updateHeader();
+  renderGroups();
+  showPage("group");
 }
 
 function showPage(id){
@@ -474,39 +490,43 @@ function updateHeader(){
   const bc = document.getElementById("breadcrumb");
 
   if(!nav.group){
-    document.getElementById("headerLabel").textContent="Worker — ตรวจสอบ";
-    document.getElementById("headerName").textContent="เลือก Group";
-    document.getElementById("headerSub").textContent="กรุณาเลือก Group ของคุณ";
-    backBtn.style.display="none";
-    bc.innerHTML="";
+    document.getElementById("headerLabel").textContent = `วันที่ ${nav.date} · SHIFT ${nav.shift}`;
+    document.getElementById("headerName").textContent = "เลือก Group";
+    document.getElementById("headerSub").textContent = "กรุณาเลือก Group ของคุณ";
+    backBtn.style.display = "block";
+    backBtn.textContent = "← เปลี่ยนกะ/วันที่";
+    backBtn.onclick = () => { showPage("init"); nav.date=null; nav.shift=null; updateHeader(); };
+    bc.innerHTML = "";
   } else if(!nav.type){
-    document.getElementById("headerLabel").textContent="Group "+nav.group;
-    document.getElementById("headerName").textContent="เลือกประเภทตรวจสอบ";
-    document.getElementById("headerSub").textContent="กรุณาเลือกประเภทรายการ";
-    backBtn.style.display="block";
-    bc.innerHTML=`<span>${nav.group}</span>`;
+    document.getElementById("headerLabel").textContent = `Group ${nav.group} · SHIFT ${nav.shift}`;
+    document.getElementById("headerName").textContent = "เลือกประเภทตรวจสอบ";
+    document.getElementById("headerSub").textContent = "กรุณาเลือกประเภทรายการ";
+    backBtn.style.display = "block";
+    backBtn.textContent = "← ย้อนกลับ";
+    backBtn.onclick = goBack;
+    bc.innerHTML = `<span>Group ${nav.group}</span>`;
   } else if(!nav.stage){
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
-    document.getElementById("headerLabel").textContent="Group "+nav.group+" · "+typeLabel;
-    document.getElementById("headerName").textContent="เลือก Stage";
-    document.getElementById("headerSub").textContent="กรุณาเลือก Stage";
-    backBtn.style.display="block";
-    bc.innerHTML=`<span>${nav.group}</span> › <span>${typeLabel}</span>`;
+    document.getElementById("headerLabel").textContent = typeLabel;
+    document.getElementById("headerName").textContent = "เลือก Stage";
+    document.getElementById("headerSub").textContent = "กรุณาเลือก Stage";
+    backBtn.style.display = "block";
+    bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span>`;
   } else if(getSubtypes().length && !nav.subtype && !isContactTip()){
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
-    document.getElementById("headerLabel").textContent=typeLabel+" · "+nav.stage;
-    document.getElementById("headerName").textContent="เลือกรายละเอียดย่อย";
-    document.getElementById("headerSub").textContent="กรุณาเลือกตำแหน่งย่อย";
-    backBtn.style.display="block";
-    bc.innerHTML=`<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${nav.stage}</span>`;
+    document.getElementById("headerLabel").textContent = typeLabel + " · " + nav.stage;
+    document.getElementById("headerName").textContent = "เลือกรายละเอียดย่อย";
+    document.getElementById("headerSub").textContent = "กรุณาเลือกตำแหน่งย่อย";
+    backBtn.style.display = "block";
+    bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${nav.stage}</span>`;
   } else {
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     const fullName = nav.stage + (nav.subtype ? " ("+nav.subtype+")" : "");
-    document.getElementById("headerLabel").textContent=typeLabel;
-    document.getElementById("headerName").textContent=fullName;
-    document.getElementById("headerSub").textContent=today.toLocaleDateString("th-TH",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
-    backBtn.style.display="block";
-    bc.innerHTML=`<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${fullName}</span>`;
+    document.getElementById("headerLabel").textContent = typeLabel;
+    document.getElementById("headerName").textContent = fullName;
+    document.getElementById("headerSub").textContent = `${nav.date} · SHIFT ${nav.shift}`;
+    backBtn.style.display = "block";
+    bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${fullName}</span>`;
   }
 }
 
@@ -532,12 +552,12 @@ function goBack(){
   } else if(nav.type){ 
     nav.type=null; nav.stage=null; updateHeader(); renderTypes(); showPage("type"); 
   } else if(nav.group){ 
-    nav.group=null; updateHeader(); renderGroups(); showPage("group"); 
+    nav.group=null; updateHeader(); showPage("group"); 
   }
 }
 
 function goHome(){
-  nav={group:null,type:null,stage:null,subtype:null};
+  nav = { group:null, type:null, stage:null, subtype:null, date:nav.date, shift:nav.shift };
   document.getElementById("workerName").value="";
   document.getElementById("remarkText").value="";
   updateHeader();
@@ -575,10 +595,8 @@ function renderTypes(){
     el.onclick=()=>{ 
       nav.type=typeKey; 
       updateHeader(); 
-      fetchSharedStatusAndRenderStages().then(() => {
-        renderStages();
-        showPage("stage");
-      });
+      renderStages();
+      showPage("stage");
     };
     grid.appendChild(el);
   });
@@ -588,12 +606,13 @@ function renderStages(){
   const grid = document.getElementById("stageGrid");
   grid.innerHTML="";
   const stages = STATION_DATA[nav.group][nav.type].stages;
+  const groupDoneMap = sharedCompletedMap[nav.group] || {};
 
   Object.entries(stages).forEach(([stageName, subtypes]) => {
     const el=document.createElement("div");
     
     let isStageFullyCompleted = false;
-    const doneSubs = sharedCompletedMap[stageName] || {};
+    const doneSubs = groupDoneMap[stageName] || {};
     
     if (subtypes && subtypes.length > 0 && !isContactTip()) {
       isStageFullyCompleted = subtypes.every(sub => doneSubs[sub] === true);
@@ -632,7 +651,8 @@ function renderStages(){
 function renderSubtypes(){
   const row = document.getElementById("subtypeRow");
   row.innerHTML="";
-  const doneSubs = sharedCompletedMap[nav.stage] || {};
+  const groupDoneMap = sharedCompletedMap[nav.group] || {};
+  const doneSubs = groupDoneMap[nav.stage] || {};
 
   getSubtypes().forEach(sub=>{
     const isDone = doneSubs[sub] === true;
@@ -812,10 +832,8 @@ function buildFullStageName(){
 
 function submitWorker(){
   const worker=document.getElementById("workerName").value.trim();
-  const date=document.getElementById("inputDate").value;
-  const shift=document.getElementById("inputShift").value;
-
-  if(!shift){showToast("กรุณาเลือกกะทำงาน","err");return;}
+  const date=nav.date;
+  const shift=nav.shift;
 
   let undoneCount = 0;
   if(isContactTip()){
@@ -852,10 +870,10 @@ function submitWorker(){
   all.push(entry);
   localStorage.setItem("isuzu_submissions",JSON.stringify(all));
 
-  // อัปเดตสถานะในเครื่องทันทีหลังส่ง
   const subKey = nav.subtype ? nav.subtype : "_DEFAULT_";
-  if(!sharedCompletedMap[nav.stage]) sharedCompletedMap[nav.stage] = {};
-  sharedCompletedMap[nav.stage][subKey] = true;
+  if(!sharedCompletedMap[nav.group]) sharedCompletedMap[nav.group] = {};
+  if(!sharedCompletedMap[nav.group][nav.stage]) sharedCompletedMap[nav.group][nav.stage] = {};
+  sharedCompletedMap[nav.group][nav.stage][subKey] = true;
 
   fetch(SHEETS_URL, {
     method: "POST",
@@ -898,9 +916,6 @@ function showToast(msg,type=""){
   t.textContent=msg;t.className="toast show "+type;
   setTimeout(()=>t.className="toast",3000);
 }
-
-updateHeader();
-renderGroups();
 </script>
 </body>
 </html>
