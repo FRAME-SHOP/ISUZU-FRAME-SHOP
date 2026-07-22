@@ -210,7 +210,16 @@ const FOREMAN_DB = {
 
 let currentGroup = "FRC"; 
 
-// 🛠️ โครงสร้างข้อมูลด่านจริงแบบ Dynamic ตรงกับ Worker และ Code.gs ล่าสุด
+// 🛠️ กำหนดจำนวนด่านเป้าหมายที่ถูกต้องตามหน้าชีตปัจจุบัน
+const STATION_SPECS = {
+  FRC: 27,
+  FRF: 47,
+  FRR: 54,
+  FRU: 43,
+  FRX: 51,
+  FXC: 27
+};
+
 const STATION_DATA = {
   FRC: {
     CO2: { label:"เครื่องเชื่อม CO2", stages:{
@@ -221,7 +230,8 @@ const STATION_DATA = {
     JIG: { label:"JIG", stages:{ "CP1-02": [], "CP1-03": [], "CP1-04": [], "CP1-05": [] }},
     AIR: { label:"AIR SERVICE UNIT", stages:{ "CP1-02": [], "CP1-03": [], "CP1-04": [], "CP1-05": [] }},
     FANUC: { label:"หุ่นยนต์ FANUC", stages:{
-      "CP1-03-LH": ["no.1", "no.3", "no.5"], "CP1-03-RH": ["no.2", "no.4", "no.6"],
+      "CP1-03-LH": ["no.1", "no.3", "no.5"], 
+      "CP1-03-RH": ["no.2", "no.4", "no.6"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{ "CP1-03": ["W1","W2","W3","W4","W5","W6"] }},
   },
@@ -283,7 +293,7 @@ const STATION_DATA = {
       "MA2-04": ["No.1", "No.2", "No.3", "No.4", "No.5", "No.6"],
       "MA2-06": ["No.1", "No.2", "No.3", "No.4"],
     }},
-    CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA2-02": ["W1","W2","W3","W4"], "MA2-04": ["W1","W2","W3","W4","W5","W6"], "MA2-06": ["W1","W2","W3","W4"], "SA2-01": ["W1","W2"], "SA2-02": ["W1","W2"] }},
+    CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA2-02": ["W1","W2","W3","W4"], "MA2-04": ["W1","W2","W3","W4","W5","W6"], "MA2-06":["W1","W2","W3","W4"], "SA2-01": ["W1","W2"], "SA2-02": ["W1","W2"] }},
   },
   FRX: {
     HOIST: { label:"ELECTRIC HOIST", stages:{ "SC2-01": [] }},
@@ -325,23 +335,6 @@ let currentFM = null;
 let proxyMode = false;
 let originalGroup = null;
 let originalShift = null;
-
-// ฟังก์ชันคำนวณจำนวนด่านทั้งหมดของแต่ละ Group แบบไดนามิก (รวมด่านย่อย No.1-6)
-function getGroupTotalStages(groupKey){
-  const types = STATION_DATA[groupKey] || {};
-  let total = 0;
-  Object.keys(types).forEach(typeKey => {
-    const stages = types[typeKey].stages;
-    Object.entries(stages).forEach(([base, subs]) => {
-      if (subs && subs.length > 0) {
-        total += subs.length;
-      } else {
-        total += 1;
-      }
-    });
-  });
-  return total;
-}
 
 function getAllStagesForGroup(group){
   const types = STATION_DATA[group] || {};
@@ -518,7 +511,7 @@ function getMyDone(){
 function updateApproveCount(){
   if(!currentFM) return;
   const doneCount = getMyDoneCount(); 
-  const totalSpecs = getGroupTotalStages(currentFM.group); // 👈 ดึงเป้าหมายจำนวนด่านจริงตาม Group
+  const totalSpecs = STATION_SPECS[currentFM.group] || 0; // 👈 ดึงค่าจาก STATION_SPECS ตาม Group ที่ถูกต้อง
   const el = document.getElementById("fmStations");
   el.textContent = `SHIFT ${currentFM.shift} · Group ${currentFM.group}${proxyMode?" (แทน)":""} · อนุมัติแล้ว ${doneCount}/${totalSpecs}`;
 }
