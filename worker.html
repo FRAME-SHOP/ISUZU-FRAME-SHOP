@@ -61,9 +61,14 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
 .meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
 
+/* 🛠️ ซ่อมระบบ Layout ช่องปฏิทินของ iOS ให้แนบพอดีการ์ด */
 .meta-item input, .meta-item select {
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  -webkit-appearance: none;
+  appearance: none;
   box-sizing: border-box !important; 
   border: 1.5px solid var(--border);
   border-radius: 8px;
@@ -450,7 +455,6 @@ function getSubtypes(){
   return STATION_DATA[nav.group][nav.type]?.stages[nav.stage] || [];
 }
 
-// 🛠️ แก้ไขปุ่มย้อนกลับ: ถ้าเป็น Contact Tip ให้พาวิ่งกลับไปหน้าเลือก Stage หลักเสมอ
 function goBack(){
   const activePage = document.querySelector(".page.active");
   if(activePage && activePage.id === "page-form") {
@@ -519,7 +523,6 @@ function renderTypes(){
   });
 }
 
-// 🛠️ ปรับปรุงจุดสำคัญ: เมื่อเลือก Stage ของ CONTACT_TIP ให้วิ่งตรงเข้าหน้าฟอร์มหัวข้อตรวจสอบทันที ไม่ต้องมีหน้าเลือกรายละเอียดย่อย W1-W6
 function renderStages(){
   const grid = document.getElementById("stageGrid");
   grid.innerHTML="";
@@ -533,7 +536,6 @@ function renderStages(){
       nav.stage=stageName; nav.subtype=null;
       updateHeader();
       
-      // 💡 ถ้าเป็น CONTACT_TIP ให้ข้ามไปหน้าฟอร์มกรอกตัวเลข W1-W6 แต่ละหัวข้อทันที
       if(isContactTip()){ 
         initForm(); 
         showPage("form"); 
