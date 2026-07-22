@@ -57,6 +57,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   color: #065F46;
 }
 
+/* 🛠️ แก้ไขคุมขนาดไม่ให้หลุดกรอบในมือถือ */
 .meta-card{
   background:var(--card); margin:0 14px; border-radius:12px; box-shadow:var(--shadow);
   padding:12px 14px; display:grid !important; grid-template-columns: 1fr 1fr !important;
@@ -69,13 +70,15 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 }
 
 .meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
-.meta-item input, .meta-item select {
+.meta-item input, .meta-item select, .field-card input, .field-card select {
   width: 100% !important; max-width: 100% !important; min-width: 0 !important; display: block !important;
   -webkit-appearance: none; appearance: none; box-sizing: border-box !important; 
-  border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 10px;
-  font-family: 'Sarabun', sans-serif; font-size: 14px; background: #F9FAFB; outline: none;
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 10px;
+  font-family: 'Sarabun', sans-serif; font-size: 15px; background: #F9FAFB; outline: none;
 }
-.meta-item input:focus,.meta-item select:focus{border-color:var(--red);background:#fff;}
+.meta-item input:focus, .meta-item select:focus, .field-card input:focus, .field-card select:focus {
+  border-color: var(--red); background: #fff;
+}
 
 .progress-wrap{margin:14px 14px 0;}
 .progress-bg{background:#E5E7EB;border-radius:99px;height:5px;overflow:hidden;}
@@ -98,10 +101,9 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .comment-row{margin-top:8px;}
 .comment-row textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Sarabun',sans-serif;font-size:13px;resize:none;outline:none;background:#fff;min-height:56px;}
 
-.field-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:13px 14px;box-shadow:var(--shadow);}
+.field-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:13px 14px;box-shadow:var(--shadow);box-sizing:border-box;}
 .field-card label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
-.field-card input,.field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;background:#F9FAFB;}
-.field-card textarea{resize:none;min-height:64px;}
+.field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;background:#F9FAFB;resize:none;min-height:64px;box-sizing:border-box;}
 
 .submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
@@ -147,11 +149,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div class="section-title">กำหนดข้อมูลการทำงาน</div>
     <div class="field-card" style="margin-bottom: 12px;">
       <label>วันที่ปฏิบัติงาน</label>
-      <input type="date" id="initDate" style="width:100%; border:1.5px solid var(--border); border-radius:8px; padding:10px; font-family:'Sarabun'; font-size:15px; background:#F9FAFB; outline:none;">
+      <input type="date" id="initDate">
     </div>
     <div class="field-card" style="margin-bottom: 16px;">
       <label>กะทำงาน (Shift)</label>
-      <select id="initShift" style="width:100%; border:1.5px solid var(--border); border-radius:8px; padding:10px; font-family:'Sarabun'; font-size:15px; background:#F9FAFB; outline:none;">
+      <select id="initShift">
         <option value="">-- เลือกกะทำงาน --</option>
         <option value="A">SHIFT A</option>
         <option value="B">SHIFT B</option>
@@ -415,7 +417,7 @@ let sharedCompletedMap = {};
 const todayStr = new Date().toISOString().split("T")[0];
 document.getElementById("initDate").value = todayStr;
 
-// เริ่มต้นกดปุ่มถัดไปจากหน้าเลือกวันที่/กะ
+// 🛠️ กดเลือกกะแล้วสลับหน้าทันทีแบบไม่หน่วง (Instant UI) แล้วดึงข้อมูลสถานะเบื้องหลังเงียบๆ
 function startInspection(){
   const d = document.getElementById("initDate").value;
   const s = document.getElementById("initShift").value;
@@ -425,10 +427,15 @@ function startInspection(){
   nav.date = d;
   nav.shift = s;
 
-  fetchSharedStatusAndRenderGroups();
+  updateHeader();
+  renderGroups();
+  showPage("group");
+
+  // ดึงข้อมูลสถานะสีเขียวเบื้องหลังแบบไม่ให้หน้าจอค้าง
+  backgroundFetchSharedStatus();
 }
 
-async function fetchSharedStatusAndRenderGroups() {
+async function backgroundFetchSharedStatus() {
   try {
     const res = await fetch(SHEETS_URL + "?t=" + Date.now());
     const data = await res.json();
@@ -470,10 +477,6 @@ async function fetchSharedStatusAndRenderGroups() {
   } catch (e) {
     console.log("Fetch shared status error:", e);
   }
-
-  updateHeader();
-  renderGroups();
-  showPage("group");
 }
 
 function showPage(id){
