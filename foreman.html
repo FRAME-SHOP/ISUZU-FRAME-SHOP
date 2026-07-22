@@ -190,12 +190,12 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
 const FOREMAN_DB = {
-  "25019": { name:"นาย สุพัฒน์ คำชนะ",      shift:"A", group:"FRC" },
-  "05135": { name:"นาย สมพงศ์ พุ่มแก้ว",      shift:"A", group:"FRE" },
+  "25019": { name:"นาย สุพัฒน์ คำชนะ",     shift:"A", group:"FRC" },
+  "05135": { name:"นาย สมพงศ์ พุ่มแก้ว",     shift:"A", group:"FRE" },
   "03085": { name:"นาย เสมียน ผลจันทร์",    shift:"A", group:"FRF" },
   "04072": { name:"นาย วิหาญ แรมจันทึก",    shift:"A", group:"FRL" },
   "04071": { name:"นาย ประกาศ นวนสว่าง",    shift:"A", group:"FRR" },
-  "90313": { name:"นาย ขจร พาลี",           shift:"A", group:"FRU" },
+  "90313": { name:"นาย ขจร พาลี",            shift:"A", group:"FRU" },
   "04064": { name:"นาย คเชนทร์ ขาวจันทึก",  shift:"A", group:"FRX" },
   "05141": { name:"นาย วัฒนา บุรมรัตน์",    shift:"A", group:"FXC" },
   "06138": { name:"นาย ประสบ เสาหงษ์",      shift:"B", group:"FRC" },
@@ -205,21 +205,12 @@ const FOREMAN_DB = {
   "97004": { name:"นาย ธงชัย รุ่งโรจน์",    shift:"B", group:"FRR" },
   "11075": { name:"นาย วชิระ วงศ์เหล่า",    shift:"B", group:"FRU" },
   "90285": { name:"นาย ต้นรัก งามกุลประสิทธิ์", shift:"B", group:"FRX" },
-  "94037": { name:"นาย วิบูลย์ อาจหาญ",     shift:"B", group:"FXC" },
+  "94037": { name:"นาย วิบูลย์ อาจหาญ",      shift:"B", group:"FXC" },
 };
 
 let currentGroup = "FRC"; 
 
-// 🛠️ ล็อกสเปกเป้าหมายด่านสรุปสำหรับ Foreman (อัปเดตตรงตามที่คุณพิงค์แจ้งล่าสุด)
-const STATION_SPECS = {
-  FRC: 27,  
-  FRF: 35, 
-  FRR: 40, // 👈 40 ด่านถ้วน
-  FRU: 30, // 👈 30 ด่านถ้วน
-  FRX: 37, // 👈 37 ด่านถ้วน
-  FXC: 27
-};
-
+// 🛠️ โครงสร้างข้อมูลด่านจริงแบบ Dynamic ตรงกับ Worker และ Code.gs ล่าสุด
 const STATION_DATA = {
   FRC: {
     CO2: { label:"เครื่องเชื่อม CO2", stages:{
@@ -246,8 +237,11 @@ const STATION_DATA = {
       "MA1-03": [], "MA1-04": [], "MA1-05": [], "MA1-06": [], "MA1-07": [], "MA1-09": []
     }},
     YASKAWA: { label:"หุ่นยนต์ YASKAWA", stages:{
-      "SA1-01": [], "SA1-02": [], "MA1-02": [],
-      "MA1-04": ["No.2/4/6", "No.1/3/5"], "MA1-06": [],
+      "SA1-01": ["No.1", "No.2"],
+      "SA1-02": ["No.1", "No.2"],
+      "MA1-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MA1-04": ["No.1", "No.2", "No.3", "No.4", "No.5", "No.6"],
+      "MA1-06": ["No.1", "No.2", "No.3", "No.4"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA1-02": ["W1","W2","W3","W4"], "MA1-04": ["W1","W2","W3","W4","W5","W6"], "MA1-06": ["W1","W2","W3","W4"], "SA1-01": ["W1","W2"], "SA1-02": ["W1","W2"] }},
   },
@@ -263,8 +257,12 @@ const STATION_DATA = {
       "MC1-05": [], "MC1-07": [], "MC1-08": [], "MC1-8.5": ["H8", "H7"], "MC1-10": ["H9", "H10", "Jig", "Lifter"],
     }},
     YASKAWA: { label:"หุ่นยนต์ YASKAWA", stages:{
-      "SC1-01": [], "SC1-02": [], "MC1-02": [],
-      "MC1-04": ["No.2/4/6"], "MC1-05": ["No.1/3/5"], "MC1-07": [],
+      "SC1-01": ["No.1", "No.2", "No.3"],
+      "SC1-02": ["No.1", "No.2", "No.3"],
+      "MC1-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MC1-04": ["No.1", "No.2", "No.3", "No.4"],
+      "MC1-05": ["No.1", "No.2", "No.3", "No.4"],
+      "MC1-07": ["No.1", "No.2"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{ "SC1-01": ["W1","W2","W3"], "SC1-02": ["W1","W2","W3"], "MC1-02": ["W1","W2","W3","W4"], "MC1-04": ["W1","W2","W3","W4"], "MC1-05": ["W1","W2","W3","W4"], "MC1-07": ["W1","W2"] }},
   },
@@ -278,7 +276,13 @@ const STATION_DATA = {
       "SA2-01": [], "SA2-02": [], "MA2-01": [], "MA2-02": [], "MA2-04": [], "MA2-06": [],
       "MA2-09": ["H8", "H9"],
     }},
-    FANUC: { label:"หุ่นยนต์ FANUC", stages:{ "SA2-01": [], "SA2-02": [], "MA2-02": [], "MA2-04": [], "MA2-06": [] }},
+    FANUC: { label:"หุ่นยนต์ FANUC", stages:{
+      "SA2-01": ["No.1", "No.2"],
+      "SA2-02": ["No.1", "No.2"],
+      "MA2-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MA2-04": ["No.1", "No.2", "No.3", "No.4", "No.5", "No.6"],
+      "MA2-06": ["No.1", "No.2", "No.3", "No.4"],
+    }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA2-02": ["W1","W2","W3","W4"], "MA2-04": ["W1","W2","W3","W4","W5","W6"], "MA2-06": ["W1","W2","W3","W4"], "SA2-01": ["W1","W2"], "SA2-02": ["W1","W2"] }},
   },
   FRX: {
@@ -293,7 +297,12 @@ const STATION_DATA = {
       "MC2-10": ["H8", "H9", "H10", "Jig"],
     }},
     FANUC: { label:"หุ่นยนต์ FANUC", stages:{
-      "SC2-01": [], "SC2-02": [], "MC2-02": [], "MC2-04": [], "MC2-05": [], "MC2-07": [],
+      "SC2-01": ["No.1", "No.2", "No.3"],
+      "SC2-02": ["No.1", "No.2", "No.3"],
+      "MC2-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MC2-04": ["No.1", "No.2", "No.3", "No.4"],
+      "MC2-05": ["No.1", "No.2", "No.3", "No.4"],
+      "MC2-07": ["No.1", "No.2"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{
       "MC2-02": ["W1","W2","W3","W4"], "MC2-04": ["W1","W2","W3","W4"], "MC2-05": ["W1","W2","W3","W4"], "MC2-07": ["W1","W2"], "SC2-01": ["W1","W2","W3"], "SC2-02": ["W1","W2","W3"]
@@ -316,6 +325,23 @@ let currentFM = null;
 let proxyMode = false;
 let originalGroup = null;
 let originalShift = null;
+
+// ฟังก์ชันคำนวณจำนวนด่านทั้งหมดของแต่ละ Group แบบไดนามิก (รวมด่านย่อย No.1-6)
+function getGroupTotalStages(groupKey){
+  const types = STATION_DATA[groupKey] || {};
+  let total = 0;
+  Object.keys(types).forEach(typeKey => {
+    const stages = types[typeKey].stages;
+    Object.entries(stages).forEach(([base, subs]) => {
+      if (subs && subs.length > 0) {
+        total += subs.length;
+      } else {
+        total += 1;
+      }
+    });
+  });
+  return total;
+}
 
 function getAllStagesForGroup(group){
   const types = STATION_DATA[group] || {};
@@ -492,7 +518,7 @@ function getMyDone(){
 function updateApproveCount(){
   if(!currentFM) return;
   const doneCount = getMyDoneCount(); 
-  const totalSpecs = STATION_SPECS[currentGroup] || getAllStagesForGroup(currentFM.group).length;
+  const totalSpecs = getGroupTotalStages(currentFM.group); // 👈 ดึงเป้าหมายจำนวนด่านจริงตาม Group
   const el = document.getElementById("fmStations");
   el.textContent = `SHIFT ${currentFM.shift} · Group ${currentFM.group}${proxyMode?" (แทน)":""} · อนุมัติแล้ว ${doneCount}/${totalSpecs}`;
 }
@@ -574,9 +600,8 @@ function buildApproveCard(s, isDone){
         ${fails.length>0?`
           <button class="hold-btn" id="hb_${s.id}" onclick="holdForFix('${s.id}')">⏸ รอแก้ไข</button>
           <button class="approve-btn" id="ab_${s.id}" onclick="approve('${s.id}')" style="background:#6B7280;">อนุมัติทับ</button>
-        `:`
-          <button class="approve-btn" id="ab_${s.id}" onclick="approve('${s.id}')">✓ อนุมัติ</button>
-        `}
+        `:``}
+        <button class="approve-btn" id="ab_${s.id}" onclick="approve('${s.id}')">✓ อนุมัติ</button>
       </div>
     `:`<div class="approved-banner">✓ อนุมัติโดย ${s.foreman}${s.proxy_by?" (แทนโดย "+s.proxy_by+")":""}</div>`}
   `;
@@ -598,7 +623,7 @@ function approve(id){
     all[idx].foreman = name.replace(" [แทน]", "").trim(); 
     all[idx].proxy_by = FOREMAN_DB[currentFM.code].name; 
     all[idx].proxy_code = currentFM.code;               
-    all[idx].proxy_for_group = originalGroup;           
+    all[idx].proxy_for_group = originalGroup;            
   } else {
     all[idx].foreman = name;
     all[idx].foreman_code = currentFM.code;
