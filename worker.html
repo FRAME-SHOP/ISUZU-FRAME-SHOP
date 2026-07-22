@@ -27,7 +27,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
 .nav-card:active{transform:scale(.98);}
 
-/* 🛠️ สีเขียวสำหรับ Stage หลักเมื่อตรวจครบทุก Subtype แล้ว */
 .nav-card.completed-stage {
   background: var(--pass-bg) !important;
   border-color: var(--pass-border) !important;
@@ -45,7 +44,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-sub{font-size:12px;color:var(--muted);margin-top:2px;}
 .nav-arrow{font-size:20px;color:var(--red);font-weight:700;flex-shrink:0;}
 
-/* 🛠️ ดีไซน์ปุ่ม Subtype (No.1, No.2...) แยกอิสระ */
 .subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px;}
 .subtype-chip{
   background:var(--card);border:1.5px solid var(--border);border-radius:12px;
@@ -53,7 +51,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   box-shadow:var(--shadow);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .subtype-chip:active{transform:scale(.97);}
-/* Subtype ที่ตรวจแล้วเปลี่ยนเป็นสีเขียว */
 .subtype-chip.completed-sub {
   background: var(--pass-bg) !important;
   border-color: var(--pass-border) !important;
@@ -168,7 +165,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- PAGE 4: เลือกรายละเอียด (Subtype) -->
+<!-- PAGE 4: เลือกรายละเอียดย่อย -->
 <div class="page" id="page-subtype">
   <div class="section">
     <div class="section-title">เลือกรายละเอียดย่อย</div>
@@ -179,13 +176,13 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <!-- PAGE 5: กรอกแบบฟอร์ม -->
 <div class="page" id="page-form">
   <div class="meta-card" style="margin-top: 14px;">
-    <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate" onchange="checkAndAutoResetCache(); renderStages();"></div>
+    <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate" onchange="fetchSharedStatusAndRenderStages();"></div>
     <div class="meta-item">
       <label>กะทำงาน</label>
-      <select id="inputShift" onchange="checkAndAutoResetCache(); renderStages();">
+      <select id="inputShift" onchange="fetchSharedStatusAndRenderStages();">
         <option value="">-- เลือกกะทำงาน --</option>
-        <option value="A">SHIFT A</option>
-        <option value="B">SHIFT B</option>
+        <option value="A">SHIFT A (กะเช้า)</option>
+        <option value="B">SHIFT B (กะดึก)</option>
       </select>
     </div>
   </div>
@@ -368,7 +365,7 @@ const JIG_CHECKS = [
 ];
 
 const FANUC_CHECKS = [
-  {id:1, name:"สภาพทั่วไปหัว TORCH",                  method:"สายตา, สัมผัส",  standard:"ไม่โยก, ไม่หลวมคลอน"},
+  {id:1, name:"สภาพทั่วไปหัว TORCH",                  method:"สายตา, สัมผัส",  standard:"notโยก, ไม่หลวมคลอน"},
   {id:2, name:"คอนแทคทิป, นอสเซิล, ทิปบอดี้",        method:"สายตา",          standard:"ไม่มี Spatter ติด, ไม่แตกร้าว"},
   {id:3, name:"TEACH PENDANT",                          method:"สายตา",          standard:"สวิทช์อยู่โหมด AUTO, SPEED RATIO 100%"},
   {id:4, name:"แรงกดลวด",                              method:"สายตา",          standard:"แรงกดลวดอยู่ที่ค่า 2-4"},
@@ -404,31 +401,64 @@ const CHECKS_BY_TYPE = {
 let nav = { group:null, type:null, stage:null, subtype:null };
 let checkState = {};
 let currentChecks = [];
+let sharedCompletedMap = {}; // 🛠️ เก็บสถานะสีเขียวที่ดึงจาก Google Sheets ร่วมกัน
 
 const today = new Date();
 document.getElementById("inputDate").value = today.toISOString().split("T")[0];
 
-function checkAndAutoResetCache() {
-  const now = new Date();
-  const currentDateStr = now.toISOString().split("T")[0];
-  const currentHour = now.getHours();
+// 🛠️ ฟังก์ชันดึงสถานะจาก Google Sheets มาร่วมกัน (แชร์หน่วยความจำ 100 พนักงาน)
+async function fetchSharedStatusAndRenderStages() {
+  const date = document.getElementById("inputDate").value;
+  const shift = document.getElementById("inputShift").value;
   
-  const shiftSelect = document.getElementById("inputShift").value || "A";
-  const cacheKey = `isuzu_completed_stages_${currentDateStr}_${shiftSelect}`;
+  if (!date || !shift || !nav.group) return;
+
+  try {
+    const res = await fetch(SHEETS_URL + "?t=" + Date.now());
+    const data = await res.json();
+    
+    sharedCompletedMap = {};
+    
+    if (data.result === "success" && data.rows) {
+      data.rows.forEach(row => {
+        let rDate = String(row["วันที่"] || "").split("T")[0];
+        let rShift = String(row["กะ"] || "").trim();
+        let rGroup = String(row["Group"] || "").trim();
+        let rStage = String(row["Stage"] || "").trim();
+        let rStatus = String(row["สถานะ"] || row["status"] || "").trim().toLowerCase();
+
+        // ถ้ายอดตรงกับ วัน, กะ, Group และสถานะผ่านหรือส่งตรวจแล้ว
+        if (rDate === date && rShift === shift && rGroup === nav.group && (rStatus === "approved" || rStatus === "pending")) {
+          // แยก Stage หลักและ Subtype ออกจากข้อความ (เช่น CP2-03-NO.1)
+          Object.keys(STATION_DATA[nav.group] || {}).forEach(typeKey => {
+            const stages = STATION_DATA[nav.group][typeKey].stages;
+            Object.entries(stages).forEach(([baseStage, subs]) => {
+              if (subs && subs.length > 0) {
+                subs.forEach(sub => {
+                  if (rStage.toUpperCase() === (baseStage + "-" + sub).toUpperCase()) {
+                    if (!sharedCompletedMap[baseStage]) sharedCompletedMap[baseStage] = {};
+                    sharedCompletedMap[baseStage][sub] = true;
+                  }
+                });
+              } else {
+                if (rStage.toUpperCase() === baseStage.toUpperCase()) {
+                  if (!sharedCompletedMap[baseStage]) sharedCompletedMap[baseStage] = {};
+                  sharedCompletedMap[baseStage]["_DEFAULT_"] = true;
+                }
+              }
+            });
+          });
+        }
+      });
+    }
+  } catch (e) {
+    console.log("Fetch shared status error:", e);
+  }
   
-  const lastResetTime = parseInt(localStorage.getItem("isuzu_last_reset_time") || "-1");
-  const lastResetDate = localStorage.getItem("isuzu_last_reset_date") || "";
-  
-  let targetResetSlot = (currentHour >= 6 && currentHour < 18) ? 6 : 18;
-  
-  if (currentDateStr !== lastResetDate || (currentHour >= targetResetSlot && lastResetTime < targetResetSlot)) {
-    localStorage.removeItem(cacheKey);
-    localStorage.setItem("isuzu_last_reset_date", currentDateStr);
-    localStorage.setItem("isuzu_last_reset_time", currentHour.toString());
+  if (nav.group && nav.type) {
+    renderStages();
   }
 }
-
-checkAndAutoResetCache();
 
 function showPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -523,7 +553,12 @@ function renderGroups(){
     const el=document.createElement("div");
     el.className="nav-card";
     el.innerHTML=`<div class="nav-icon">🏭</div><div class="nav-info"><div class="nav-title">Group ${g}</div><div class="nav-sub">${typeCount} ประเภทรายการตรวจ</div></div><div class="nav-arrow">›</div>`;
-    el.onclick=()=>{ nav.group=g; updateHeader(); renderTypes(); showPage("type"); };
+    el.onclick=()=>{ 
+      nav.group=g; 
+      updateHeader(); 
+      renderTypes(); 
+      showPage("type"); 
+    };
     grid.appendChild(el);
   });
 }
@@ -537,46 +572,32 @@ function renderTypes(){
     const el=document.createElement("div");
     el.className="nav-card";
     el.innerHTML=`<div class="nav-icon">${TYPE_ICONS[typeKey]||"📋"}</div><div class="nav-info"><div class="nav-title">${typeData.label}</div><div class="nav-sub">${stageCount} Station</div></div><div class="nav-arrow">›</div>`;
-    el.onclick=()=>{ nav.type=typeKey; updateHeader(); renderStages(); showPage("stage"); };
+    el.onclick=()=>{ 
+      nav.type=typeKey; 
+      updateHeader(); 
+      fetchSharedStatusAndRenderStages().then(() => {
+        renderStages();
+        showPage("stage");
+      });
+    };
     grid.appendChild(el);
   });
-}
-
-// 🛠️ ตรวจสอบสถานะว่า Subtypes (No.1, No.2...) ครบทุกอันหรือยัง
-function getCompletedSubtypesMap() {
-  const date = document.getElementById("inputDate").value;
-  const shift = document.getElementById("inputShift").value || "A";
-  const key = `isuzu_completed_subtypes_${date}_${shift}`;
-  try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch(e) { return {}; }
-}
-
-function markSubtypeCompleted(stageName, subtypeName) {
-  const date = document.getElementById("inputDate").value;
-  const shift = document.getElementById("inputShift").value || "A";
-  const key = `isuzu_completed_subtypes_${date}_${shift}`;
-  const map = getCompletedSubtypesMap();
-  
-  if(!map[stageName]) map[stageName] = {};
-  map[stageName][subtypeName] = true;
-  localStorage.setItem(key, JSON.stringify(map));
 }
 
 function renderStages(){
   const grid = document.getElementById("stageGrid");
   grid.innerHTML="";
   const stages = STATION_DATA[nav.group][nav.type].stages;
-  const completedSubMap = getCompletedSubtypesMap();
 
   Object.entries(stages).forEach(([stageName, subtypes]) => {
     const el=document.createElement("div");
     
-    // เช็คว่า Stage นี้มี Subtype ครบทุกอันแล้วหรือยัง (ถ้าครบหมด ถึงจะให้ Stage หลักขึ้นเขียว)
     let isStageFullyCompleted = false;
+    const doneSubs = sharedCompletedMap[stageName] || {};
+    
     if (subtypes && subtypes.length > 0 && !isContactTip()) {
-      const doneSubs = completedSubMap[stageName] || {};
       isStageFullyCompleted = subtypes.every(sub => doneSubs[sub] === true);
     } else {
-      const doneSubs = completedSubMap[stageName] || {};
       isStageFullyCompleted = doneSubs["_DEFAULT_"] === true;
     }
 
@@ -611,8 +632,7 @@ function renderStages(){
 function renderSubtypes(){
   const row = document.getElementById("subtypeRow");
   row.innerHTML="";
-  const completedSubMap = getCompletedSubtypesMap();
-  const doneSubs = completedSubMap[nav.stage] || {};
+  const doneSubs = sharedCompletedMap[nav.stage] || {};
 
   getSubtypes().forEach(sub=>{
     const isDone = doneSubs[sub] === true;
@@ -832,9 +852,10 @@ function submitWorker(){
   all.push(entry);
   localStorage.setItem("isuzu_submissions",JSON.stringify(all));
 
-  // 🛠️ บันทึกสถานะ Subtype ว่าตรวจเสร็จแล้ว (เปลี่ยนปุ่ม No.1 เป็นสีเขียว)
+  // อัปเดตสถานะในเครื่องทันทีหลังส่ง
   const subKey = nav.subtype ? nav.subtype : "_DEFAULT_";
-  markSubtypeCompleted(nav.stage, subKey);
+  if(!sharedCompletedMap[nav.stage]) sharedCompletedMap[nav.stage] = {};
+  sharedCompletedMap[nav.stage][subKey] = true;
 
   fetch(SHEETS_URL, {
     method: "POST",
