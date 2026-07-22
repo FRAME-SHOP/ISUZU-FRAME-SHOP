@@ -10,7 +10,6 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
 
-/* 🛠️ ปรับแต่งสี Header ด้านบนให้เป็นสีขาวชัดเจน ไม่ซีด */
 .header{background:var(--red);color:#ffffff;padding:18px 16px 28px;}
 .header-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .back-btn{background:rgba(255,255,255,.2);border:none;color:#ffffff;border-radius:8px;padding:6px 12px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
@@ -228,6 +227,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
+// 🛠️ อัปเดตรายละเอียด No.1 - No.6 สำหรับหุ่นยนต์ YASKAWA และ FANUC ครบถ้วน
 const STATION_DATA = {
   FRC: {
     CO2: { label:"เครื่องเชื่อม CO2", stages:{
@@ -254,8 +254,11 @@ const STATION_DATA = {
       "MA1-03": [], "MA1-04": [], "MA1-05": [], "MA1-06": [], "MA1-07": [], "MA1-09": []
     }},
     YASKAWA: { label:"หุ่นยนต์ YASKAWA", stages:{
-      "SA1-01": [], "SA1-02": [], "MA1-02": [],
-      "MA1-04": ["No.2/4/6", "No.1/3/5"], "MA1-06": [],
+      "SA1-01": ["No.1", "No.2"],
+      "SA1-02": ["No.1", "No.2"],
+      "MA1-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MA1-04": ["No.1", "No.2", "No.3", "No.4", "No.5", "No.6"],
+      "MA1-06": ["No.1", "No.2", "No.3", "No.4"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA1-02": ["W1","W2","W3","W4"], "MA1-04": ["W1","W2","W3","W4","W5","W6"], "MA1-06": ["W1","W2","W3","W4"], "SA1-01": ["W1","W2"], "SA1-02": ["W1","W2"] }},
   },
@@ -271,8 +274,12 @@ const STATION_DATA = {
       "MC1-05": [], "MC1-07": [], "MC1-08": [], "MC1-8.5": ["H8", "H7"], "MC1-10": ["H9", "H10", "Jig", "Lifter"],
     }},
     YASKAWA: { label:"หุ่นยนต์ YASKAWA", stages:{
-      "SC1-01": [], "SC1-02": [], "MC1-02": [],
-      "MC1-04": ["No.2/4/6"], "MC1-05": ["No.1/3/5"], "MC1-07": [],
+      "SC1-01": ["No.1", "No.2", "No.3"],
+      "SC1-02": ["No.1", "No.2", "No.3"],
+      "MC1-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MC1-04": ["No.1", "No.2", "No.3", "No.4"],
+      "MC1-05": ["No.1", "No.2", "No.3", "No.4"],
+      "MC1-07": ["No.1", "No.2"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{ "SC1-01": ["W1","W2","W3"], "SC1-02": ["W1","W2","W3"], "MC1-02": ["W1","W2","W3","W4"], "MC1-04": ["W1","W2","W3","W4"], "MC1-05": ["W1","W2","W3","W4"], "MC1-07": ["W1","W2"] }},
   },
@@ -286,7 +293,13 @@ const STATION_DATA = {
       "SA2-01": [], "SA2-02": [], "MA2-01": [], "MA2-02": [], "MA2-04": [], "MA2-06": [],
       "MA2-09": ["H8", "H9"],
     }},
-    FANUC: { label:"หุ่นยนต์ FANUC", stages:{ "SA2-01": [], "SA2-02": [], "MA2-02": [], "MA2-04": [], "MA2-06": [] }},
+    FANUC: { label:"หุ่นยนต์ FANUC", stages:{
+      "SA2-01": ["No.1", "No.2"],
+      "SA2-02": ["No.1", "No.2"],
+      "MA2-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MA2-04": ["No.1", "No.2", "No.3", "No.4", "No.5", "No.6"],
+      "MA2-06": ["No.1", "No.2", "No.3", "No.4"],
+    }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{ "MA2-02": ["W1","W2","W3","W4"], "MA2-04": ["W1","W2","W3","W4","W5","W6"], "MA2-06":["W1","W2","W3","W4"], "SA2-01": ["W1","W2"], "SA2-02": ["W1","W2"] }},
   },
   FRX: {
@@ -301,7 +314,12 @@ const STATION_DATA = {
       "MC2-10": ["H8", "H9", "H10", "Jig"],
     }},
     FANUC: { label:"หุ่นยนต์ FANUC", stages:{
-      "SC2-01": [], "SC2-02": [], "MC2-02": [], "MC2-04": [], "MC2-05": [], "MC2-07": [],
+      "SC2-01": ["No.1", "No.2", "No.3"],
+      "SC2-02": ["No.1", "No.2", "No.3"],
+      "MC2-02": ["No.1", "No.2", "No.3", "No.4"],
+      "MC2-04": ["No.1", "No.2", "No.3", "No.4"],
+      "MC2-05": ["No.1", "No.2", "No.3", "No.4"],
+      "MC2-07": ["No.1", "No.2"],
     }},
     CONTACT_TIP: { label:"CONTACT TIP", stages:{
       "MC2-02": ["W1","W2","W3","W4"], "MC2-04": ["W1","W2","W3","W4"], "MC2-05": ["W1","W2","W3","W4"], "MC2-07": ["W1","W2"], "SC2-01": ["W1","W2","W3"], "SC2-02": ["W1","W2","W3"],
