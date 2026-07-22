@@ -689,10 +689,10 @@ function renderStages(){
 
       if (hasFail) {
         stageClass = " fail-stage";
-        badgeHtml = '<div class="badge-status badge-fail">พบปัญหา (แดง)</div>';
+        badgeHtml = '<div class="badge-status badge-fail">พบปัญหา</div>';
       } else if (hasWarn) {
         stageClass = " warn-stage";
-        badgeHtml = '<div class="badge-status badge-warn">รอแก้ไข (เหลือง)</div>';
+        badgeHtml = '<div class="badge-status badge-warn">รอแก้ไข</div>';
       } else if (allDone) {
         stageClass = " completed-stage";
         badgeHtml = '<div class="badge-status badge-pass">ตรวจครบ</div>';
@@ -701,10 +701,10 @@ function renderStages(){
       const status = doneSubs["_DEFAULT_"];
       if (status === "fail") {
         stageClass = " fail-stage";
-        badgeHtml = '<div class="badge-status badge-fail">พบปัญหา (แดง)</div>';
+        badgeHtml = '<div class="badge-status badge-fail">พบปัญหา</div>';
       } else if (status === "warn") {
         stageClass = " warn-stage";
-        badgeHtml = '<div class="badge-status badge-warn">รอแก้ไข (เหลือง)</div>';
+        badgeHtml = '<div class="badge-status badge-warn">รอแก้ไข</div>';
       } else if (status === "pass") {
         stageClass = " completed-stage";
         badgeHtml = '<div class="badge-status badge-pass">ตรวจครบ</div>';
