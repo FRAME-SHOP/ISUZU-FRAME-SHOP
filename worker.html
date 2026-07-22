@@ -203,10 +203,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate" onchange="checkAndAutoResetCache(); renderStages();"></div>
     <div class="meta-item">
       <label>กะทำงาน</label>
+      <!-- 🛠️ ให้พนักงานกดเลือก Shift A / Shift B ด้วยตนเอง -->
       <select id="inputShift" onchange="checkAndAutoResetCache(); renderStages();">
         <option value="">-- เลือกกะทำงาน --</option>
-        <option value="A">SHIFT A (เช้า)</option>
-        <option value="B">SHIFT B (ดึก)</option>
+        <option value="A">SHIFT A (กะเช้า)</option>
+        <option value="B">SHIFT B (กะดึก)</option>
       </select>
     </div>
   </div>
@@ -441,30 +442,22 @@ let currentChecks = [];
 const today = new Date();
 document.getElementById("inputDate").value = today.toISOString().split("T")[0];
 
-// 🛠️ ตรวจสอบช่วงเวลารีเซ็ทอัตโนมัติ (6.00 และ 18.00) ตามกะทำงาน
+// 🛠️ ตรวจสอบรอบเวลารีเซ็ทอัตโนมัติ (6:00 และ 18:00) ตามช่วงเปลี่ยนกะ
 function checkAndAutoResetCache() {
   const now = new Date();
   const currentDateStr = now.toISOString().split("T")[0];
   const currentHour = now.getHours();
   
-  // กำหนดกะอัตโนมัติตามช่วงเวลา ถ้าอยู่ระหว่าง 06:00 - 18:00 ให้เป็นกะ A นอกนั้นกะ B
-  const shiftSelect = document.getElementById("inputShift");
-  if (!shiftSelect.value) {
-    shiftSelect.value = (currentHour >= 6 && currentHour < 18) ? "A" : "B";
-  }
+  const shiftSelect = document.getElementById("inputShift").value || "A";
+  const cacheKey = `isuzu_completed_stages_${currentDateStr}_${shiftSelect}`;
   
-  const currentShift = shiftSelect.value;
-  const cacheKey = `isuzu_completed_stages_${currentDateStr}_${currentShift}`;
-  
-  // ตรวจสอบรอบเวลาตัดกะ (06:00 และ 18:00)
-  const lastResetTime = localStorage.getItem("isuzu_last_reset_time") || "0";
+  const lastResetTime = parseInt(localStorage.getItem("isuzu_last_reset_time") || "-1");
   const lastResetDate = localStorage.getItem("isuzu_last_reset_date") || "";
   
-  let targetResetHour = (currentHour >= 6 && currentHour < 18) ? 6 : 18;
+  // กำหนดช่วงเวลาเช็ค (รอบเช้า 6:00, รอบดึก 18:00)
+  let targetResetSlot = (currentHour >= 6 && currentHour < 18) ? 6 : 18;
   
-  // ถ้าข้ามวัน หรือข้ามช่วงเวลา 6.00 / 18.00 ให้เคลียร์สถานะสีเขียวเพื่อให้พนักงานเริ่มตรวจใหม่
-  if (currentDateStr !== lastResetDate || (currentHour >= targetResetHour && parseInt(lastResetTime) < targetResetHour)) {
-    // ล้างสถานะเก่าเฉพาะกะนี้
+  if (currentDateStr !== lastResetDate || (currentHour >= targetResetSlot && lastResetTime < targetResetSlot)) {
     localStorage.removeItem(cacheKey);
     localStorage.setItem("isuzu_last_reset_date", currentDateStr);
     localStorage.setItem("isuzu_last_reset_time", currentHour.toString());
@@ -624,7 +617,6 @@ function renderStages(){
     const el=document.createElement("div");
     const subInfo = (subtypes.length && !isContactTip()) ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
     
-    // เช็คว่า Stage นี้ตรวจเสร็จไปรึยัง (ถ้าตรวจแล้วให้เปลี่ยนเป็นสีเขียว)
     const isDone = completedMap[stageName] === true;
     el.className = "nav-card" + (isDone ? " completed-stage" : "");
 
@@ -889,7 +881,7 @@ function submitWorker(){
   all.push(entry);
   localStorage.setItem("isuzu_submissions",JSON.stringify(all));
 
-  // 🛠️ บันทึกสถานะว่า Stage นี้ตรวจเสร็จแล้ว (เปลี่ยนเป็นสีเขียว)
+  // 🛠️ บันทึกสถานะว่า Stage นี้ตรวจเสร็จแล้ว (เปลี่ยนปุ่มเป็นสีเขียว)
   markStageCompleted(nav.stage);
 
   fetch(SHEETS_URL, {
