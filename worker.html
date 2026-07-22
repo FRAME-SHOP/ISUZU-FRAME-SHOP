@@ -9,16 +9,19 @@
 :root{--red:#CC0000;--red-dark:#A00000;--pass:#057A55;--pass-bg:#ECFDF5;--pass-border:#6EE7B7;--fail-bg:#FFF5F5;--fail-border:#FFBABA;--bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
-.header{background:var(--red);color:#fff;padding:18px 16px 28px;}
+
+/* 🛠️ ปรับแต่งสี Header ด้านบนให้เป็นสีขาวชัดเจน ไม่ซีด */
+.header{background:var(--red);color:#ffffff;padding:18px 16px 28px;}
 .header-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.back-btn{background:rgba(255,255,255,.2);border:none;color:#ffffff;border-radius:8px;padding:6px 12px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
 .back-btn:hover{background:rgba(255,255,255,.3);}
-.logo{font-size:16px;font-weight:800;letter-spacing:.05em;}
-.header-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:2px;}
-.header-name{font-size:20px;font-weight:800;line-height:1.2;}
-.header-sub{font-size:13px;opacity:.75;margin-top:2px;}
-.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;opacity:.75;margin-top:8px;flex-wrap:wrap;}
-.breadcrumb span{opacity:.6;}
+.logo{font-size:16px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
+.header-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;margin-bottom:2px;}
+.header-name{font-size:20px;font-weight:800;line-height:1.2;color:#ffffff;}
+.header-sub{font-size:13px;font-weight:500;color:#ffffff;margin-top:2px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#ffffff;margin-top:8px;flex-wrap:wrap;}
+.breadcrumb span{color:#ffffff;font-weight:500;}
+
 .section{margin:14px 14px 0;}
 .section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px;}
 .grid{display:flex;flex-direction:column;gap:8px;}
@@ -178,7 +181,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate"></div>
     <div class="meta-item">
       <label>กะทำงาน</label>
-      <!-- 🛠️ ปรับเปลี่ยน: พนักงานต้องกดเลือก Shift ด้วยตนเอง -->
       <select id="inputShift">
         <option value="">-- เลือกกะทำงาน --</option>
         <option value="A">SHIFT A</option>
@@ -490,7 +492,7 @@ function goHome(){
   nav={group:null,type:null,stage:null,subtype:null};
   document.getElementById("workerName").value="";
   document.getElementById("remarkText").value="";
-  document.getElementById("inputShift").value=""; // 🛠️ เคลียร์ค่ากะทำงานเมื่อกลับหน้าหลัก
+  document.getElementById("inputShift").value="";
   updateHeader();
   renderGroups();
   showPage("group");
@@ -747,7 +749,6 @@ function submitWorker(){
   const date=document.getElementById("inputDate").value;
   const shift=document.getElementById("inputShift").value;
 
-  // 🛠️ เช็คการเลือกกะทำงาน
   if(!shift){showToast("กรุณาเลือกกะทำงาน","err");return;}
 
   let undoneCount = 0;
