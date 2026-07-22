@@ -6,7 +6,11 @@
 <title>Worker — ตรวจสอบ</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
-:root{--red:#CC0000;--red-dark:#A00000;--pass:#057A55;--pass-bg:#ECFDF5;--pass-border:#6EE7B7;--fail-bg:#FFF5F5;--fail-border:#FFBABA;--bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);}
+:root{
+  --red:#CC0000;--red-dark:#A00000;--pass:#057A55;--pass-bg:#ECFDF5;--pass-border:#6EE7B7;
+  --fail-bg:#FFF5F5;--fail-border:#FFBABA;--warn:#D97706;--warn-bg:#FEF3C7;--warn-border:#FCD34D;
+  --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
+}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
 
@@ -27,16 +31,25 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
 .nav-card:active{transform:scale(.98);}
 
-.nav-card.completed-stage {
-  background: var(--pass-bg) !important;
-  border-color: var(--pass-border) !important;
-}
+/* 🎨 สถานะสีของ Stage หลัก */
+.nav-card.completed-stage { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; }
 .nav-card.completed-stage .nav-title { color: #065F46; }
 .nav-card.completed-stage .nav-sub { color: #047857; font-weight: 600; }
-.completed-badge {
-  font-size: 11px; background: var(--pass); color: #fff;
-  padding: 3px 8px; border-radius: 6px; font-weight: 700; margin-left: auto;
+
+.nav-card.fail-stage { background: var(--fail-bg) !important; border-color: var(--fail-border) !important; }
+.nav-card.fail-stage .nav-title { color: #991B1B; }
+.nav-card.fail-stage .nav-sub { color: #B91C1C; font-weight: 600; }
+
+.nav-card.warn-stage { background: var(--warn-bg) !important; border-color: var(--warn-border) !important; }
+.nav-card.warn-stage .nav-title { color: #92400E; }
+.nav-card.warn-stage .nav-sub { color: #B45309; font-weight: 600; }
+
+.badge-status {
+  font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 700; margin-left: auto; color: #fff;
 }
+.badge-pass { background: var(--pass); }
+.badge-fail { background: var(--red); }
+.badge-warn { background: var(--warn); color: #78350F; }
 
 .nav-icon{font-size:26px;flex-shrink:0;}
 .nav-info{flex:1;min-width:0;}
@@ -44,6 +57,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-sub{font-size:12px;color:var(--muted);margin-top:2px;}
 .nav-arrow{font-size:20px;color:var(--red);font-weight:700;flex-shrink:0;}
 
+/* 🎨 สถานะสีของ Subtype (No.1, No.2...) */
 .subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px;}
 .subtype-chip{
   background:var(--card);border:1.5px solid var(--border);border-radius:12px;
@@ -51,13 +65,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   box-shadow:var(--shadow);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .subtype-chip:active{transform:scale(.97);}
-.subtype-chip.completed-sub {
-  background: var(--pass-bg) !important;
-  border-color: var(--pass-border) !important;
-  color: #065F46;
-}
 
-/* 🛠️ แก้ไขคุมขนาดไม่ให้หลุดกรอบในมือถือ */
+.subtype-chip.completed-sub { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; color: #065F46; }
+.subtype-chip.fail-sub { background: var(--fail-bg) !important; border-color: var(--fail-border) !important; color: #991B1B; }
+.subtype-chip.warn-sub { background: var(--warn-bg) !important; border-color: var(--warn-border) !important; color: #92400E; }
+
 .meta-card{
   background:var(--card); margin:0 14px; border-radius:12px; box-shadow:var(--shadow);
   padding:12px 14px; display:grid !important; grid-template-columns: 1fr 1fr !important;
@@ -155,8 +167,8 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
       <label>กะทำงาน (Shift)</label>
       <select id="initShift">
         <option value="">-- เลือกกะทำงาน --</option>
-        <option value="A">SHIFT A</option>
-        <option value="B">SHIFT B</option>
+        <option value="A">SHIFT A (กะเช้า)</option>
+        <option value="B">SHIFT B (กะดึก)</option>
       </select>
     </div>
     <button class="submit-btn" style="width:100%; margin:0;" onclick="startInspection()">ถัดไป: เลือก Group →</button>
@@ -412,12 +424,11 @@ const CHECKS_BY_TYPE = {
 let nav = { group:null, type:null, stage:null, subtype:null, date:null, shift:null };
 let checkState = {};
 let currentChecks = [];
-let sharedCompletedMap = {};
+let sharedStatusMap = {}; // เก็บสถานะละเอียด (pass, fail, warn/hold) แยกตาม Subtype
 
 const todayStr = new Date().toISOString().split("T")[0];
 document.getElementById("initDate").value = todayStr;
 
-// 🛠️ กดเลือกกะแล้วสลับหน้าทันทีแบบไม่หน่วง (Instant UI) แล้วดึงข้อมูลสถานะเบื้องหลังเงียบๆ
 function startInspection(){
   const d = document.getElementById("initDate").value;
   const s = document.getElementById("initShift").value;
@@ -431,7 +442,6 @@ function startInspection(){
   renderGroups();
   showPage("group");
 
-  // ดึงข้อมูลสถานะสีเขียวเบื้องหลังแบบไม่ให้หน้าจอค้าง
   backgroundFetchSharedStatus();
 }
 
@@ -440,39 +450,92 @@ async function backgroundFetchSharedStatus() {
     const res = await fetch(SHEETS_URL + "?t=" + Date.now());
     const data = await res.json();
     
-    sharedCompletedMap = {};
+    sharedStatusMap = {};
+    const heldList = JSON.parse(localStorage.getItem("isuzu_held_" + nav.date) || "[]");
+    
+    // ดึงข้อมูลใน LocalStorage ของเครื่องนี้ร่วมด้วย
+    const localSubs = JSON.parse(localStorage.getItem("isuzu_submissions") || "[]");
+    const allRows = [];
     
     if (data.result === "success" && data.rows) {
-      data.rows.forEach(row => {
-        let rDate = String(row["วันที่"] || "").split("T")[0];
-        let rShift = String(row["กะ"] || "").trim();
-        let rGroup = String(row["Group"] || "").trim();
-        let rStage = String(row["Stage"] || "").trim();
-        let rStatus = String(row["สถานะ"] || row["status"] || "").trim().toLowerCase();
+      data.rows.forEach(r => {
+        let j = {};
+        try { j = JSON.parse(r["JSON เต็ม"] || "{}"); } catch(e){}
+        allRows.push({
+          id: r["ID"] || j.id,
+          date: String(r["วันที่"]||j.date||"").split("T")[0],
+          shift: String(r["กะ"]||j.shift||"").trim(),
+          group: String(r["Group"]||j.group||"").trim(),
+          stage: String(r["Stage"]||j.stage||"").trim(),
+          status: String(r["สถานะ"]||r["status"]||j.status||"").trim().toLowerCase(),
+          checks: j.checks || []
+        });
+      });
+    }
+    
+    localSubs.forEach(l => allRows.push({
+      id: l.id,
+      date: String(l.date||"").split("T")[0],
+      shift: String(l.shift||"").trim(),
+      group: String(l.group||"").trim(),
+      stage: String(l.stage||"").trim(),
+      status: String(l.status||"").trim().toLowerCase(),
+      checks: l.checks || []
+    }));
 
-        if (rDate === nav.date && rShift === nav.shift && (rStatus === "approved" || rStatus === "pending")) {
-          Object.keys(STATION_DATA[rGroup] || {}).forEach(typeKey => {
-            const stages = STATION_DATA[rGroup][typeKey].stages;
-            Object.entries(stages).forEach(([baseStage, subs]) => {
-              if (subs && subs.length > 0) {
-                subs.forEach(sub => {
-                  if (rStage.toUpperCase() === (baseStage + "-" + sub).toUpperCase()) {
-                    if (!sharedCompletedMap[rGroup]) sharedCompletedMap[rGroup] = {};
-                    if (!sharedCompletedMap[rGroup][baseStage]) sharedCompletedMap[rGroup][baseStage] = {};
-                    sharedCompletedMap[rGroup][baseStage][sub] = true;
+    allRows.forEach(row => {
+      if (row.date === nav.date && row.shift === nav.shift) {
+        let rGroup = row.group;
+        let rStage = row.stage;
+        let rStatus = row.status;
+        let hasFail = (row.checks || []).some(c => c.result === "fail");
+        let isHeld = heldList.includes(row.id);
+
+        Object.keys(STATION_DATA[rGroup] || {}).forEach(typeKey => {
+          const stages = STATION_DATA[rGroup][typeKey].stages;
+          Object.entries(stages).forEach(([baseStage, subs]) => {
+            if (subs && subs.length > 0) {
+              subs.forEach(sub => {
+                if (rStage.toUpperCase() === (baseStage + "-" + sub).toUpperCase()) {
+                  if (!sharedStatusMap[rGroup]) sharedStatusMap[rGroup] = {};
+                  if (!sharedStatusMap[rGroup][baseStage]) sharedStatusMap[rGroup][baseStage] = {};
+                  
+                  // กำหนดสถานะสี
+                  if (isHeld) {
+                    sharedStatusMap[rGroup][baseStage][sub] = "warn"; // สีเหลือง (รอแก้ไข)
+                  } else if (rStatus === "approved" && hasFail) {
+                    sharedStatusMap[rGroup][baseStage][sub] = "fail"; // สีแดง (อนุมัติทับแต่มีปัญหา)
+                  } else if (hasFail) {
+                    sharedStatusMap[rGroup][baseStage][sub] = "fail"; // สีแดง (กรอกผิด/ไม่ผ่าน)
+                  } else if (rStatus === "approved" || rStatus === "pending") {
+                    sharedStatusMap[rGroup][baseStage][sub] = "pass"; // สีเขียว (ผ่าน)
                   }
-                });
-              } else {
-                if (rStage.toUpperCase() === baseStage.toUpperCase()) {
-                  if (!sharedCompletedMap[rGroup]) sharedCompletedMap[rGroup] = {};
-                  if (!sharedCompletedMap[rGroup][baseStage]) sharedCompletedMap[rGroup][baseStage] = {};
-                  sharedCompletedMap[rGroup][baseStage]["_DEFAULT_"] = true;
+                }
+              });
+            } else {
+              if (rStage.toUpperCase() === baseStage.toUpperCase()) {
+                if (!sharedStatusMap[rGroup]) sharedStatusMap[rGroup] = {};
+                if (!sharedStatusMap[rGroup][baseStage]) sharedStatusMap[rGroup][baseStage] = {};
+                
+                if (isHeld) {
+                  sharedStatusMap[rGroup][baseStage]["_DEFAULT_"] = "warn";
+                } else if (rStatus === "approved" && hasFail) {
+                  sharedStatusMap[rGroup][baseStage]["_DEFAULT_"] = "fail";
+                } else if (hasFail) {
+                  sharedStatusMap[rGroup][baseStage]["_DEFAULT_"] = "fail";
+                } else if (rStatus === "approved" || rStatus === "pending") {
+                  sharedStatusMap[rGroup][baseStage]["_DEFAULT_"] = "pass";
                 }
               }
-            });
+            }
           });
-        }
-      });
+        });
+      }
+    });
+
+    const activePage = document.querySelector(".page.active");
+    if (activePage && activePage.id === "page-stage") {
+      renderStages();
     }
   } catch (e) {
     console.log("Fetch shared status error:", e);
@@ -609,30 +672,53 @@ function renderStages(){
   const grid = document.getElementById("stageGrid");
   grid.innerHTML="";
   const stages = STATION_DATA[nav.group][nav.type].stages;
-  const groupDoneMap = sharedCompletedMap[nav.group] || {};
+  const groupStatusMap = sharedStatusMap[nav.group] || {};
 
   Object.entries(stages).forEach(([stageName, subtypes]) => {
     const el=document.createElement("div");
+    const doneSubs = groupStatusMap[stageName] || {};
     
-    let isStageFullyCompleted = false;
-    const doneSubs = groupDoneMap[stageName] || {};
-    
+    let stageClass = "";
+    let badgeHtml = '<div class="nav-arrow">›</div>';
+    let subInfo = (subtypes.length && !isContactTip()) ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
+
     if (subtypes && subtypes.length > 0 && !isContactTip()) {
-      isStageFullyCompleted = subtypes.every(sub => doneSubs[sub] === true);
+      const allDone = subtypes.every(sub => doneSubs[sub] === "pass");
+      const hasFail = subtypes.some(sub => doneSubs[sub] === "fail");
+      const hasWarn = subtypes.some(sub => doneSubs[sub] === "warn");
+
+      if (hasFail) {
+        stageClass = " fail-stage";
+        badgeHtml = '<div class="badge-status badge-fail">พบปัญหา (แดง)</div>';
+      } else if (hasWarn) {
+        stageClass = " warn-stage";
+        badgeHtml = '<div class="badge-status badge-warn">รอแก้ไข (เหลือง)</div>';
+      } else if (allDone) {
+        stageClass = " completed-stage";
+        badgeHtml = '<div class="badge-status badge-pass">ตรวจครบ</div>';
+      }
     } else {
-      isStageFullyCompleted = doneSubs["_DEFAULT_"] === true;
+      const status = doneSubs["_DEFAULT_"];
+      if (status === "fail") {
+        stageClass = " fail-stage";
+        badgeHtml = '<div class="badge-status badge-fail">พบปัญหา (แดง)</div>';
+      } else if (status === "warn") {
+        stageClass = " warn-stage";
+        badgeHtml = '<div class="badge-status badge-warn">รอแก้ไข (เหลือง)</div>';
+      } else if (status === "pass") {
+        stageClass = " completed-stage";
+        badgeHtml = '<div class="badge-status badge-pass">ตรวจครบ</div>';
+      }
     }
 
-    el.className = "nav-card" + (isStageFullyCompleted ? " completed-stage" : "");
-    const subInfo = (subtypes.length && !isContactTip()) ? `${subtypes.length} รายละเอียดย่อย` : "รายการตรวจพื้นฐาน";
-
+    el.className = "nav-card" + stageClass;
     el.innerHTML=`
-      <div class="nav-icon">${isStageFullyCompleted ? "✅" : "📍"}</div>
+      <div class="nav-icon">${stageClass.includes("completed") ? "✅" : stageClass.includes("fail") ? "❌" : stageClass.includes("warn") ? "⚠️" : "📍"}</div>
       <div class="nav-info">
         <div class="nav-title">${stageName}</div>
-        <div class="nav-sub">${isStageFullyCompleted ? "ตรวจครบทุกส่วนแล้ว" : subInfo}</div>
+        <div class="nav-sub">${subInfo}</div>
       </div>
-      ${isStageFullyCompleted ? '<div class="completed-badge">ตรวจครบ</div>' : '<div class="nav-arrow">›</div>'}
+      ${badgeHtml}
     `;
 
     el.onclick=()=>{
@@ -654,14 +740,26 @@ function renderStages(){
 function renderSubtypes(){
   const row = document.getElementById("subtypeRow");
   row.innerHTML="";
-  const groupDoneMap = sharedCompletedMap[nav.group] || {};
-  const doneSubs = groupDoneMap[nav.stage] || {};
+  const groupStatusMap = sharedStatusMap[nav.group] || {};
+  const doneSubs = groupStatusMap[nav.stage] || {};
 
   getSubtypes().forEach(sub=>{
-    const isDone = doneSubs[sub] === true;
+    const status = doneSubs[sub];
+    let css = "";
+    let icon = "🔹";
+    let labelExtra = "";
+
+    if (status === "pass") {
+      css = " completed-sub"; icon = "✅"; labelExtra = " (ผ่าน)";
+    } else if (status === "fail") {
+      css = " fail-sub"; icon = "❌"; labelExtra = " (ไม่ผ่าน)";
+    } else if (status === "warn") {
+      css = " warn-sub"; icon = "⚠️"; labelExtra = " (รอแก้ไข)";
+    }
+
     const chip=document.createElement("div");
-    chip.className = "subtype-chip" + (isDone ? " completed-sub" : "");
-    chip.innerHTML = `<span>${isDone ? "✅" : "🔹"}</span><span>${sub}</span>`;
+    chip.className = "subtype-chip" + css;
+    chip.innerHTML = `<span>${icon}</span><span>${sub}${labelExtra}</span>`;
     chip.onclick=()=>{ nav.subtype=sub; updateHeader(); initForm(); showPage("form"); };
     row.appendChild(chip);
   });
@@ -873,10 +971,11 @@ function submitWorker(){
   all.push(entry);
   localStorage.setItem("isuzu_submissions",JSON.stringify(all));
 
+  const hasFail = entry.checks.some(c => c.result === "fail");
   const subKey = nav.subtype ? nav.subtype : "_DEFAULT_";
-  if(!sharedCompletedMap[nav.group]) sharedCompletedMap[nav.group] = {};
-  if(!sharedCompletedMap[nav.group][nav.stage]) sharedCompletedMap[nav.group][nav.stage] = {};
-  sharedCompletedMap[nav.group][nav.stage][subKey] = true;
+  if(!sharedStatusMap[nav.group]) sharedStatusMap[nav.group] = {};
+  if(!sharedStatusMap[nav.group][nav.stage]) sharedStatusMap[nav.group][nav.stage] = {};
+  sharedStatusMap[nav.group][nav.stage][subKey] = hasFail ? "fail" : "pass";
 
   fetch(SHEETS_URL, {
     method: "POST",
