@@ -61,7 +61,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
 .meta-item label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
 
-/* 🛠️ ซ่อมระบบ Layout ช่องปฏิทินของ iOS ให้แนบพอดีการ์ด */
 .meta-item input, .meta-item select {
   width: 100% !important;
   max-width: 100% !important;
@@ -179,7 +178,9 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div class="meta-item"><label>วันที่</label><input type="date" id="inputDate"></div>
     <div class="meta-item">
       <label>กะทำงาน</label>
+      <!-- 🛠️ ปรับเปลี่ยน: พนักงานต้องกดเลือก Shift ด้วยตนเอง -->
       <select id="inputShift">
+        <option value="">-- เลือกกะทำงาน --</option>
         <option value="A">SHIFT A</option>
         <option value="B">SHIFT B</option>
       </select>
@@ -397,8 +398,6 @@ let currentChecks = [];
 
 const today = new Date();
 document.getElementById("inputDate").value = today.toISOString().split("T")[0];
-const h = today.getHours();
-document.getElementById("inputShift").value = (h>=18||h<6)?"B":"A";
 
 function showPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -491,6 +490,7 @@ function goHome(){
   nav={group:null,type:null,stage:null,subtype:null};
   document.getElementById("workerName").value="";
   document.getElementById("remarkText").value="";
+  document.getElementById("inputShift").value=""; // 🛠️ เคลียร์ค่ากะทำงานเมื่อกลับหน้าหลัก
   updateHeader();
   renderGroups();
   showPage("group");
@@ -746,6 +746,9 @@ function submitWorker(){
   const worker=document.getElementById("workerName").value.trim();
   const date=document.getElementById("inputDate").value;
   const shift=document.getElementById("inputShift").value;
+
+  // 🛠️ เช็คการเลือกกะทำงาน
+  if(!shift){showToast("กรุณาเลือกกะทำงาน","err");return;}
 
   let undoneCount = 0;
   if(isContactTip()){
