@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ISUZU FRG — Office Dashboard</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800;900&display=swap');
@@ -12,107 +12,128 @@
   --bg:#F2F2F3;--card:#fff;--text:#111827;--muted:#6B7280;--border:#E5E7EB;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.header{background:var(--red);color:#fff;padding:16px 20px 18px;}
-.header-row{display:flex;justify-content:space-between;align-items:flex-start;}
-.brand {font-size:20px;font-weight:900;letter-spacing:.04em;}
-.brand-sub{font-size:11px;opacity:.7;margin-top:1px;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:16px;}
+
+/* 🛠️ Compact Header */
+.header{background:var(--red);color:#fff;padding:10px 12px 12px;}
+.header-row{display:flex;justify-content:space-between;align-items:center;}
+.brand {font-size:16px;font-weight:900;letter-spacing:.04em;}
+.brand-sub{font-size:10px;opacity:.8;display:inline-block;margin-left:6px;}
 .live-wrap{text-align:right;}
-.live-pill{display:flex;align-items:center;gap:5px;justify-content:flex-end;font-size:12px;font-weight:700;}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#4ADE80;animation:pulse 2s infinite;}
+.live-pill{display:flex;align-items:center;gap:4px;justify-content:flex-end;font-size:11px;font-weight:700;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#4ADE80;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.update-time{font-size:10px;opacity:.65;margin-top:2px;}
-.header-date{font-size:12px;font-weight:600;opacity:.8;margin-top:8px;}
-.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px 0;}
-.sc{background:var(--card);border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.07);}
-.sc-num{font-size:28px;font-weight:900;line-height:1;}
-.sc-label{font-size:10px;color:var(--muted);font-weight:600;margin-top:3px;}
+.update-time{font-size:9px;opacity:.75;}
+.header-date{font-size:11px;font-weight:600;opacity:.85;margin-top:2px;}
+
+/* 🛠️ Compact Summary Cards */
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px 0;}
+.sc{background:var(--card);border-radius:10px;padding:8px 4px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.sc-num{font-size:20px;font-weight:900;line-height:1;}
+.sc-label{font-size:9px;color:var(--muted);font-weight:700;margin-top:2px;}
 .sc-total .sc-num{color:#1A56DB;}.sc-pass .sc-num{color:var(--pass);}
-.sc-fail .sc-num{color:var(--red);}.sc-wait .sc-num{color:#9CA3AF;}
-.filter-bar{display:flex;gap:6px;padding:10px 14px 0;flex-wrap:wrap;align-items:center;}
-.fbtn{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
-  font-family:'Sarabun',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);}
+.sc-fail .sc-num{color:var(--red);}.sc-wait .sc-num{color:#6B7280;}
+
+/* 🛠️ Filter & Control Bar (Single Line) */
+.filter-bar{display:flex;gap:4px;padding:8px 10px 0;align-items:center;}
+.fbtn{padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--card);
+  font-family:'Sarabun',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;}
 .fbtn.active{background:var(--red);border-color:var(--red);color:#fff;}
-.date-input{border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;
-  font-family:'Sarabun',sans-serif;font-size:13px;outline:none;background:var(--card);}
-.export-btn{margin-left:auto;background:var(--pass);color:#fff;border:none;border-radius:8px;
-  padding:6px 14px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
-.refresh-bar{display:flex;align-items:center;padding:8px 14px 0;font-size:12px;color:var(--muted);}
-.refresh-btn{margin-left:auto;background:var(--card);border:1.5px solid var(--border);border-radius:8px;
-  padding:4px 12px;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
-/* TYPE CARDS */
-.type-grid{display:flex;gap:10px;padding:12px 14px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-top:10px;}
-.type-grid::-webkit-scrollbar{display:none;}
-.tc{background:var(--card);border-radius:16px;padding:18px 16px;cursor:pointer;
-  border:2px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .15s;
-  position:relative;overflow:hidden;flex:0 0 160px;min-width:160px;}
+.date-input{border:1px solid var(--border);border-radius:6px;padding:4px 6px;
+  font-family:'Sarabun',sans-serif;font-size:11px;outline:none;background:var(--card);flex:1;min-width:0;
+  -webkit-appearance:none;appearance:none;}
+.action-btns{display:flex;gap:4px;margin-left:auto;}
+.export-btn{background:var(--pass);color:#fff;border:none;border-radius:6px;
+  padding:5px 8px;font-family:'Sarabun',sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.refresh-btn{background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:5px 8px;font-family:'Sarabun',sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;}
+
+.refresh-info{display:flex;justify-content:space-between;align-items:center;padding:4px 10px 0;font-size:10px;color:var(--muted);}
+
+/* 🛠️ Compact 2-Column Grid View for Mobile */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 10px 0;}
+.tc{background:var(--card);border-radius:12px;padding:10px 12px;cursor:pointer;
+  border:1.5px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s;
+  position:relative;display:flex;flex-direction:column;justify-content:space-between;}
 .tc:active{transform:scale(.97);}
 .tc.tc-pass{border-color:var(--pass-border);background:var(--pass-bg);}
 .tc.tc-fail{border-color:var(--fail-border);background:var(--fail-bg);}
 .tc.tc-warn{border-color:var(--warn-border);background:var(--warn-bg);}
-.tc-icon{font-size:24px;margin-bottom:6px;}
-.tc-name{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px;}
-.tc-ratio{font-size:32px;font-weight:900;line-height:1;margin-bottom:8px;}
+
+.tc-top{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.tc-icon{font-size:18px;}
+.tc-name{font-size:12px;font-weight:700;color:var(--text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.tc-bottom{display:flex;align-items:baseline;justify-content:space-between;margin-top:4px;}
+.tc-ratio{font-size:22px;font-weight:900;line-height:1;}
 .tc-pass .tc-ratio{color:var(--pass);}.tc-fail .tc-ratio{color:var(--red);}
-.tc-warn .tc-ratio{color:var(--warn);}.tc .tc-ratio{color:#D1D5DB;}
-.tc-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;
-  padding:4px 12px;border-radius:20px;}
+.tc-warn .tc-ratio{color:var(--warn);}.tc .tc-ratio{color:#9CA3AF;}
+
+.tc-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;white-space:nowrap;}
 .tc-pass .tc-badge{background:var(--pass);color:#fff;}
 .tc-fail .tc-badge{background:var(--red);color:#fff;}
 .tc-warn .tc-badge{background:var(--warn);color:#fff;}
 .tc .tc-badge{background:#E5E7EB;color:var(--muted);}
-.fail-dot{position:absolute;top:12px;right:12px;background:var(--red);color:#fff;
-  border-radius:50%;width:22px;height:22px;font-size:11px;font-weight:700;
+
+.fail-dot{position:absolute;top:6px;right:6px;background:var(--red);color:#fff;
+  border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:800;
   display:flex;align-items:center;justify-content:center;}
+
 /* ALERT */
-.alert-box{margin:10px 14px 0;background:var(--fail-bg);border:1.5px solid var(--fail-border);
-  border-radius:12px;padding:10px 14px;}
-.alert-title{font-size:12px;font-weight:700;color:var(--red);margin-bottom:3px;}
-.alert-body{font-size:12px;color:var(--text);}
-/* MODAL */
+.alert-box{margin:6px 10px 0;background:var(--fail-bg);border:1px solid var(--fail-border);
+  border-radius:8px;padding:6px 10px;}
+.alert-title{font-size:11px;font-weight:700;color:var(--red);}
+.alert-body{font-size:10px;color:var(--text);}
+
+/* MODAL DRAWER */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;
   align-items:flex-end;justify-content:center;}
 .overlay.show{display:flex;}
-.drawer{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:640px;
-  max-height:88vh;overflow-y:auto;padding-bottom:40px;}
-.drawer-handle{width:36px;height:4px;background:#D1D5DB;border-radius:99px;margin:12px auto 0;}
-.drawer-header{padding:14px 18px 10px;border-bottom:1px solid var(--border);
+.drawer{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:640px;
+  max-height:85vh;overflow-y:auto;padding-bottom:30px;}
+.drawer-handle{width:36px;height:4px;background:#D1D5DB;border-radius:99px;margin:10px auto 0;}
+.drawer-header{padding:10px 14px 8px;border-bottom:1px solid var(--border);
   position:sticky;top:0;background:var(--card);z-index:1;}
-.drawer-title{font-size:18px;font-weight:900;}
-.drawer-sub{font-size:12px;color:var(--muted);margin-top:2px;}
-.drawer-close{float:right;background:none;border:none;font-size:28px;cursor:pointer;
-  color:var(--muted);line-height:1;margin-top:-2px;font-weight:bold;}
+.drawer-title{font-size:16px;font-weight:900;}
+.drawer-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.drawer-close{float:right;background:none;border:none;font-size:24px;cursor:pointer;
+  color:var(--muted);line-height:1;font-weight:bold;}
+
 /* GROUP ROW inside modal */
-.group-row{margin:10px 18px 0;}
-.group-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-  color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.group-row{margin:8px 14px 0;}
+.group-label{font-size:11px;font-weight:800;text-transform:uppercase;
+  color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
 .group-prog{flex:1;height:5px;background:var(--border);border-radius:99px;overflow:hidden;}
 .group-prog-fill{height:100%;background:var(--pass);border-radius:99px;}
-.group-pct{font-size:11px;font-weight:700;color:var(--muted);}
+.group-pct{font-size:10px;font-weight:700;color:var(--muted);}
+
 /* STAGE ITEMS */
-.stage-list{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
-.si{border-radius:12px;padding:11px 14px;border:1.5px solid var(--border);background:#FAFAFA;}
+.stage-list{display:flex;flex-direction:column;gap:5px;margin-top:4px;}
+.si{border-radius:10px;padding:8px 10px;border:1px solid var(--border);background:#FAFAFA;}
 .si.si-pass{background:var(--pass-bg);border-color:var(--pass-border);cursor:pointer;}
 .si.si-fail{background:var(--fail-bg);border-color:var(--fail-border);}
 .si.si-pending{background:#FFFBEB;border-color:#FCD34D;}
-.si-header{display:flex;align-items:center;gap:8px;}
-.si-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.si-header{display:flex;align-items:center;gap:6px;}
+.si-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .dp{background:var(--pass);}.df{background:var(--red);}.dw{background:#D1D5DB;}.dy{background:#D97706;}
-.si-name{font-size:14px;font-weight:700;flex:1;}
-.si-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;}
+.si-name{font-size:13px;font-weight:700;flex:1;}
+.si-tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;}
 .tp{background:var(--pass);color:#fff;}.tf{background:var(--red);color:#fff;}.tw{background:#E5E7EB;color:var(--muted);}.ty{background:#D97706;color:#fff;}
-.si-checks{margin-top:8px;padding-top:7px;border-top:1px solid rgba(0,0,0,.07);}
-.ck{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;}
+.si-checks{margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.07);}
+.ck{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;}
 .ck.ck-fail{color:var(--red);font-weight:600;}
 .ck-val{font-weight:700;}
-.si-meta{font-size:11px;color:var(--muted);margin-top:5px;}
+.si-meta{font-size:10px;color:var(--muted);margin-top:4px;}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-row">
-    <div><div class="brand">ISUZU FRG</div><div class="brand-sub">Office Dashboard · Real-time</div></div>
+    <div>
+      <span class="brand">ISUZU FRG</span>
+      <span class="brand-sub">Dashboard</span>
+    </div>
     <div class="live-wrap">
       <div class="live-pill"><span class="live-dot"></span>LIVE</div>
       <div class="update-time" id="lastUpdate">--:--:--</div>
@@ -125,19 +146,22 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="sc sc-total"><div class="sc-num" id="sTotal">0</div><div class="sc-label">ทั้งหมด</div></div>
   <div class="sc sc-pass"><div class="sc-num" id="sPass">0</div><div class="sc-label">ผ่านแล้ว</div></div>
   <div class="sc sc-fail"><div class="sc-num" id="sFail">0</div><div class="sc-label">พบปัญหา</div></div>
-  <div class="sc sc-wait"><div class="sc-num" id="sWait">0</div><div class="sc-label">รอตรวจ/รออนุมัติ</div></div>
+  <div class="sc sc-wait"><div class="sc-num" id="sWait">0</div><div class="sc-label">รอตรวจ/อนุมัติ</div></div>
 </div>
 
 <div class="filter-bar">
   <button class="fbtn active" onclick="setShift('ALL',this)">ทั้งหมด</button>
-  <button class="fbtn" onclick="setShift('A',this)">SHIFT A</button>
-  <button class="fbtn" onclick="setShift('B',this)">SHIFT B</button>
+  <button class="fbtn" onclick="setShift('A',this)">กะ A</button>
+  <button class="fbtn" onclick="setShift('B',this)">กะ B</button>
   <input type="date" class="date-input" id="filterDate" onchange="renderDashboard()">
-  <button class="export-btn" onclick="exportCSV()">📥 Export</button>
+  <div class="action-btns">
+    <button class="export-btn" onclick="exportCSV()">📥 Export</button>
+    <button class="refresh-btn" onclick="refresh()">🔄</button>
+  </div>
 </div>
-<div class="refresh-bar">
+
+<div class="refresh-info">
   <span id="countdownText">รีเฟรชใน 30 วิ</span>
-  <button class="refresh-btn" onclick="refresh()">🔄 รีเฟรช</button>
 </div>
 
 <div id="alertArea"></div>
@@ -159,14 +183,13 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const SHEETS_URL="https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
-// 🛠️ อัปเดตโครงสร้างด่านตรงตามสเปกชีตปฏิทินเป๊ะ รวมทั้งหมด 175 Stage
 const STATION_DATA={
   FRC:{
     CO2:{stages:{"CP1-02":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-04":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-05":["FRT-LH","RR-LH","FRT-RH","RR-RH"]}},
     JIG:{stages:{"CP1-02":[],"CP1-03":[],"CP1-04":[],"CP1-05":[]}},
     AIR:{stages:{"CP1-02":[],"CP1-03":[],"CP1-04":[],"CP1-05":[]}},
     FANUC:{stages:{"CP1-03-LH":["no.1","no.3","no.5"],"CP1-03-RH":["no.2","no.4","no.6"]}},
-    CONTACT_TIP:{stages:{"CP1-03":[]}}, 
+    CONTACT_TIP:{stages:{"CP1-03":["W1","W2","W3","W4","W5","W6"]}}, 
   },
   FRF:{
     HOIST:{stages:{"SA1-01":[]}},
@@ -174,7 +197,7 @@ const STATION_DATA={
     JIG:{stages:{"SA1-01":[],"SA1-02":[],"MA1-00":[],"MA1-02":[],"MA1-04":[],"MA1-06":[],"MA1-07":[],"MA1-09":[]}},
     AIR:{stages:{"SA1-01":[],"SA1-02":[],"MA1-00":[],"MA1-02":[],"MA1-03":[],"MA1-04":[],"MA1-05":[],"MA1-06":[],"MA1-07":[],"MA1-09":[]}},
     YASKAWA:{stages:{"SA1-01":[],"SA1-02":[],"MA1-02":[],"MA1-04":["No.2/4/6","No.1/3/5"],"MA1-06":[]}},
-    CONTACT_TIP:{stages:{"MA1-02":[], "MA1-04":[], "MA1-06":[], "SA1-01":[], "SA1-02":[]}}, 
+    CONTACT_TIP:{stages:{"MA1-02":["W1","W2","W3","W4"], "MA1-04":["W1","W2","W3","W4","W5","W6"], "MA1-06":["W1","W2","W3","W4"], "SA1-01":["W1","W2"], "SA1-02":["W1","W2"]}}, 
   },
   FRR:{
     HOIST:{stages:{"SC1-01":[]}},
@@ -182,7 +205,7 @@ const STATION_DATA={
     JIG:{stages:{"SC1-01":[],"SC1-02":[],"MC1-01":[],"MC1-02":[],"MC1-04":[],"MC1-05":[],"MC1-07":[],"MC1-08":[],"MC1-10":[]}},
     AIR:{stages:{"SC1-01":[],"SC1-02":[],"MC1-01":[],"MC1-02":[],"MC1-04":[],"MC1-05":[],"MC1-07":[],"MC1-08":[],"MC1-8.5":["H8","H7"],"MC1-10":["H9","H10","Jig","Lifter"]}},
     YASKAWA:{stages:{"SC1-01":[],"SC1-02":[],"MC1-02":[],"MC1-04":["No.2/4/6"],"MC1-05":["No.1/3/5"],"MC1-07":[]}},
-    CONTACT_TIP:{stages:{"SC1-01":[], "SC1-02":[], "MC1-02":[], "MC1-04":[], "MC1-05":[], "MC1-07":[]}}, 
+    CONTACT_TIP:{stages:{"SC1-01":["W1","W2","W3"], "SC1-02":["W1","W2","W3"], "MC1-02":["W1","W2","W3","W4"], "MC1-04":["W1","W2","W3","W4"], "MC1-05":["W1","W2","W3","W4"], "MC1-07":["W1","W2"]}}, 
   },
   FRU:{
     HOIST:{stages:{"SA2-01":[]}},
@@ -190,7 +213,7 @@ const STATION_DATA={
     JIG:{stages:{"SA2-01":[],"SA2-02":[],"MA2-01":[],"MA2-02":[],"MA2-04":[],"MA2-06":[],"MA2-09":[]}},
     AIR:{stages:{"SA2-01":[],"SA2-02":[],"MA2-01":[],"MA2-02":[],"MA2-04":[],"MA2-06":[],"MA2-09":["H8","H9"]}},
     FANUC:{stages:{"SA2-01":[],"SA2-02":[],"MA2-02":[],"MA2-04":[],"MA2-06":[]}},
-    CONTACT_TIP:{stages:{"MA2-02":[], "MA2-04":[], "MA2-06":[], "SA2-01":[], "SA2-02":[]}}, 
+    CONTACT_TIP:{stages:{"MA2-02":["W1","W2","W3","W4"], "MA2-04":["W1","W2","W3","W4","W5","W6"], "MA2-06":["W1","W2","W3","W4"], "SA2-01":["W1","W2"], "SA2-02":["W1","W2"]}}, 
   },
   FRX:{
     HOIST:{stages:{"SC2-01":[]}},
@@ -198,14 +221,14 @@ const STATION_DATA={
     JIG:{stages:{"SC2-01":["RG2u-RJ2u"],"SC2-02":["RG2u-RJ2u"],"MC2-01":[],"MC2-02":[],"MC2-04":[],"MC2-05":[],"MC2-07":[],"MC2-10":[]}},
     AIR:{stages:{"SC2-01":[],"SC2-02":[],"MC2-01":[],"MC2-02":[],"MC2-04":[],"MC2-05":[],"MC2-07":[],"MC2-10":["H8","H9","H10","Jig"]}},
     FANUC:{stages:{"SC2-01":[],"SC2-02":[],"MC2-02":[],"MC2-04":[],"MC2-05":[],"MC2-07":[]}},
-    CONTACT_TIP:{stages:{"MC2-02":[], "MC2-04":[], "MC2-05":[], "MC2-07":[], "SC2-01":[], "SC2-02":[]}}, 
+    CONTACT_TIP:{stages:{"MC2-02":["W1","W2","W3","W4"], "MC2-04":["W1","W2","W3","W4"], "MC2-05":["W1","W2","W3","W4"], "MC2-07":["W1","W2"], "SC2-01":["W1","W2","W3"], "SC2-02":["W1","W2","W3"]}}, 
   },
   FXC:{
     CO2:{stages:{"CP2-02":["007","008","009","010"],"CP2-04":["011","012","013","014"],"CP2-05":["015","016","017","018"]}},
     JIG:{stages:{"CP2-02":[],"CP2-03":[],"CP2-04":[],"CP2-05":[]}},
     AIR:{stages:{"CP2-02":[],"CP2-03":[],"CP2-04":[],"CP2-05":[]}},
     FANUC:{stages:{"CP2-03":["NO.1","NO.2","NO.3","NO.4","NO.5","NO.6"]}},
-    CONTACT_TIP:{stages:{"CP2-03":[]}}, 
+    CONTACT_TIP:{stages:{"CP2-03":["W1","W2","W3","W4","W5","W6"]}}, 
   },
 };
 
@@ -389,7 +412,7 @@ function renderDashboard(){
           let cleanItemStage = String(s.stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
           let cleanTargetStage = String(stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
           
-          return (cleanItemStage===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
+          return (cleanItemStage===cleanTargetStage || cleanItemStage.split("-")[0]===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
         });
         
         const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
@@ -433,7 +456,7 @@ function renderDashboard(){
       <div class="alert-box">
         <div class="alert-title">⚠ ${a.type} — ${a.stage} (Group ${a.group})</div>
         <div class="alert-body">Worker: ${a.worker} · ปัญหา: ${a.failItems.join(", ")}</div>
-      </div>`).join("")+(alerts.length>5?`<div style="text-align:center;font-size:12px;color:var(--red);padding:6px 0;font-weight:700;">และอีก ${alerts.length-5} รายการ...</div>`:"");
+      </div>`).join("")+(alerts.length>5?`<div style="text-align:center;font-size:10px;color:var(--red);padding:4px 0;font-weight:700;">และอีก ${alerts.length-5} รายการ...</div>`:"");
   } else alertArea.innerHTML="";
 
   const grid=document.getElementById("typeGrid");
@@ -447,17 +470,21 @@ function renderDashboard(){
     
     if(st.fail>0){cls="tc-fail";badge="⚠ พบปัญหา";}
     else if(done===st.total&&st.total>0){cls="tc-pass";badge="ผ่านครบ";}
-    else if(done>0 || st.total - st.wait > 0){cls="tc-warn";badge="กำลังดำเนินการ";}
+    else if(done>0 || st.total - st.wait > 0){cls="tc-warn";badge="กำลังทำ";}
     else{badge="รอตรวจ";}
 
     const card=document.createElement("div");
     card.className="tc "+cls;
     card.innerHTML=`
       ${st.fail>0?`<div class="fail-dot">${st.fail}</div>`:""}
-      <div class="tc-icon">${meta.icon}</div>
-      <div class="tc-name">${meta.label}</div>
-      <div class="tc-ratio">${st.total - st.wait}/${st.total}</div>
-      <div class="tc-badge">${badge}</div>
+      <div class="tc-top">
+        <div class="tc-icon">${meta.icon}</div>
+        <div class="tc-name">${meta.label}</div>
+      </div>
+      <div class="tc-bottom">
+        <div class="tc-ratio">${st.total - st.wait}/${st.total}</div>
+        <div class="tc-badge">${badge}</div>
+      </div>
     `;
     card.onclick=()=>openModal(typeKey,meta,subs);
     grid.appendChild(card);
@@ -489,7 +516,7 @@ function openModal(typeKey,meta,subs){
         let cleanItemStage = String(s.stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
         let cleanTargetStage = String(stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
         
-        return (cleanItemStage===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
+        return (cleanItemStage===cleanTargetStage || cleanItemStage.split("-")[0]===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
       });
       
       const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
@@ -514,9 +541,9 @@ function openModal(typeKey,meta,subs){
     const pct=stages.length>0?Math.round((gPass+gFail)/stages.length*100):0;
     const grpColor=gFail>0?"var(--red)":gPass+gFail===stages.length?"var(--pass)":"var(--warn)";
     grpEl.innerHTML=`
-      <div class="group-label" style="margin-top:14px;">
+      <div class="group-label" style="margin-top:10px;">
         🏭 Group ${group}
-        <div class="group-prog" style="margin: 0 10px;"><div class="group-prog-fill" style="width:${pct}%;background:${grpColor}"></div></div>
+        <div class="group-prog" style="margin: 0 8px;"><div class="group-prog-fill" style="width:${pct}%;background:${grpColor}"></div></div>
         <span class="group-pct">${gPass+gFail}/${stages.length}</span>
       </div>`;
 
