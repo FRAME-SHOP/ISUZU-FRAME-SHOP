@@ -14,7 +14,9 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:16px;}
 
-/* 🛠️ Compact Header */
+/* ==========================================================================
+   📱 MOBILE STYLES (ขนาดหน้าจอมือถือ - เน้นกระชับ จบในหน้าเดียว)
+   ========================================================================== */
 .header{background:var(--red);color:#fff;padding:10px 12px 12px;}
 .header-row{display:flex;justify-content:space-between;align-items:center;}
 .brand {font-size:16px;font-weight:900;letter-spacing:.04em;}
@@ -26,7 +28,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .update-time{font-size:9px;opacity:.75;}
 .header-date{font-size:11px;font-weight:600;opacity:.85;margin-top:2px;}
 
-/* 🛠️ Compact Summary Cards */
 .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px 0;}
 .sc{background:var(--card);border-radius:10px;padding:8px 4px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05);}
 .sc-num{font-size:20px;font-weight:900;line-height:1;}
@@ -34,7 +35,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .sc-total .sc-num{color:#1A56DB;}.sc-pass .sc-num{color:var(--pass);}
 .sc-fail .sc-num{color:var(--red);}.sc-wait .sc-num{color:#6B7280;}
 
-/* 🛠️ Filter & Control Bar (Single Line) */
 .filter-bar{display:flex;gap:4px;padding:8px 10px 0;align-items:center;}
 .fbtn{padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--card);
   font-family:'Sarabun',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;}
@@ -50,7 +50,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
 .refresh-info{display:flex;justify-content:space-between;align-items:center;padding:4px 10px 0;font-size:10px;color:var(--muted);}
 
-/* 🛠️ Compact 2-Column Grid View for Mobile */
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 10px 0;}
 .tc{background:var(--card);border-radius:12px;padding:10px 12px;cursor:pointer;
   border:1.5px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s;
@@ -124,6 +123,69 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .ck.ck-fail{color:var(--red);font-weight:600;}
 .ck-val{font-weight:700;}
 .si-meta{font-size:10px;color:var(--muted);margin-top:4px;}
+
+
+/* ==========================================================================
+   💻 DESKTOP STYLES (สลับกลับไปใช้เลเอาต์เดิมเมื่อเปิดบนคอมพิวเตอร์ / หน้าจอใหญ่)
+   ========================================================================== */
+@media (min-width: 768px) {
+  body { padding-bottom: 40px; }
+  
+  .header { padding: 16px 20px 18px; }
+  .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
+  .brand { font-size: 20px; }
+  .brand-sub { font-size: 11px; opacity: 0.7; margin-top: 1px; display: block; margin-left: 0; }
+  .live-pill { font-size: 12px; gap: 5px; }
+  .live-dot { width: 7px; height: 7px; }
+  .update-time { font-size: 10px; opacity: 0.65; margin-top: 2px; }
+  .header-date { font-size: 12px; opacity: 0.8; margin-top: 8px; }
+
+  .summary { gap: 8px; padding: 12px 14px 0; }
+  .sc { padding: 12px 8px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+  .sc-num { font-size: 28px; }
+  .sc-label { font-size: 10px; margin-top: 3px; }
+
+  .filter-bar { gap: 6px; padding: 10px 14px 0; flex-wrap: wrap; }
+  .fbtn { padding: 6px 14px; font-size: 13px; border-radius: 8px; border-width: 1.5px; }
+  .date-input { padding: 6px 10px; font-size: 13px; border-radius: 8px; border-width: 1.5px; flex: initial; }
+  .action-btns { gap: 6px; margin-left: auto; }
+  .export-btn, .refresh-btn { padding: 6px 14px; font-size: 13px; border-radius: 8px; }
+
+  .refresh-info { padding: 8px 14px 0; font-size: 12px; }
+
+  /* สลับกลับเป็นแถวการ์ดแนวนอนสโครลได้ หรือการ์ดใบใหญ่แบบดั้งเดิม */
+  .type-grid {
+    display: flex;
+    gap: 10px;
+    padding: 12px 14px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-top: 10px;
+  }
+  .type-grid::-webkit-scrollbar { display: none; }
+
+  .tc {
+    flex: 0 0 160px;
+    min-width: 160px;
+    padding: 18px 16px;
+    border-radius: 16px;
+    border-width: 2px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    display: block;
+  }
+  .tc-top { display: block; margin-bottom: 0; }
+  .tc-icon { font-size: 24px; margin-bottom: 6px; }
+  .tc-name { font-size: 13px; color: var(--muted); margin-bottom: 10px; white-space: normal; overflow: visible; }
+  .tc-bottom { display: block; margin-top: 0; }
+  .tc-ratio { font-size: 32px; margin-bottom: 8px; }
+  .tc-badge { font-size: 12px; padding: 4px 12px; border-radius: 20px; display: inline-flex; }
+  .fail-dot { width: 22px; height: 22px; font-size: 11px; top: 12px; right: 12px; }
+
+  .alert-box { margin: 10px 14px 0; padding: 10px 14px; border-radius: 12px; border-width: 1.5px; }
+  .alert-title { font-size: 12px; margin-bottom: 3px; }
+  .alert-body { font-size: 12px; }
+}
 </style>
 </head>
 <body>
@@ -132,7 +194,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="header-row">
     <div>
       <span class="brand">ISUZU FRG</span>
-      <span class="brand-sub">Dashboard</span>
+      <span class="brand-sub">Office Dashboard · Real-time</span>
     </div>
     <div class="live-wrap">
       <div class="live-pill"><span class="live-dot"></span>LIVE</div>
@@ -146,17 +208,17 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="sc sc-total"><div class="sc-num" id="sTotal">0</div><div class="sc-label">ทั้งหมด</div></div>
   <div class="sc sc-pass"><div class="sc-num" id="sPass">0</div><div class="sc-label">ผ่านแล้ว</div></div>
   <div class="sc sc-fail"><div class="sc-num" id="sFail">0</div><div class="sc-label">พบปัญหา</div></div>
-  <div class="sc sc-wait"><div class="sc-num" id="sWait">0</div><div class="sc-label">รอตรวจ/อนุมัติ</div></div>
+  <div class="sc sc-wait"><div class="sc-num" id="sWait">0</div><div class="sc-label">รอตรวจ/รออนุมัติ</div></div>
 </div>
 
 <div class="filter-bar">
   <button class="fbtn active" onclick="setShift('ALL',this)">ทั้งหมด</button>
-  <button class="fbtn" onclick="setShift('A',this)">กะ A</button>
-  <button class="fbtn" onclick="setShift('B',this)">กะ B</button>
+  <button class="fbtn" onclick="setShift('A',this)">SHIFT A</button>
+  <button class="fbtn" onclick="setShift('B',this)">SHIFT B</button>
   <input type="date" class="date-input" id="filterDate" onchange="renderDashboard()">
   <div class="action-btns">
     <button class="export-btn" onclick="exportCSV()">📥 Export</button>
-    <button class="refresh-btn" onclick="refresh()">🔄</button>
+    <button class="refresh-btn" onclick="refresh()">🔄 รีเฟรช</button>
   </div>
 </div>
 
