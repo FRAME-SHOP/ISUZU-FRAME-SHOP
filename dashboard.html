@@ -224,13 +224,14 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const SHEETS_URL="https://script.google.com/macros/s/AKfycbyF-nQ4tO1KWeAIlwtumGYBekLT7plg87xQn31jT1Gl49VQaiIGAg4UBMDv_PRjaJ_1jw/exec";
 
+// 🛠️ โครงสร้างด่านคำนวณยอดถ้วนเป๊ะ = 196 Stage
 const STATION_DATA={
   FRC:{
     CO2:{stages:{"CP1-02":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-04":["FRT-LH","RR-LH","FRT-RH","RR-RH"],"CP1-05":["FRT-LH","RR-LH","FRT-RH","RR-RH"]}},
     JIG:{stages:{"CP1-02":[],"CP1-03":[],"CP1-04":[],"CP1-05":[]}},
     AIR:{stages:{"CP1-02":[],"CP1-03":[],"CP1-04":[],"CP1-05":[]}},
     FANUC:{stages:{"CP1-03-LH":["no.1","no.3","no.5"],"CP1-03-RH":["no.2","no.4","no.6"]}},
-    CONTACT_TIP:{stages:{"CP1-03":["W1","W2","W3","W4","W5","W6"]}}, 
+    CONTACT_TIP:{stages:{"CP1-03":[]}}, 
   },
   FRF:{
     HOIST:{stages:{"SA1-01":[]}},
@@ -265,11 +266,11 @@ const STATION_DATA={
     CONTACT_TIP:{stages:{"MC2-02":["W1","W2","W3","W4"], "MC2-04":["W1","W2","W3","W4"], "MC2-05":["W1","W2","W3","W4"], "MC2-07":["W1","W2"], "SC2-01":["W1","W2","W3"], "SC2-02":["W1","W2","W3"]}}, 
   },
   FXC:{
-    CO2:{stages:{"CP2-02":["007","008","009","010"],"CP2-04":["011","012","013","014"],"CP2-05":["015","016","017","018"]}},
-    JIG:{stages:{"CP2-02":[],"CP2-03":[],"CP2-04":[],"CP2-05":[]}},
-    AIR:{stages:{"CP2-02":[],"CP2-03":[],"CP2-04":[],"CP2-05":[]}},
-    FANUC:{stages:{"CP2-03":["NO.1","NO.2","NO.3","NO.4","NO.5","NO.6"]}},
-    CONTACT_TIP:{stages:{"CP2-03":["W1","W2","W3","W4","W5","W6"]}}, 
+    CO2:{stages:{"CP2-02":[]}},
+    JIG:{stages:{"CP2-02":[]}},
+    AIR:{stages:{"CP2-02":[]}},
+    FANUC:{stages:{"CP2-03-NO.1":[], "CP2-03-NO.2":[], "CP2-03-NO.3":[], "CP2-03-NO.4":[]}},
+    CONTACT_TIP:{stages:{"CP2-03":[]}}, 
   },
 };
 
@@ -292,7 +293,6 @@ const TYPE_META={
   CONTACT_TIP:{label:"CONTACT TIP",icon:"🔌"},
 };
 
-// 🛠️ ล็อคฟังก์ชันแตก Stage ย่อย ให้ได้ยอดรวม 196 Stage เป๊ะ
 function getAllStages(group,typeKey){
   const t=STATION_DATA[group]&&STATION_DATA[group][typeKey];
   if(!t) return [];
@@ -418,7 +418,6 @@ function cleanDateStr(str) {
   return `${year}-${month}-${day}`;
 }
 
-// 🛠️ ล็อคลอจิกคำนวณเป้าหมายเพื่อไม่ให้มีการนับ Stage เบิ้ลซ้ำ ยอดรวมจะได้ 196 เป๊ะ
 function renderDashboard(){
   const filterDateInput = document.getElementById("filterDate").value; 
   const targetDateCleaned = cleanDateStr(filterDateInput);
@@ -455,7 +454,7 @@ function renderDashboard(){
           let cleanItemStage = String(s.stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
           let cleanTargetStage = String(stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
           
-          return (cleanItemStage===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
+          return (cleanItemStage===cleanTargetStage || cleanItemStage.split("-")[0]===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
         });
         
         const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
@@ -559,7 +558,7 @@ function openModal(typeKey,meta,subs){
         let cleanItemStage = String(s.stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
         let cleanTargetStage = String(stage || "").trim().toUpperCase().split("-").join("").split("_").join("").split(" ").join("").split(".").join("");
         
-        return (cleanItemStage===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
+        return (cleanItemStage===cleanTargetStage || cleanItemStage.split("-")[0]===cleanTargetStage) && s.group===group && (sTypeClean === keyClean || sTypeClean === labelClean);
       });
       
       const sortedSubs = stageSubs.sort((a,b)=>new Date(b.timestamp_worker)-new Date(a.timestamp_worker));
