@@ -12,15 +12,16 @@
   --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;font-size:16px;} /* ปรับพื้นฐานเป็น 16px */
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;font-size:16px;}
 
 .header{background:var(--red);color:#ffffff;padding:18px 16px 28px;}
-.header-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.header-top-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
 .back-btn{background:rgba(255,255,255,.2);border:none;color:#ffffff;border-radius:8px;padding:6px 12px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
 .back-btn:hover{background:rgba(255,255,255,.3);}
-.logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
 .header-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;margin-bottom:2px;}
-.header-name{font-size:20px;font-weight:800;line-height:1.2;color:#ffffff;} /* ล็อกไม่เกิน 20px ตามเงื่อนไข */
+.header-name{font-size:20px;font-weight:800;line-height:1.2;color:#ffffff;}
 .header-sub{font-size:15px;font-weight:500;color:#ffffff;margin-top:2px;}
 .breadcrumb{display:flex;align-items:center;gap:6px;font-size:14px;color:#ffffff;margin-top:8px;flex-wrap:wrap;}
 .breadcrumb span{color:#ffffff;font-weight:500;}
@@ -147,7 +148,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <div class="header">
   <div class="header-top">
     <div class="logo">ISUZU FRG</div>
-    <button class="back-btn" id="backBtn" onclick="goBack()" style="display:none;">← ย้อนกลับ</button>
+    <div class="header-top-left" id="headerButtonsContainer" style="display:none;">
+      <button class="back-btn" id="backBtn" onclick="goBack()">← ย้อนกลับ</button>
+      <button class="back-btn" id="toTypeBtn" onclick="goToTypeSelect()" style="display:none;">เลือกประเภท ≡</button>
+    </div>
   </div>
   <div class="header-title" id="headerLabel">เริ่มต้นใช้งาน</div>
   <div class="header-name" id="headerName">Worker — ตรวจสอบ</div>
@@ -549,46 +553,64 @@ function showPage(id){
 }
 
 function updateHeader(){
+  const headerButtonsContainer = document.getElementById("headerButtonsContainer");
   const backBtn = document.getElementById("backBtn");
+  const toTypeBtn = document.getElementById("toTypeBtn");
   const bc = document.getElementById("breadcrumb");
 
   if(!nav.group){
+    headerButtonsContainer.style.display = "flex";
+    backBtn.textContent = "← เปลี่ยนกะ/วันที่";
+    backBtn.onclick = () => { showPage("init"); nav.date=null; nav.shift=null; updateHeader(); };
+    toTypeBtn.style.display = "none";
+    
     document.getElementById("headerLabel").textContent = `วันที่ ${nav.date} · SHIFT ${nav.shift}`;
     document.getElementById("headerName").textContent = "เลือก Group";
     document.getElementById("headerSub").textContent = "กรุณาเลือก Group ของคุณ";
-    backBtn.style.display = "block";
-    backBtn.textContent = "← เปลี่ยนกะ/วันที่";
-    backBtn.onclick = () => { showPage("init"); nav.date=null; nav.shift=null; updateHeader(); };
     bc.innerHTML = "";
   } else if(!nav.type){
+    headerButtonsContainer.style.display = "flex";
+    backBtn.textContent = "← ย้อนกลับ";
+    backBtn.onclick = goBack;
+    toTypeBtn.style.display = "none";
+
     document.getElementById("headerLabel").textContent = `Group ${nav.group} · SHIFT ${nav.shift}`;
     document.getElementById("headerName").textContent = "เลือกประเภทตรวจสอบ";
     document.getElementById("headerSub").textContent = "กรุณาเลือกประเภทรายการ";
-    backBtn.style.display = "block";
-    backBtn.textContent = "← ย้อนกลับ";
-    backBtn.onclick = goBack;
     bc.innerHTML = `<span>Group ${nav.group}</span>`;
   } else if(!nav.stage){
+    headerButtonsContainer.style.display = "flex";
+    backBtn.textContent = "← ย้อนกลับ";
+    backBtn.onclick = goBack;
+    toTypeBtn.style.display = "none";
+
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     document.getElementById("headerLabel").textContent = typeLabel;
     document.getElementById("headerName").textContent = "เลือก Stage";
     document.getElementById("headerSub").textContent = "กรุณาเลือก Stage";
-    backBtn.style.display = "block";
     bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span>`;
   } else if(getSubtypes().length && !nav.subtype && !isContactTip()){
+    headerButtonsContainer.style.display = "flex";
+    backBtn.textContent = "← ย้อนกลับ";
+    backBtn.onclick = goBack;
+    toTypeBtn.style.display = "inline-block"; // แสดงปุ่มลัดไปเลือกประเภทเมื่ออยู่ในหน้า Subtype ขึ้นไป
+
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     document.getElementById("headerLabel").textContent = typeLabel + " · " + nav.stage;
     document.getElementById("headerName").textContent = "เลือกรายละเอียดย่อย";
     document.getElementById("headerSub").textContent = "กรุณาเลือกตำแหน่งย่อย";
-    backBtn.style.display = "block";
     bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${nav.stage}</span>`;
   } else {
+    headerButtonsContainer.style.display = "flex";
+    backBtn.textContent = "← ย้อนกลับ";
+    backBtn.onclick = goBack;
+    toTypeBtn.style.display = "inline-block"; // แสดงปุ่มลัดไปเลือกประเภทเมื่ออยู่ในฟอร์มตรวจ
+
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     const fullName = nav.stage + (nav.subtype ? " ("+nav.subtype+")" : "");
     document.getElementById("headerLabel").textContent = typeLabel;
     document.getElementById("headerName").textContent = fullName;
     document.getElementById("headerSub").textContent = `${nav.date} · SHIFT ${nav.shift}`;
-    backBtn.style.display = "block";
     bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${fullName}</span>`;
   }
 }
@@ -617,6 +639,16 @@ function goBack(){
   } else if(nav.group){ 
     nav.group=null; updateHeader(); showPage("group"); 
   }
+}
+
+// ฟังก์ชันสำหรับปุ่มลัด "เลือกประเภท" ด้านขวา
+function goToTypeSelect(){
+  nav.type = null;
+  nav.stage = null;
+  nav.subtype = null;
+  updateHeader();
+  renderTypes();
+  showPage("type");
 }
 
 function goHome(){
