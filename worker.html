@@ -12,15 +12,18 @@
   --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:90px;font-size:16px;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:110px;font-size:16px;}
 
-.header{background:var(--red);color:#ffffff;padding:18px 16px 20px;}
-.logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;margin-bottom:8px;}
-.header-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;margin-bottom:2px;}
-.header-name{font-size:20px;font-weight:800;line-height:1.2;color:#ffffff;}
-.header-sub{font-size:15px;font-weight:500;color:#ffffff;margin-top:2px;}
-.breadcrumb{display:flex;align-items:center;gap:6px;font-size:14px;color:#ffffff;margin-top:6px;flex-wrap:wrap;}
-.breadcrumb span{color:#ffffff;font-weight:500;}
+/* 🎨 ปรับแต่ง Header ด้านบนให้จัดเรียงสวยงาม ไม่รก และมีลูกเล่นจัดข้อความบางส่วนไปทางขวา */
+.header{background:var(--red);color:#ffffff;padding:18px 16px 20px;position:relative;}
+.header-top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
+.header-right-meta{text-align:right;}
+.header-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.85);}
+.header-name{font-size:20px;font-weight:800;line-height:1.2;color:#ffffff;margin-top:2px;}
+.header-sub{font-size:14px;font-weight:500;color:rgba(255,255,255,0.9);margin-top:2px;}
+.breadcrumb{display:flex;align-items:center;justify-content:flex-end;gap:6px;font-size:13px;color:rgba(255,255,255,0.8);margin-top:8px;flex-wrap:wrap;}
+.breadcrumb span{color:#ffffff;font-weight:600;}
 
 .section{margin:14px 14px 0;}
 .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px;}
@@ -117,7 +120,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
 
-/* 📌 แถบปุ่มลอยติดด้านล่างหน้าจอ */
+/* 📌 แถบปุ่มลอยติดด้านล่าง พร้อมเว้นขอบ Safe Area (ไม่ทับแถบดำมือถือ) */
 .bottom-floating-nav {
   position: fixed;
   bottom: 0;
@@ -125,7 +128,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   right: 0;
   background: #ffffff;
   border-top: 1.5px solid var(--border);
-  padding: 12px 14px;
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)) 14px;
   display: none;
   gap: 12px;
   z-index: 900;
@@ -170,7 +173,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-bottom:10px;}
 .home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;}
 
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
 
@@ -186,8 +189,12 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <body>
 
 <div class="header">
-  <div class="logo">ISUZU FRG</div>
-  <div class="header-title" id="headerLabel">เริ่มต้นใช้งาน</div>
+  <div class="header-top-row">
+    <div class="logo">ISUZU FRG</div>
+    <div class="header-right-meta">
+      <div class="header-title" id="headerLabel">เริ่มต้นใช้งาน</div>
+    </div>
+  </div>
   <div class="header-name" id="headerName">Worker — ตรวจสอบ</div>
   <div class="header-sub" id="headerSub">กรุณาเลือกวันที่และกะทำงาน</div>
   <div class="breadcrumb" id="breadcrumb"></div>
@@ -282,7 +289,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <button class="home-btn" onclick="goHome()">🏠 กลับหน้าหลัก</button>
 </div>
 
-<!-- 📌 แถบปุ่มลอยติดด้านล่าง (แสดงตั้งแต่หน้า Stage ขึ้นไป) -->
+<!-- 📌 แถบปุ่มลอยติดด้านล่าง (เว้นขอบ Safe Area ป้องกันชนขอบดำด้านล่าง) -->
 <div class="bottom-floating-nav" id="bottomFloatingNav">
   <button class="bottom-nav-btn btn-back-left" onclick="goBack()">← ย้อนกลับ</button>
   <button class="bottom-nav-btn btn-type-right" onclick="goToTypeSelect()">เลือกประเภท ≡</button>
