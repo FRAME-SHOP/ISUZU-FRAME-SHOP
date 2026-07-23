@@ -17,34 +17,27 @@ body {
   font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text);
   min-height: 100vh; padding-bottom: 80px; margin: 0; padding: 0;
   width: 100%; max-width: 100%; overflow-x: hidden; position: relative;
+  font-size: 16px; /* ขยายพื้นฐาน +2 */
 }
 
-.header{background:var(--red);color:#ffffff;padding:16px;width:100%;}
+.header{background:var(--red);color:#ffffff;padding:18px 16px;width:100%;}
 .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;}
-.header-left-title{font-size:18px;font-weight:800;line-height:1.3;white-space:pre-line;}
-.header-right-title{font-size:20px;font-weight:800;text-align:right;line-height:1.3;}
-.breadcrumb{font-size:16px;font-weight:700;color:#FFE4E6;margin-top:6px;word-break:break-all;}
+.header-left-title{font-size:20px;font-weight:800;line-height:1.3;white-space:pre-line;}
+.header-right-title{font-size:22px;font-weight:800;text-align:right;line-height:1.3;}
+.breadcrumb{font-size:18px;font-weight:700;color:#FFE4E6;margin-top:6px;word-break:break-all;}
 
-.init-hero {
-  font-size: 16px; font-weight: 800; letter-spacing: 0.05em; color: #ffffff; margin-bottom: 2px;
-}
-.init-hero-sub {
-  font-size: 13px; font-weight: 600; color: #F3F4F6; margin-bottom: 10px; opacity: 0.9;
-}
-.init-hero-title {
-  font-size: 26px; font-weight: 800; color: #ffffff; line-height: 1.2; margin-bottom: 4px;
-}
-.init-hero-desc {
-  font-size: 15px; font-weight: 500; color: #FFE4E6;
-}
+.init-hero { font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: #ffffff; margin-bottom: 2px; }
+.init-hero-sub { font-size: 15px; font-weight: 600; color: #F3F4F6; margin-bottom: 10px; opacity: 0.9; }
+.init-hero-title { font-size: 28px; font-weight: 800; color: #ffffff; line-height: 1.2; margin-bottom: 4px; }
+.init-hero-desc { font-size: 17px; font-weight: 500; color: #FFE4E6; }
 
-.section { margin: 16px 12px 0 12px; width: calc(100% - 24px); }
-.section-title { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
-.grid { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.section { margin: 18px 12px 0 12px; width: calc(100% - 24px); }
+.section-title { font-size: 16px; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+.grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
 .nav-card{
   background: var(--card); border-radius: 14px; border: 1.5px solid var(--border);
-  padding: 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px;
+  padding: 18px 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px;
   cursor: pointer; transition: transform .15s, box-shadow .15s; position: relative; width: 100%;
 }
 .nav-card:active{transform:scale(.98);}
@@ -61,21 +54,21 @@ body {
 .nav-card.warn-stage .nav-title { color: #92400E; }
 .nav-card.warn-stage .nav-sub { color: #B45309; font-weight: 600; }
 
-.badge-status { font-size: 13px; padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-left: auto; color: #fff; text-align: right; flex-shrink: 0; }
+.badge-status { font-size: 15px; padding: 6px 12px; border-radius: 8px; font-weight: 700; margin-left: auto; color: #fff; text-align: right; flex-shrink: 0; }
 .badge-pass { background: var(--pass); }
 .badge-fail { background: var(--red); }
 .badge-warn { background: var(--warn); color: #78350F; }
 
-.nav-icon{font-size:30px;flex-shrink:0;}
+.nav-icon{font-size:32px;flex-shrink:0;}
 .nav-info{flex:1;min-width:0;}
-.nav-title{font-size:18px;font-weight:800;}
-.nav-sub{font-size:13px;color:var(--muted);margin-top:3px;}
-.nav-arrow{font-size:22px;color:var(--red);font-weight:700;flex-shrink:0;margin-left:auto;}
+.nav-title{font-size:20px;font-weight:800;}
+.nav-sub{font-size:15px;color:var(--muted);margin-top:4px;}
+.nav-arrow{font-size:24px;color:var(--red);font-weight:700;flex-shrink:0;margin-left:auto;}
 
 .subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 12px;width:calc(100% - 24px);}
 .subtype-chip{
   background:var(--card);border:1.5px solid var(--border);border-radius:14px;
-  padding:18px 14px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;
+  padding:20px 14px;font-size:17px;font-weight:700;cursor:pointer;text-align:center;
   box-shadow:var(--shadow);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .subtype-chip:active{transform:scale(.97);}
@@ -91,88 +84,88 @@ body {
 @media (max-width: 600px) {
   .meta-card { grid-template-columns: 1fr !important; gap: 12px !important; padding: 14px !important; width:calc(100% - 24px) !important; }
 }
-.meta-item label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
+.meta-item label{display:block;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
 .meta-item input, .meta-item select, .field-card input, .field-card select {
   width: 100% !important; max-width: 100% !important; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px;
-  font-family: 'Sarabun', sans-serif; font-size: 16px; background: #F9FAFB; outline: none; color: #0284C7; font-weight: 700;
+  font-family: 'Sarabun', sans-serif; font-size: 18px; background: #F9FAFB; outline: none; color: #0284C7; font-weight: 700;
 }
 
-.progress-wrap{margin:14px 12px 0;width:calc(100% - 24px);}
-.progress-bg{background:#E5E7EB;border-radius:99px;height:8px;overflow:hidden;width:100%;}
+.progress-wrap{margin:16px 12px 0;width:calc(100% - 24px);}
+.progress-bg{background:#E5E7EB;border-radius:99px;height:10px;overflow:hidden;width:100%;}
 .progress-fill{background:var(--red);height:100%;border-radius:99px;transition:width .3s;width:0%;}
-.progress-label{font-size:13px;color:var(--muted);text-align:right;margin-top:4px;font-weight:600;}
+.progress-label{font-size:15px;color:var(--muted);text-align:right;margin-top:6px;font-weight:600;}
 
-.check-list{display:flex;flex-direction:column;gap:10px;width:100%;}
-.check-item{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);width:100%;}
+.check-list{display:flex;flex-direction:column;gap:12px;width:100%;}
+.check-item{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:16px;box-shadow:var(--shadow);width:100%;}
 .check-item.pass{border-color:var(--pass-border);background:var(--pass-bg);}
 .check-item.fail{border-color:var(--fail-border);background:var(--fail-bg);}
 .check-top{display:flex;align-items:flex-start;gap:12px;width:100%;}
-.check-num{background:#FFE8E8;color:var(--red);font-size:13px;font-weight:700;border-radius:8px;padding:3px 9px;flex-shrink:0;margin-top:2px;}
+.check-num{background:#FFE8E8;color:var(--red);font-size:15px;font-weight:700;border-radius:8px;padding:4px 10px;flex-shrink:0;margin-top:2px;}
 .check-info{flex:1;min-width:0;}
-.check-name{font-size:16px;font-weight:700;line-height:1.4;}
-.check-std{font-size:13px;color:var(--muted);margin-top:3px;}
+.check-name{font-size:18px;font-weight:700;line-height:1.4;}
+.check-std{font-size:15px;color:var(--muted);margin-top:4px;}
 .toggle-group{display:flex;gap:8px;flex-shrink:0;margin-top:2px;}
-.tbtn{width:46px;height:42px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.tbtn{width:50px;height:46px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 .tbtn.ap{background:var(--pass);border-color:var(--pass);color:#fff;}
 .tbtn.af{background:var(--red);border-color:var(--red);color:#fff;}
 
-.comment-row{margin-top:10px;width:100%;}
-.comment-row textarea{width:100%;max-width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:15px;resize:none;outline:none;background:#fff;min-height:60px;}
+.comment-row{margin-top:12px;width:100%;}
+.comment-row textarea{width:100%;max-width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px;font-family:'Sarabun',sans-serif;font-size:17px;resize:none;outline:none;background:#fff;min-height:70px;}
 
 /* 🛠️ ล็อกกรอบฟิลด์ข้อมูลให้พอดีหน้าจอดันไม่ล้นขอบ */
 .field-card{
   background: var(--card); border-radius: 16px; border: 1.5px solid var(--border);
-  padding: 16px; box-shadow: var(--shadow); width: 100%; max-width: 100%;
+  padding: 18px 16px; box-shadow: var(--shadow); width: 100%; max-width: 100%; box-sizing: border-box;
 }
-.field-card label{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:8px;}
+.field-card label{display:block;font-size:15px;font-weight:700;color:var(--muted);margin-bottom:8px;}
 .field-card input, .field-card select, .field-card textarea{
   width: 100% !important; max-width: 100% !important; border: 1.5px solid var(--border);
-  border-radius: 12px; padding: 14px; font-family: 'Sarabun', sans-serif; font-size: 16px;
-  outline: none; background: #F9FAFB; color: #0284C7; font-weight: 700;
+  border-radius: 12px; padding: 14px; font-family: 'Sarabun', sans-serif; font-size: 18px;
+  outline: none; background: #F9FAFB; color: #0284C7; font-weight: 700; box-sizing: border-box !important;
 }
 .field-card select { color: var(--text); font-weight: normal; }
 .field-card select:invalid { color: #9CA3AF; }
-.field-card textarea{resize:none;min-height:70px;color:var(--text);font-weight:normal;}
+.field-card textarea{resize:none;min-height:80px;color:var(--text);font-weight:normal;}
 
 .submit-btn{
-  width: 100%; max-width: 100%; margin: 18px 0 0 0; background: var(--red); color: #fff;
-  border: none; border-radius: 14px; padding: 16px; font-family: 'Sarabun', sans-serif;
-  font-size: 18px; font-weight: 800; cursor: pointer; display: flex; align-items: center;
+  width: 100%; max-width: 100%; margin: 20px 0 0 0; background: var(--red); color: #fff;
+  border: none; border-radius: 14px; padding: 18px; font-family: 'Sarabun', sans-serif;
+  font-size: 20px; font-weight: 800; cursor: pointer; display: flex; align-items: center;
   justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(204,0,0,0.3);
 }
 .submit-btn:hover{background:var(--red-dark);}
 
 .bottom-nav-bar {
   position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
-  border-top: 1.5px solid var(--border); padding: 12px 16px; display: flex; gap: 10px;
+  border-top: 1.5px solid var(--border); padding: 14px 16px; display: flex; gap: 10px;
   z-index: 99; box-shadow: 0 -4px 16px rgba(0,0,0,.06); width: 100%; max-width: 100%;
 }
 .bnav-btn {
-  flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border);
+  flex: 1; padding: 14px; border-radius: 12px; border: 1.5px solid var(--border);
   background: #F3F4F6; color: var(--text); font-family: 'Sarabun', sans-serif;
-  font-size: 14px; font-weight: 700; cursor: pointer; text-align: center;
+  font-size: 16px; font-weight: 700; cursor: pointer; text-align: center;
 }
 .bnav-btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
 
 .success-screen{display:none;padding:40px 20px;text-align:center;width:100%;}
 .success-screen.show{display:block;}
-.success-icon{font-size:70px;margin-bottom:12px;}
-.success-title{font-size:24px;font-weight:800;margin-bottom:6px;}
-.success-sub{font-size:15px;color:var(--muted);margin-bottom:28px;}
-.success-info{background:#F9FAFB;border-radius:14px;padding:16px;text-align:left;font-size:15px;line-height:2;border:1.5px solid var(--border);margin-bottom:20px;width:100%;}
-.reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;}
-.home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+.success-icon{font-size:80px;margin-bottom:14px;}
+.success-title{font-size:26px;font-weight:800;margin-bottom:8px;}
+.success-sub{font-size:17px;color:var(--muted);margin-bottom:28px;}
+.success-info{background:#F9FAFB;border-radius:14px;padding:18px;text-align:left;font-size:17px;line-height:2;border:1.5px solid var(--border);margin-bottom:20px;width:100%;}
+.reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:18px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-bottom:12px;}
+.home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:18px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:700;cursor:pointer;}
 
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:16px 24px;font-size:17px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
 
-.ct-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);width:100%;}
+.ct-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:16px;box-shadow:var(--shadow);width:100%;}
 .ct-row.ct-done{border-color:var(--pass-border);background:var(--pass-bg);}
 .ct-row.ct-zero{border-color:var(--fail-border);background:var(--fail-bg);}
-.ct-label{flex:1;font-size:16px;font-weight:700;}
-.ct-input{width:80px;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:700;text-align:center;outline:none;}
-.ct-unit{font-size:13px;color:var(--muted);white-space:nowrap;}
+.ct-label{flex:1;font-size:18px;font-weight:700;}
+.ct-input{width:90px;border:1.5px solid var(--border);border-radius:10px;padding:12px;font-family:'Sarabun',sans-serif;font-size:19px;font-weight:700;text-align:center;outline:none;}
+.ct-unit{font-size:15px;color:var(--muted);white-space:nowrap;}
 .page{display:none;width:100%;}.page.active{display:block;}
 </style>
 </head>
@@ -187,9 +180,9 @@ body {
   <div class="breadcrumb" id="breadcrumb"></div>
 </div>
 
-<!-- PAGE 0: หน้าแรกเลือกวันที่และกะ -->
+<!-- PAGE 0: หน้าแรกเลือกวันที่และกะตามดีไซน์เป๊ะๆ -->
 <div class="page active" id="page-init">
-  <div style="background:var(--red); color:#fff; padding:24px 16px; width:100%;">
+  <div style="background:var(--red); color:#fff; padding:28px 16px; width:100%;">
     <div class="init-hero">ISUZU FRG</div>
     <div class="init-hero-sub">เริ่มต้นใช้งาน</div>
     <div class="init-hero-title">Worker — ตรวจสอบ</div>
@@ -199,12 +192,12 @@ body {
   <div class="section">
     <div class="section-title">กำหนดข้อมูลการทำงาน</div>
     
-    <div class="field-card" style="margin-bottom: 14px;">
+    <div class="field-card" style="margin-bottom: 16px;">
       <label>วันที่ปฏิบัติงาน</label>
       <input type="date" id="initDate">
     </div>
     
-    <div class="field-card" style="margin-bottom: 20px;">
+    <div class="field-card" style="margin-bottom: 24px;">
       <label>กะทำงาน (SHIFT)</label>
       <select id="initShift" required>
         <option value="" disabled selected>-- เลือกกะทำงาน --</option>
@@ -902,7 +895,7 @@ function renderChecks(){
       return;
     }
     const header = document.createElement("div");
-    header.style.cssText="font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
+    header.style.cssText="font-size:15px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
     header.textContent="กดเลือกสถานะของแต่ละ Contact Tip";
     list.appendChild(header);
 
@@ -919,7 +912,7 @@ function renderChecks(){
           class="ct-input" value="${val !== null ? val : ""}"
           oninput="setCTVal('${w}', this.value)"
           onblur="setCTVal('${w}', this.value)">
-        <span class="ct-unit">ครั้ง<br><span style="font-size:12px;color:var(--muted);">(0=ไม่เปลี่ยน)</span></span>
+        <span class="ct-unit">ครั้ง<br><span style="font-size:13px;color:var(--muted);">(0=ไม่เปลี่ยน)</span></span>
       `;
       list.appendChild(row);
     });
@@ -936,16 +929,16 @@ function renderChecks(){
     const numericRow = c.numeric ? `
       <div class="comment-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;margin-bottom:0;">
         <input type="number" inputmode="decimal" placeholder="ค่าที่วัดได้ (${c.min}-${c.max})"
-          style="flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:15px;outline:none;"
+          style="flex:1;border:1.5px solid var(--border);border-radius:10px;padding:12px;font-family:'Sarabun',sans-serif;font-size:17px;outline:none;"
           value="${s.value||""}" oninput="setV(${c.id},this.value)">
-        <span style="font-size:14px;color:var(--muted);min-width:45px;font-weight:600;">${c.unit||""}</span>
+        <span style="font-size:16px;color:var(--muted);min-width:45px;font-weight:600;">${c.unit||""}</span>
       </div>` : "";
 
     const toggleOrStatus = c.numeric
       ? `<div class="numeric-status" style="flex-shrink:0;margin-top:2px;">
-           ${s.result==="pass"?'<span style="font-size:13px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:6px 12px;">✓ ผ่าน</span>'
-             :s.result==="fail"?'<span style="font-size:13px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:6px 12px;">✗ ไม่ผ่าน</span>'
-             :'<span style="font-size:13px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>'}
+           ${s.result==="pass"?'<span style="font-size:15px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:6px 12px;">✓ ผ่าน</span>'
+             :s.result==="fail"?'<span style="font-size:15px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:6px 12px;">✗ ไม่ผ่าน</span>'
+             :'<span style="font-size:15px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>'}
          </div>`
       : `<div class="toggle-group">
            <button class="tbtn ${s.result==="pass"?"ap":""}" onclick="setR(${c.id},'pass')">O</button>
@@ -1012,11 +1005,11 @@ function updateNumericStatusUI(id){
   const statusBox = item.querySelector(".numeric-status");
   if(statusBox){
     if(s.result==="pass"){
-      statusBox.innerHTML = '<span style="font-size:13px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:6px 12px;">✓ ผ่าน</span>';
+      statusBox.innerHTML = '<span style="font-size:15px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:6px 12px;">✓ ผ่าน</span>';
     } else if(s.result==="fail"){
-      statusBox.innerHTML = '<span style="font-size:13px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:6px 12px;">✗ ไม่ผ่าน</span>';
+      statusBox.innerHTML = '<span style="font-size:15px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:6px 12px;">✗ ไม่ผ่าน</span>';
     } else {
-      statusBox.innerHTML = '<span style="font-size:13px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>';
+      statusBox.innerHTML = '<span style="font-size:15px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>';
     }
   }
   const cBox = document.getElementById(`commentBox_${id}`);
