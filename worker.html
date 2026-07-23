@@ -12,26 +12,25 @@
   --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#4B5563;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:30px;overflow-x:hidden;}
 
-.header{background:var(--red);color:#ffffff;padding:16px 16px 20px;}
+.header{background:var(--red);color:#ffffff;padding:16px 16px 20px;width:100%;box-sizing:border-box;}
 .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;}
 .header-left-title{font-size:18px;font-weight:800;line-height:1.3;white-space:pre-line;}
 .header-right-title{font-size:20px;font-weight:800;text-align:right;line-height:1.3;}
-.breadcrumb{font-size:18px;font-weight:700;color:#FFE4E6;margin-top:8px;word-break:break-all;}
+.breadcrumb{font-size:16px;font-weight:700;color:#FFE4E6;margin-top:6px;word-break:break-all;}
 
-.section{margin:16px 14px 0;}
-.section-title{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;}
+.section{margin:16px 14px 0;width:calc(100% - 28px);box-sizing:border-box;}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;}
 .grid{display:flex;flex-direction:column;gap:10px;}
 
 .nav-card{
   background:var(--card);border-radius:14px;border:1.5px solid var(--border);
   padding:16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;
-  cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;
+  cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;width:100%;box-sizing:border-box;
 }
 .nav-card:active{transform:scale(.98);}
 
-/* 🎨 สถานะสีของ Card และ Type Card */
 .nav-card.completed-stage, .nav-card.completed-type { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; }
 .nav-card.completed-stage .nav-title, .nav-card.completed-type .nav-title { color: #065F46; }
 .nav-card.completed-stage .nav-sub, .nav-card.completed-type .nav-sub { color: #047857; font-weight: 600; }
@@ -44,7 +43,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card.warn-stage .nav-title { color: #92400E; }
 .nav-card.warn-stage .nav-sub { color: #B45309; font-weight: 600; }
 
-.badge-status { font-size: 14px; padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-left: auto; color: #fff; }
+.badge-status { font-size: 13px; padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-left: auto; color: #fff; }
 .badge-pass { background: var(--pass); }
 .badge-fail { background: var(--red); }
 .badge-warn { background: var(--warn); color: #78350F; }
@@ -52,14 +51,14 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-icon{font-size:30px;flex-shrink:0;}
 .nav-info{flex:1;min-width:0;}
 .nav-title{font-size:18px;font-weight:800;}
-.nav-sub{font-size:14px;color:var(--muted);margin-top:3px;}
+.nav-sub{font-size:13px;color:var(--muted);margin-top:3px;}
 .nav-arrow{font-size:22px;color:var(--red);font-weight:700;flex-shrink:0;}
 
-.subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 14px;}
+.subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 14px;width:calc(100% - 28px);box-sizing:border-box;}
 .subtype-chip{
   background:var(--card);border:1.5px solid var(--border);border-radius:14px;
-  padding:18px 14px;font-size:16px;font-weight:700;cursor:pointer;text-align:center;
-  box-shadow:var(--shadow);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:18px 14px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;
+  box-shadow:var(--shadow);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;
 }
 .subtype-chip:active{transform:scale(.97);}
 .subtype-chip.completed-sub { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; color: #065F46; }
@@ -69,79 +68,78 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .meta-card{
   background:var(--card); margin:0 14px; border-radius:14px; box-shadow:var(--shadow);
   padding:16px; display:grid !important; grid-template-columns: 1fr 1fr !important;
-  gap:12px; border:1px solid var(--border); box-sizing: border-box !important;
+  gap:12px; border:1px solid var(--border); box-sizing: border-box !important; width:calc(100% - 28px);
 }
 @media (max-width: 600px) {
-  .meta-card { grid-template-columns: 1fr !important; gap: 12px !important; padding: 14px !important; }
+  .meta-card { grid-template-columns: 1fr !important; gap: 12px !important; padding: 14px !important; width:calc(100% - 28px) !important; }
 }
-.meta-item label{display:block;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
+.meta-item label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
 .meta-item input, .meta-item select, .field-card input, .field-card select {
   width: 100% !important; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px;
-  font-family: 'Sarabun', sans-serif; font-size: 16px; background: #F9FAFB; outline: none; box-sizing: border-box;
+  font-family: 'Sarabun', sans-serif; font-size: 15px; background: #F9FAFB; outline: none; box-sizing: border-box;
 }
 
-.progress-wrap{margin:14px 14px 0;}
-.progress-bg{background:#E5E7EB;border-radius:99px;height:8px;overflow:hidden;}
+.progress-wrap{margin:14px 14px 0;width:calc(100% - 28px);box-sizing:border-box;}
+.progress-bg{background:#E5E7EB;border-radius:99px;height:8px;overflow:hidden;width:100%;}
 .progress-fill{background:var(--red);height:100%;border-radius:99px;transition:width .3s;width:0%;}
-.progress-label{font-size:14px;color:var(--muted);text-align:right;margin-top:4px;font-weight:600;}
+.progress-label{font-size:13px;color:var(--muted);text-align:right;margin-top:4px;font-weight:600;}
 
-.check-list{display:flex;flex-direction:column;gap:10px;}
-.check-item{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);}
+.check-list{display:flex;flex-direction:column;gap:10px;width:100%;box-sizing:border-box;}
+.check-item{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);width:100%;box-sizing:border-box;}
 .check-item.pass{border-color:var(--pass-border);background:var(--pass-bg);}
 .check-item.fail{border-color:var(--fail-border);background:var(--fail-bg);}
-.check-top{display:flex;align-items:flex-start;gap:12px;}
-.check-num{background:#FFE8E8;color:var(--red);font-size:14px;font-weight:700;border-radius:8px;padding:3px 9px;flex-shrink:0;margin-top:2px;}
+.check-top{display:flex;align-items:flex-start;gap:12px;width:100%;}
+.check-num{background:#FFE8E8;color:var(--red);font-size:13px;font-weight:700;border-radius:8px;padding:3px 9px;flex-shrink:0;margin-top:2px;}
 .check-info{flex:1;min-width:0;}
 .check-name{font-size:16px;font-weight:700;line-height:1.4;}
-.check-std{font-size:14px;color:var(--muted);margin-top:3px;}
+.check-std{font-size:13px;color:var(--muted);margin-top:3px;}
 .toggle-group{display:flex;gap:8px;flex-shrink:0;margin-top:2px;}
 .tbtn{width:46px;height:42px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 .tbtn.ap{background:var(--pass);border-color:var(--pass);color:#fff;}
 .tbtn.af{background:var(--red);border-color:var(--red);color:#fff;}
 
-.comment-row{margin-top:10px;}
-.comment-row textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:15px;resize:none;outline:none;background:#fff;min-height:60px;}
+.comment-row{margin-top:10px;width:100%;box-sizing:border-box;}
+.comment-row textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:15px;resize:none;outline:none;background:#fff;min-height:60px;box-sizing:border-box;}
 
-.field-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);box-sizing:border-box;}
-.field-card label{display:block;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
-.field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:16px;outline:none;background:#F9FAFB;resize:none;min-height:70px;box-sizing:border-box;}
+.field-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);box-sizing:border-box;width:100%;}
+.field-card label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
+.field-card input, .field-card select, .field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px;font-family:'Sarabun',sans-serif;font-size:15px;outline:none;background:#F9FAFB;box-sizing:border-box;}
+.field-card textarea{resize:none;min-height:70px;}
 
-.submit-btn{width:calc(100% - 28px);margin:18px 14px 0;background:var(--red);color:#fff;border:none;border-radius:14px;padding:16px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.submit-btn{width:100%;margin:18px 0 0 0;background:var(--red);color:#fff;border:none;border-radius:14px;padding:16px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;}
 .submit-btn:hover{background:var(--red-dark);}
 
-/* 🛠️ แถบปุ่มย้อนกลับล่างซ้าย และปุ่มลัดไปเลือกประเภท */
-.bottom-nav-bar {
-  position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
-  border-top: 1.5px solid var(--border); padding: 12px 16px; display: flex; gap: 10px;
-  z-index: 99; box-shadow: 0 -4px 16px rgba(0,0,0,.06);
+/* 🛠️ ปุ่มย้อนกลับและปุ่มลัดด้านบนขวาของหน้าจอภายใน (แทนแถบดำล่าง) */
+.top-action-row {
+  display: flex; gap: 8px; margin: 14px 14px 0 14px; width: calc(100% - 28px); box-sizing: border-box;
 }
-.bnav-btn {
-  flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border);
+.top-action-btn {
+  flex: 1; padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border);
   background: #F3F4F6; color: var(--text); font-family: 'Sarabun', sans-serif;
-  font-size: 15px; font-weight: 700; cursor: pointer; text-align: center;
+  font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; box-sizing: border-box;
 }
-.bnav-btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
+.top-action-btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
 
-.success-screen{display:none;padding:40px 20px;text-align:center;}
+.success-screen{display:none;padding:40px 20px;text-align:center;width:100%;box-sizing:border-box;}
 .success-screen.show{display:block;}
 .success-icon{font-size:70px;margin-bottom:12px;}
 .success-title{font-size:24px;font-weight:800;margin-bottom:6px;}
-.success-sub{font-size:16px;color:var(--muted);margin-bottom:28px;}
-.success-info{background:#F9FAFB;border-radius:14px;padding:16px;text-align:left;font-size:16px;line-height:2;border:1.5px solid var(--border);margin-bottom:20px;}
-.reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;}
-.home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;}
+.success-sub{font-size:15px;color:var(--muted);margin-bottom:28px;}
+.success-info{background:#F9FAFB;border-radius:14px;padding:16px;text-align:left;font-size:15px;line-height:2;border:1.5px solid var(--border);margin-bottom:20px;width:100%;box-sizing:border-box;}
+.reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-sizing:border-box;}
+.home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-sizing:border-box;}
 
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:14px 22px;font-size:16px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
 
-.ct-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);}
+.ct-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);width:100%;box-sizing:border-box;}
 .ct-row.ct-done{border-color:var(--pass-border);background:var(--pass-bg);}
 .ct-row.ct-zero{border-color:var(--fail-border);background:var(--fail-bg);}
-.ct-label{flex:1;font-size:17px;font-weight:700;}
-.ct-input{width:80px;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;text-align:center;outline:none;}
-.ct-unit{font-size:14px;color:var(--muted);white-space:nowrap;}
-.page{display:none;}.page.active{display:block;}
+.ct-label{flex:1;font-size:16px;font-weight:700;}
+.ct-input{width:80px;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:700;text-align:center;outline:none;}
+.ct-unit{font-size:13px;color:var(--muted);white-space:nowrap;}
+.page{display:none;width:100%;box-sizing:border-box;}.page.active{display:block;}
 </style>
 </head>
 <body>
@@ -154,23 +152,29 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="breadcrumb" id="breadcrumb"></div>
 </div>
 
+<!-- 🛠️ แถบปุ่มย้อนกลับและปุ่มลัดไปเลือกประเภท (วางไว้ด้านบนเพื่อไม่ให้มีแถบดำล่างกวนใจ) -->
+<div class="top-action-row" id="topActionRow" style="display:none;">
+  <button class="top-action-btn" onclick="goBack()">← ย้อนกลับ</button>
+  <button class="top-action-btn primary" id="shortcutTypeBtn" onclick="goToTypes()" style="display:none;">📋 ไปหน้าเลือกประเภท</button>
+</div>
+
 <!-- PAGE 0: หน้าแรกบังคับเลือก วันที่ และ Shift A / B ก่อน -->
 <div class="page active" id="page-init">
   <div class="section">
     <div class="section-title">กำหนดข้อมูลการทำงาน</div>
-    <div class="field-card" style="margin-bottom: 14px;">
+    <div class="field-card" style="margin-bottom: 12px;">
       <label>วันที่ปฏิบัติงาน</label>
       <input type="date" id="initDate">
     </div>
-    <div class="field-card" style="margin-bottom: 18px;">
+    <div class="field-card" style="margin-bottom: 16px;">
       <label>กะทำงาน (Shift)</label>
       <select id="initShift">
         <option value="">-- เลือกกะทำงาน --</option>
-        <option value="A">SHIFT A (กะเช้า)</option>
-        <option value="B">SHIFT B (กะดึก)</option>
+        <option value="A">SHIFT A</option>
+        <option value="B">SHIFT B</option>
       </select>
     </div>
-    <button class="submit-btn" style="width:100%; margin:0;" onclick="startInspection()">ถัดไป: เลือก Group →</button>
+    <button class="submit-btn" onclick="startInspection()">ถัดไป: เลือก Group →</button>
   </div>
 </div>
 
@@ -227,7 +231,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div class="section-title">ลงชื่อผู้ตรวจ</div>
     <div class="field-card">
       <label>ชื่อ-สกุล Worker</label>
-      <input type="text" id="workerName" placeholder="พิมพ์ชื่อ-สกุล..." style="background:#F9FAFB; border:1.5px solid var(--border); border-radius:10px; padding:12px; font-size:16px;">
+      <input type="text" id="workerName" placeholder="พิมพ์ชื่อ-สกุล...">
     </div>
   </div>
   <button class="submit-btn" onclick="submitWorker()">ส่งให้ Foreman อนุมัติ →</button>
@@ -241,12 +245,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="success-info" id="successInfo"></div>
   <button class="reset-btn" onclick="resetForm()">+ ตรวจรอบถัดไป (Stage เดิม)</button>
   <button class="home-btn" onclick="goHome()">🏠 กลับหน้าหลัก</button>
-</div>
-
-<!-- 🛠️ แถบปุ่มย้อนกลับล่างซ้าย และปุ่มลัดไปเลือกประเภท -->
-<div class="bottom-nav-bar" id="bottomNavBar" style="display:none;">
-  <button class="bnav-btn" onclick="goBack()">← ย้อนกลับ</button>
-  <button class="bnav-btn primary" id="shortcutTypeBtn" onclick="goToTypes()" style="display:none;">📋 ไปหน้าเลือกประเภท</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -438,7 +436,7 @@ function startInspection(){
   const d = document.getElementById("initDate").value;
   const s = document.getElementById("initShift").value;
   if(!d){ showToast("กรุณาเลือกวันที่ปฏิบัติงาน","err"); return; }
-  if(!s){ showToast("กรุณาเลือกกะทำงาน (Shift A หรือ B)","err"); return; }
+  if(!s){ showToast("กรุณาเลือกกะทำงาน (SHIFT A หรือ B)","err"); return; }
 
   nav.date = d;
   nav.shift = s;
@@ -552,14 +550,13 @@ function showPage(id){
   document.getElementById("successScreen").classList.remove("show");
   document.getElementById("page-form").style.display = (id === "form") ? "block" : "";
   
-  // จัดการแสดงผลปุ่มล่างซ้าย (Bottom Nav Bar)
-  const bnav = document.getElementById("bottomNavBar");
+  const topActionRow = document.getElementById("topActionRow");
   const shortcutBtn = document.getElementById("shortcutTypeBtn");
   
   if (id === "init" || id === "group") {
-    bnav.style.display = "none";
+    topActionRow.style.display = "none";
   } else {
-    bnav.style.display = "flex";
+    topActionRow.style.display = "flex";
     if (id === "stage" || id === "subtype" || id === "form") {
       shortcutBtn.style.display = "block";
     } else {
@@ -697,7 +694,7 @@ function renderTypes(){
 
     let countText = "";
     if (isRobotType) {
-      countText = `${doneUnits}/${totalUnits}<br><span style="font-size:13px; font-weight:normal;">${totalUnits} Unit</span>`;
+      countText = `${doneUnits}/${totalUnits}<br><span style="font-size:12px; font-weight:normal;">${totalUnits} Unit</span>`;
     } else {
       const totalStages = Object.keys(stages).length;
       let doneStagesCount = 0;
@@ -709,7 +706,7 @@ function renderTypes(){
           if (doneSubs["_DEFAULT_"] === "pass") doneStagesCount++;
         }
       });
-      countText = `${doneStagesCount}/${totalStages}<br><span style="font-size:13px; font-weight:normal;">${totalStages} Station</span>`;
+      countText = `${doneStagesCount}/${totalStages}<br><span style="font-size:12px; font-weight:normal;">${totalStages} Station</span>`;
     }
 
     el.innerHTML=`
@@ -854,7 +851,7 @@ function renderChecks(){
       return;
     }
     const header = document.createElement("div");
-    header.style.cssText="font-size:14px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
+    header.style.cssText="font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
     header.textContent="กดเลือกสถานะของแต่ละ Contact Tip";
     list.appendChild(header);
 
@@ -888,16 +885,16 @@ function renderChecks(){
     const numericRow = c.numeric ? `
       <div class="comment-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;margin-bottom:0;">
         <input type="number" inputmode="decimal" placeholder="ค่าที่วัดได้ (${c.min}-${c.max})"
-          style="flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:16px;outline:none;"
+          style="flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:15px;outline:none;"
           value="${s.value||""}" oninput="setV(${c.id},this.value)">
-        <span style="font-size:15px;color:var(--muted);min-width:45px;font-weight:600;">${c.unit||""}</span>
+        <span style="font-size:14px;color:var(--muted);min-width:45px;font-weight:600;">${c.unit||""}</span>
       </div>` : "";
 
     const toggleOrStatus = c.numeric
       ? `<div class="numeric-status" style="flex-shrink:0;margin-top:2px;">
            ${s.result==="pass"?'<span style="font-size:13px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:6px 12px;">✓ ผ่าน</span>'
              :s.result==="fail"?'<span style="font-size:13px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:6px 12px;">✗ ไม่ผ่าน</span>'
-             :'<span style="font-size:14px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>'}
+             :'<span style="font-size:13px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>'}
          </div>`
       : `<div class="toggle-group">
            <button class="tbtn ${s.result==="pass"?"ap":""}" onclick="setR(${c.id},'pass')">O</button>
@@ -968,7 +965,7 @@ function updateNumericStatusUI(id){
     } else if(s.result==="fail"){
       statusBox.innerHTML = '<span style="font-size:13px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:6px 12px;">✗ ไม่ผ่าน</span>';
     } else {
-      statusBox.innerHTML = '<span style="font-size:14px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>';
+      statusBox.innerHTML = '<span style="font-size:13px;color:var(--muted);font-weight:600;">รอกรอกค่า</span>';
     }
   }
   const cBox = document.getElementById(`commentBox_${id}`);
