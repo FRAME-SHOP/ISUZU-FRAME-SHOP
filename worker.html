@@ -30,7 +30,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
 .nav-card:active{transform:scale(.98);}
 
-/* 🎨 สถานะสีของ Card ประเภทหลัก */
+/* 🎨 สถานะสีของ Card ประเภทหลัก (เมื่อตรวจครบจะเปลี่ยนเป็นสีเขียว) */
 .nav-card.completed-type { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; }
 .nav-card.completed-type .nav-title { color: #065F46; }
 .nav-card.completed-type .nav-sub { color: #047857; font-weight: 600; }
@@ -64,7 +64,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .type-count { font-size: 14px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 2px; }
 .nav-arrow{font-size:20px;color:var(--red);font-weight:700;flex-shrink:0; display: inline-block; margin-left: 4px;}
 
-/* 🎨 สถานะสีของ Subtype */
+/* 🎨 สถานะสีของ Subtype (No.1, No.2...) */
 .subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px;}
 .subtype-chip{
   background:var(--card);border:1.5px solid var(--border);border-radius:12px;
@@ -296,7 +296,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <button class="home-btn" onclick="goHome()">🏠 กลับหน้าหลัก</button>
 </div>
 
-<!-- 📌 แถบปุ่มลอยด้านล่าง -->
+<!-- 📌 แถบปุ่มลอยด้านล่าง (หน้า type มีแค่ปุ่มย้อนกลับอันเดียว หน้าอื่นมี 2 ปุ่ม) -->
 <div class="bottom-floating-nav" id="bottomFloatingNav">
   <button class="bottom-nav-btn btn-back-left" id="btnBackOnly" onclick="goBack()">← ย้อนกลับ</button>
   <button class="bottom-nav-btn btn-type-right" id="btnTypeSelect" onclick="goToTypeSelect()">เลือกประเภท ≡</button>
@@ -735,6 +735,7 @@ function renderTypes(){
     let totalCount = 0;
 
     if (isRobot) {
+      // นับแบบรายละเอียดย่อย (Subtype) สำหรับหุ่นยนต์
       stageNames.forEach(st => {
         const subs = stages[st];
         if (subs && subs.length > 0) {
@@ -747,10 +748,12 @@ function renderTypes(){
         }
       });
     } else {
+      // นับแบบ Stage สำหรับประเภทอื่น
       totalCount = stageNames.length;
       stageNames.forEach(st => {
         const subs = stages[st];
         if (subs && subs.length > 0) {
+          // ถ้ามี Subtype ต้องตรวจครบทุก Subtype ถึงจะนับว่า Stage นั้นผ่าน
           const allSubPass = subs.every(sub => groupStatusMap[st] && groupStatusMap[st][sub] === "pass");
           if (allSubPass) doneCount++;
         } else {
@@ -881,7 +884,12 @@ function renderSubtypes(){
 
     const chip=document.createElement("div");
     chip.className = "subtype-chip" + css;
-    chip.innerHTML = `<span>${icon}</span><span>${sub}${labelExtra}</span>`;
+
+    // เปลี่ยนเฉพาะข้อความที่แสดงบนหน้าจอ:
+    // No.1 / NO.1 -> W1 โดยค่าจริงที่ส่งไป Google Sheet ยังเป็น No.1 เหมือนเดิม
+    const displaySub = String(sub).replace(/^NO\./i, "W");
+
+    chip.innerHTML = `<span>${icon}</span><span>${displaySub}${labelExtra}</span>`;
     chip.onclick=()=>{ nav.subtype=sub; updateHeader(); initForm(); showPage("form"); };
     row.appendChild(chip);
   });
@@ -1082,7 +1090,7 @@ function submitWorker(){
     stage_base:nav.stage, 
     subtype:nav.subtype,
     worker, foreman:null,
-    remark:document.getElementById("remarkText").value.trim(),
+    remark:document.getElementById("remarkTest").value.trim(),
     checks: isContactTip()
       ? getContactTipItems().map(w=>({id:w, name:"CONTACT TIP "+w, result:parseInt(checkState[w])>0?"pass":"fail", comment:"", value:checkState[w]||"0"}))
       : currentChecks.map(c=>({id:c.id,name:c.name,result:checkState[c.id].result,comment:checkState[c.id].comment,value:checkState[c.id].value||""})),
@@ -1120,7 +1128,7 @@ function submitWorker(){
     <b>Stage:</b> ${fullStage}<br>
     <b>วันที่:</b> ${displayDate} &nbsp;|&nbsp; <b>กะ:</b> SHIFT ${shift}<br>
     <b>Worker:</b> ${worker}<br>
-    <b>ผล:</b> ผ่าน ${totalC-failC}/${totalC} รายการ${failC?`<br><span style="coee;font-weight:600;">⚠ ไม่ผ่าน ${failC} รายการ</span>`:""}
+    <b>ผล:</b> ผ่าน ${totalC-failC}/${totalC} รายการ${failC?`<br><span style="color:var(--red);font-weight:600;">⚠ ไม่ผ่าน ${failC} รายการ</span>`:""}
   `;
   document.getElementById("page-form").style.display="none";
   document.getElementById("successScreen").classList.add("show");
