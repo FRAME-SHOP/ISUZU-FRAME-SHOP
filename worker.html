@@ -6,23 +6,19 @@
 <title>Worker — ตรวจสอบ</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
-:root{
-  --red:#CC0000;--red-dark:#A00000;--pass:#057A55;--pass-bg:#ECFDF5;--pass-border:#6EE7B7;
-  --fail-bg:#FFF5F5;--fail-border:#FFBABA;--warn:#D97706;--warn-bg:#FEF3C7;--warn-border:#FCD34D;
-  --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
-}
+:root{--red:#CC0000;--red-dark:#A00000;--pass:#057A55;--pass-bg:#ECFDF5;--pass-border:#6EE7B7;--fail-bg:#FFF5F5;--fail-border:#FFBABA;--bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
 
 .header{background:var(--red);color:#ffffff;padding:18px 16px 28px;}
 .header-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.back-btn{background:rgba(255,255,255,.2);border:none;color:#ffffff;border-radius:8px;padding:6px 12px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.back-btn{background:rgba(255,255,255,.2);border:none;color:#ffffff;border-radius:8px;padding:8px 14px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
 .back-btn:hover{background:rgba(255,255,255,.3);}
-.logo{font-size:16px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
-.header-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;margin-bottom:2px;}
-.header-name{font-size:20px;font-weight:800;line-height:1.2;color:#ffffff;}
-.header-sub{font-size:13px;font-weight:500;color:#ffffff;margin-top:2px;}
-.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#ffffff;margin-top:8px;flex-wrap:wrap;}
+.logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
+.header-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;margin-bottom:2px;}
+.header-name{font-size:22px;font-weight:800;line-height:1.2;color:#ffffff;}
+.header-sub{font-size:15px;font-weight:500;color:#ffffff;margin-top:2px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:14px;color:#ffffff;margin-top:8px;flex-wrap:wrap;}
 .breadcrumb span{color:#ffffff;font-weight:500;}
 
 .section{margin:14px 14px 0;}
@@ -31,44 +27,35 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
 .nav-card:active{transform:scale(.98);}
 
-/* 🎨 สถานะสีของ Stage หลัก */
-.nav-card.completed-stage { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; }
+.nav-card.completed-stage {
+  background: var(--pass-bg) !important;
+  border-color: var(--pass-border) !important;
+}
 .nav-card.completed-stage .nav-title { color: #065F46; }
 .nav-card.completed-stage .nav-sub { color: #047857; font-weight: 600; }
-
-.nav-card.fail-stage { background: var(--fail-bg) !important; border-color: var(--fail-border) !important; }
-.nav-card.fail-stage .nav-title { color: #991B1B; }
-.nav-card.fail-stage .nav-sub { color: #B91C1C; font-weight: 600; }
-
-.nav-card.warn-stage { background: var(--warn-bg) !important; border-color: var(--warn-border) !important; }
-.nav-card.warn-stage .nav-title { color: #92400E; }
-.nav-card.warn-stage .nav-sub { color: #B45309; font-weight: 600; }
-
-.badge-status {
-  font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: 700; margin-left: auto; color: #fff;
+.completed-badge {
+  font-size: 13px; background: var(--pass); color: #fff;
+  padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-left: auto;
 }
-.badge-pass { background: var(--pass); }
-.badge-fail { background: var(--red); }
-.badge-warn { background: var(--warn); color: #78350F; }
 
-.nav-icon{font-size:26px;flex-shrink:0;}
+.nav-icon{font-size:28px;flex-shrink:0;}
 .nav-info{flex:1;min-width:0;}
-.nav-title{font-size:16px;font-weight:700;}
-.nav-sub{font-size:12px;color:var(--muted);margin-top:2px;}
-.nav-arrow{font-size:20px;color:var(--red);font-weight:700;flex-shrink:0;}
+.nav-title{font-size:17px;font-weight:700;}
+.nav-sub{font-size:14px;color:var(--muted);margin-top:2px;}
+.nav-arrow{font-size:22px;color:var(--red);font-weight:700;flex-shrink:0;}
 
-/* 🎨 สถานะสีของ Subtype (No.1, No.2...) */
 .subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px;}
 .subtype-chip{
   background:var(--card);border:1.5px solid var(--border);border-radius:12px;
-  padding:16px 14px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;
+  padding:16px 14px;font-size:17px;font-weight:700;cursor:pointer;text-align:center;
   box-shadow:var(--shadow);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .subtype-chip:active{transform:scale(.97);}
-
-.subtype-chip.completed-sub { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; color: #065F46; }
-.subtype-chip.fail-sub { background: var(--fail-bg) !important; border-color: var(--fail-border) !important; color: #991B1B; }
-.subtype-chip.warn-sub { background: var(--warn-bg) !important; border-color: var(--warn-border) !important; color: #92400E; }
+.subtype-chip.completed-sub {
+  background: var(--pass-bg) !important;
+  border-color: var(--pass-border) !important;
+  color: #065F46;
+}
 
 .meta-card{
   background:var(--card); margin:0 14px; border-radius:12px; box-shadow:var(--shadow);
@@ -82,63 +69,62 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 }
 
 .meta-item label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
-.meta-item input, .meta-item select, .field-card input, .field-card select {
+.meta-item input, .meta-item select {
   width: 100% !important; max-width: 100% !important; min-width: 0 !important; display: block !important;
   -webkit-appearance: none; appearance: none; box-sizing: border-box !important; 
-  border: 1.5px solid var(--border); border-radius: 8px; padding: 10px;
-  font-family: 'Sarabun', sans-serif; font-size: 15px; background: #F9FAFB; outline: none;
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px;
+  font-family: 'Sarabun', sans-serif; font-size: 16px; background: #F9FAFB; outline: none;
 }
-.meta-item input:focus, .meta-item select:focus, .field-card input:focus, .field-card select:focus {
-  border-color: var(--red); background: #fff;
-}
+.meta-item input:focus,.meta-item select:focus{border-color:var(--red);background:#fff;}
 
 .progress-wrap{margin:14px 14px 0;}
-.progress-bg{background:#E5E7EB;border-radius:99px;height:6px;overflow:hidden;}
+.progress-bg{background:#E5E7EB;border-radius:99px;height:7px;overflow:hidden;}
 .progress-fill{background:var(--red);height:100%;border-radius:99px;transition:width .3s;width:0%;}
-.progress-label{font-size:12px;color:var(--muted);text-align:right;margin-top:4px;font-weight:600;}
+.progress-label{font-size:13px;color:var(--muted);text-align:right;margin-top:3px;}
 
 .check-list{display:flex;flex-direction:column;gap:8px;}
 .check-item{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:12px 14px;box-shadow:var(--shadow);}
 .check-item.pass{border-color:var(--pass-border);background:var(--pass-bg);}
 .check-item.fail{border-color:var(--fail-border);background:var(--fail-bg);}
 .check-top{display:flex;align-items:flex-start;gap:10px;}
-.check-num{background:#FFE8E8;color:var(--red);font-size:12px;font-weight:700;border-radius:6px;padding:2px 7px;flex-shrink:0;margin-top:2px;}
+.check-num{background:#FFE8E8;color:var(--red);font-size:13px;font-weight:700;border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:2px;}
 .check-info{flex:1;min-width:0;}
-.check-name{font-size:15px;font-weight:600;line-height:1.35;}
-.check-std{font-size:13px;color:var(--muted);margin-top:2px;}
+.check-name{font-size:16px;font-weight:600;line-height:1.35;}
+.check-std{font-size:14px;color:var(--muted);margin-top:2px;}
 .toggle-group{display:flex;gap:6px;flex-shrink:0;margin-top:2px;}
-.tbtn{width:40px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.tbtn{width:44px;height:40px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 .tbtn.ap{background:var(--pass);border-color:var(--pass);color:#fff;}
 .tbtn.af{background:var(--red);border-color:var(--red);color:#fff;}
 .comment-row{margin-top:8px;}
-.comment-row textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Sarabun',sans-serif;font-size:14px;resize:none;outline:none;background:#fff;min-height:56px;}
+.comment-row textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Sarabun',sans-serif;font-size:15px;resize:none;outline:none;background:#fff;min-height:60px;}
 
-.field-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:13px 14px;box-shadow:var(--shadow);box-sizing:border-box;}
+.field-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:13px 14px;box-shadow:var(--shadow);}
 .field-card label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
-.field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-family:'Sarabun',sans-serif;font-size:15px;outline:none;background:#F9FAFB;resize:none;min-height:64px;box-sizing:border-box;}
+.field-card input,.field-card textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:11px 12px;font-family:'Sarabun',sans-serif;font-size:16px;outline:none;background:#F9FAFB;}
+.field-card textarea{resize:none;min-height:70px;}
 
-.submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
 
 .success-screen{display:none;padding:40px 20px;text-align:center;}
 .success-screen.show{display:block;}
-.success-icon{font-size:64px;margin-bottom:12px;}
+.success-icon{font-size:70px;margin-bottom:12px;}
 .success-title{font-size:24px;font-weight:700;margin-bottom:6px;}
-.success-sub{font-size:15px;color:var(--muted);margin-bottom:28px;}
-.success-info{background:#F9FAFB;border-radius:12px;padding:14px;text-align:left;font-size:15px;line-height:2;border:1.5px solid var(--border);margin-bottom:20px;}
-.reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:10px;}
-.home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:600;cursor:pointer;}
+.success-sub{font-size:16px;color:var(--muted);margin-bottom:28px;}
+.success-info{background:#F9FAFB;border-radius:12px;padding:16px;text-align:left;font-size:16px;line-height:2;border:1.5px solid var(--border);margin-bottom:20px;}
+.reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-bottom:10px;}
+.home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;}
 
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:15px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:15px 22px;font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:280px;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
 
 .ct-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:12px 14px;box-shadow:var(--shadow);}
 .ct-row.ct-done{border-color:var(--pass-border);background:var(--pass-bg);}
 .ct-row.ct-zero{border-color:var(--fail-border);background:var(--fail-bg);}
-.ct-label{flex:1;font-size:16px;font-weight:700;}
-.ct-input{width:70px;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:700;text-align:center;outline:none;}
-.ct-unit{font-size:13px;color:var(--muted);white-space:nowrap;}
+.ct-label{flex:1;font-size:17px;font-weight:700;}
+.ct-input{width:80px;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;text-align:center;outline:none;}
+.ct-unit{font-size:14px;color:var(--muted);white-space:nowrap;}
 .page{display:none;}.page.active{display:block;}
 </style>
 </head>
@@ -626,7 +612,7 @@ function renderChecks(){
       return;
     }
     const header = document.createElement("div");
-    header.style.cssText="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
+    header.style.cssText="font-size:14px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;";
     header.textContent="กดเลือกสถานะของแต่ละ Contact Tip";
     list.appendChild(header);
 
@@ -643,7 +629,7 @@ function renderChecks(){
           class="ct-input" value="${val !== null ? val : ""}"
           oninput="setCTVal('${w}', this.value)"
           onblur="setCTVal('${w}', this.value)">
-        <span class="ct-unit">ครั้ง<br><span style="font-size:10px;color:var(--muted);">(0=ไม่เปลี่ยน)</span></span>
+        <span class="ct-unit">ครั้ง<br><span style="font-size:12px;color:var(--muted);">(0=ไม่เปลี่ยน)</span></span>
       `;
       list.appendChild(row);
     });
@@ -660,16 +646,16 @@ function renderChecks(){
     const numericRow = c.numeric ? `
       <div class="comment-row" style="display:flex;align-items:center;gap:8px;margin-top:8px;margin-bottom:0;">
         <input type="number" inputmode="decimal" placeholder="ค่าที่วัดได้ (${c.min}-${c.max})"
-          style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;"
+          style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Sarabun',sans-serif;font-size:16px;outline:none;"
           value="${s.value||""}" oninput="setV(${c.id},this.value)">
-        <span style="font-size:13px;color:var(--muted);min-width:40px;">${c.unit||""}</span>
+        <span style="font-size:15px;color:var(--muted);min-width:45px;">${c.unit||""}</span>
       </div>` : "";
 
     const toggleOrStatus = c.numeric
       ? `<div class="numeric-status" style="flex-shrink:0;margin-top:2px;">
-           ${s.result==="pass"?'<span style="font-size:12px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:4px 10px;">✓ ผ่าน</span>'
-             :s.result==="fail"?'<span style="font-size:12px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:4px 10px;">✗ ไม่ผ่าน</span>'
-             :'<span style="font-size:12px;color:var(--muted);">รอกรอกค่า</span>'}
+           ${s.result==="pass"?'<span style="font-size:13px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:5px 12px;">✓ ผ่าน</span>'
+             :s.result==="fail"?'<span style="font-size:13px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:5px 12px;">✗ ไม่ผ่าน</span>'
+             :'<span style="font-size:13px;color:var(--muted);">รอกรอกค่า</span>'}
          </div>`
       : `<div class="toggle-group">
            <button class="tbtn ${s.result==="pass"?"ap":""}" onclick="setR(${c.id},'pass')">O</button>
@@ -736,11 +722,11 @@ function updateNumericStatusUI(id){
   const statusBox = item.querySelector(".numeric-status");
   if(statusBox){
     if(s.result==="pass"){
-      statusBox.innerHTML = '<span style="font-size:12px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:4px 10px;">✓ ผ่าน</span>';
+      statusBox.innerHTML = '<span style="font-size:13px;font-weight:700;color:var(--pass);background:var(--pass-bg);border-radius:6px;padding:5px 12px;">✓ ผ่าน</span>';
     } else if(s.result==="fail"){
-      statusBox.innerHTML = '<span style="font-size:12px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:4px 10px;">✗ ไม่ผ่าน</span>';
+      statusBox.innerHTML = '<span style="font-size:13px;font-weight:700;color:var(--red);background:var(--fail-bg);border-radius:6px;padding:5px 12px;">✗ ไม่ผ่าน</span>';
     } else {
-      statusBox.innerHTML = '<span style="font-size:12px;color:var(--muted);">รอกรอกค่า</span>';
+      statusBox.innerHTML = '<span style="font-size:13px;color:var(--muted);">รอกรอกค่า</span>';
     }
   }
   const cBox = document.getElementById(`commentBox_${id}`);
