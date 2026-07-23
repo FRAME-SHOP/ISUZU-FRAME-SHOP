@@ -12,18 +12,14 @@
   --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;font-size:16px;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:90px;font-size:16px;}
 
-.header{background:var(--red);color:#ffffff;padding:18px 16px 28px;}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.header-top-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
-.back-btn{background:rgba(255,255,255,.2);border:none;color:#ffffff;border-radius:8px;padding:6px 12px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
-.back-btn:hover{background:rgba(255,255,255,.3);}
+.header{background:var(--red);color:#ffffff;padding:18px 16px 20px;}
+.logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;margin-bottom:8px;}
 .header-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;margin-bottom:2px;}
 .header-name{font-size:20px;font-weight:800;line-height:1.2;color:#ffffff;}
 .header-sub{font-size:15px;font-weight:500;color:#ffffff;margin-top:2px;}
-.breadcrumb{display:flex;align-items:center;gap:6px;font-size:14px;color:#ffffff;margin-top:8px;flex-wrap:wrap;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:14px;color:#ffffff;margin-top:6px;flex-wrap:wrap;}
 .breadcrumb span{color:#ffffff;font-weight:500;}
 
 .section{margin:14px 14px 0;}
@@ -121,6 +117,49 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
 
+/* 📌 แถบปุ่มลอยติดด้านล่างหน้าจอ (Bottom Navigation Bar) เริ่มตั้งแต่หน้าเลือก Stage เป็นต้นไป */
+.bottom-floating-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1.5px solid var(--border);
+  padding: 12px 14px;
+  display: none; /* ซ่อนไว้ก่อน จะแสดงเฉพาะหน้า Stage, Subtype, Form */
+  gap: 10px;
+  z-index: 900;
+  box-shadow: 0 -4px 16px rgba(0,0,0,.08);
+}
+.bottom-nav-btn {
+  flex: 1;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+.btn-back-left {
+  background: #F3F4F6;
+  color: var(--text);
+  border-color: #D1D5DB;
+}
+.btn-back-left:active { background: #E5E7EB; }
+
+.btn-type-right {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+}
+.btn-type-right:active { background: var(--red-dark); }
+
 .success-screen{display:none;padding:40px 20px;text-align:center;}
 .success-screen.show{display:block;}
 .success-icon{font-size:64px;margin-bottom:12px;}
@@ -130,7 +169,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-bottom:10px;}
 .home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;}
 
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
 
@@ -146,13 +185,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 <body>
 
 <div class="header">
-  <div class="header-top">
-    <div class="logo">ISUZU FRG</div>
-    <div class="header-top-left" id="headerButtonsContainer" style="display:none;">
-      <button class="back-btn" id="backBtn" onclick="goBack()">← ย้อนกลับ</button>
-      <button class="back-btn" id="toTypeBtn" onclick="goToTypeSelect()" style="display:none;">เลือกประเภท ≡</button>
-    </div>
-  </div>
+  <div class="logo">ISUZU FRG</div>
   <div class="header-title" id="headerLabel">เริ่มต้นใช้งาน</div>
   <div class="header-name" id="headerName">Worker — ตรวจสอบ</div>
   <div class="header-sub" id="headerSub">กรุณาเลือกวันที่และกะทำงาน</div>
@@ -246,6 +279,12 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="success-info" id="successInfo"></div>
   <button class="reset-btn" onclick="resetForm()">+ ตรวจรอบถัดไป (Stage เดิม)</button>
   <button class="home-btn" onclick="goHome()">🏠 กลับหน้าหลัก</button>
+</div>
+
+<!-- 📌 แถบปุ่มลอยติดด้านล่าง (แสดงตั้งแต่หน้า Stage ขึ้นไป) -->
+<div class="bottom-floating-nav" id="bottomFloatingNav">
+  <button class="bottom-nav-btn btn-back-left" onclick="goBack()">← ย้อนกลับ</button>
+  <button class="bottom-nav-btn btn-type-right" onclick="goToTypeSelect()">เลือกประเภท ≡</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -549,63 +588,44 @@ function showPage(id){
   if(targetPage) targetPage.classList.add("active");
   document.getElementById("successScreen").classList.remove("show");
   document.getElementById("page-form").style.display = (id === "form") ? "block" : "";
+
+  // ควบคุมการแสดงผลแถบปุ่มลอยด้านล่าง (ให้แสดงตั้งแต่หน้า stage, subtype, form)
+  const floatingNav = document.getElementById("bottomFloatingNav");
+  if(id === "stage" || id === "subtype" || id === "form") {
+    floatingNav.style.display = "flex";
+  } else {
+    floatingNav.style.display = "none";
+  }
+
   window.scrollTo(0,0);
 }
 
 function updateHeader(){
-  const headerButtonsContainer = document.getElementById("headerButtonsContainer");
-  const backBtn = document.getElementById("backBtn");
-  const toTypeBtn = document.getElementById("toTypeBtn");
   const bc = document.getElementById("breadcrumb");
 
   if(!nav.group){
-    headerButtonsContainer.style.display = "flex";
-    backBtn.textContent = "← เปลี่ยนกะ/วันที่";
-    backBtn.onclick = () => { showPage("init"); nav.date=null; nav.shift=null; updateHeader(); };
-    toTypeBtn.style.display = "none";
-    
     document.getElementById("headerLabel").textContent = `วันที่ ${nav.date} · SHIFT ${nav.shift}`;
     document.getElementById("headerName").textContent = "เลือก Group";
     document.getElementById("headerSub").textContent = "กรุณาเลือก Group ของคุณ";
     bc.innerHTML = "";
   } else if(!nav.type){
-    headerButtonsContainer.style.display = "flex";
-    backBtn.textContent = "← ย้อนกลับ";
-    backBtn.onclick = goBack;
-    toTypeBtn.style.display = "none";
-
     document.getElementById("headerLabel").textContent = `Group ${nav.group} · SHIFT ${nav.shift}`;
     document.getElementById("headerName").textContent = "เลือกประเภทตรวจสอบ";
     document.getElementById("headerSub").textContent = "กรุณาเลือกประเภทรายการ";
     bc.innerHTML = `<span>Group ${nav.group}</span>`;
   } else if(!nav.stage){
-    headerButtonsContainer.style.display = "flex";
-    backBtn.textContent = "← ย้อนกลับ";
-    backBtn.onclick = goBack;
-    toTypeBtn.style.display = "none";
-
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     document.getElementById("headerLabel").textContent = typeLabel;
     document.getElementById("headerName").textContent = "เลือก Stage";
     document.getElementById("headerSub").textContent = "กรุณาเลือก Stage";
     bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span>`;
   } else if(getSubtypes().length && !nav.subtype && !isContactTip()){
-    headerButtonsContainer.style.display = "flex";
-    backBtn.textContent = "← ย้อนกลับ";
-    backBtn.onclick = goBack;
-    toTypeBtn.style.display = "inline-block"; // แสดงปุ่มลัดไปเลือกประเภทเมื่ออยู่ในหน้า Subtype ขึ้นไป
-
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     document.getElementById("headerLabel").textContent = typeLabel + " · " + nav.stage;
     document.getElementById("headerName").textContent = "เลือกรายละเอียดย่อย";
     document.getElementById("headerSub").textContent = "กรุณาเลือกตำแหน่งย่อย";
     bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${nav.stage}</span>`;
   } else {
-    headerButtonsContainer.style.display = "flex";
-    backBtn.textContent = "← ย้อนกลับ";
-    backBtn.onclick = goBack;
-    toTypeBtn.style.display = "inline-block"; // แสดงปุ่มลัดไปเลือกประเภทเมื่ออยู่ในฟอร์มตรวจ
-
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
     const fullName = nav.stage + (nav.subtype ? " ("+nav.subtype+")" : "");
     document.getElementById("headerLabel").textContent = typeLabel;
@@ -641,7 +661,6 @@ function goBack(){
   }
 }
 
-// ฟังก์ชันสำหรับปุ่มลัด "เลือกประเภท" ด้านขวา
 function goToTypeSelect(){
   nav.type = null;
   nav.stage = null;
