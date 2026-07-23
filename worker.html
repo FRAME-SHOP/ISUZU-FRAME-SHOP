@@ -117,7 +117,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
 
-/* 📌 แถบปุ่มลอยติดด้านล่างหน้าจอ (Bottom Navigation Bar) เริ่มตั้งแต่หน้าเลือก Stage เป็นต้นไป */
+/* 📌 แถบปุ่มลอยติดด้านล่างหน้าจอ */
 .bottom-floating-nav {
   position: fixed;
   bottom: 0;
@@ -126,8 +126,8 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   background: #ffffff;
   border-top: 1.5px solid var(--border);
   padding: 12px 14px;
-  display: none; /* ซ่อนไว้ก่อน จะแสดงเฉพาะหน้า Stage, Subtype, Form */
-  gap: 10px;
+  display: none;
+  gap: 12px;
   z-index: 900;
   box-shadow: 0 -4px 16px rgba(0,0,0,.08);
 }
@@ -139,26 +139,27 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   text-align: center;
+  box-shadow: none;
 }
 .btn-back-left {
-  background: #F3F4F6;
-  color: var(--text);
-  border-color: #D1D5DB;
+  background: #E5E7EB !important;
+  color: #1F2937 !important;
+  border-color: #D1D5DB !important;
 }
-.btn-back-left:active { background: #E5E7EB; }
+.btn-back-left:active { background: #D1D5DB !important; }
 
 .btn-type-right {
-  background: var(--red);
-  color: #fff;
-  border-color: var(--red);
+  background: var(--red) !important;
+  color: #FFFFFF !important;
+  border-color: var(--red) !important;
 }
-.btn-type-right:active { background: var(--red-dark); }
+.btn-type-right:active { background: var(--red-dark) !important; }
 
 .success-screen{display:none;padding:40px 20px;text-align:center;}
 .success-screen.show{display:block;}
@@ -589,7 +590,6 @@ function showPage(id){
   document.getElementById("successScreen").classList.remove("show");
   document.getElementById("page-form").style.display = (id === "form") ? "block" : "";
 
-  // ควบคุมการแสดงผลแถบปุ่มลอยด้านล่าง (ให้แสดงตั้งแต่หน้า stage, subtype, form)
   const floatingNav = document.getElementById("bottomFloatingNav");
   if(id === "stage" || id === "subtype" || id === "form") {
     floatingNav.style.display = "flex";
