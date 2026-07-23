@@ -30,6 +30,12 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
 .nav-card:active{transform:scale(.98);}
 
+/* 🎨 สถานะสีของ Card ประเภทหลัก (เมื่อตรวจครบจะเปลี่ยนเป็นสีเขียว) */
+.nav-card.completed-type { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; }
+.nav-card.completed-type .nav-title { color: #065F46; }
+.nav-card.completed-type .nav-sub { color: #047857; font-weight: 600; }
+.nav-card.completed-type .type-count { color: #047857 !important; background: #D1FAE5; padding: 2px 8px; border-radius: 6px; font-weight: 700; }
+
 /* 🎨 สถานะสีของ Stage หลัก */
 .nav-card.completed-stage { background: var(--pass-bg) !important; border-color: var(--pass-border) !important; }
 .nav-card.completed-stage .nav-title { color: #065F46; }
@@ -54,7 +60,9 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-info{flex:1;min-width:0;}
 .nav-title{font-size:17px;font-weight:700;}
 .nav-sub{font-size:14px;color:var(--muted);margin-top:2px;}
-.nav-arrow{font-size:20px;color:var(--red);font-weight:700;flex-shrink:0;}
+.nav-right-info { text-align: right; flex-shrink: 0; }
+.type-count { font-size: 14px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 2px; }
+.nav-arrow{font-size:20px;color:var(--red);font-weight:700;flex-shrink:0; display: inline-block; margin-left: 4px;}
 
 /* 🎨 สถานะสีของ Subtype (No.1, No.2...) */
 .subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px;}
@@ -119,7 +127,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
 
-/* 📌 แถบปุ่มลอยติดด้านล่าง (แก้ไขให้ปุ่มยืดเต็มเมื่อมีปุ่มเดียว หรือแบ่งครึ่งเมื่อมี 2 ปุ่ม) */
+/* 📌 แถบปุ่มลอยด้านล่าง */
 .bottom-floating-nav {
   position: fixed;
   bottom: 0;
@@ -288,7 +296,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <button class="home-btn" onclick="goHome()">🏠 กลับหน้าหลัก</button>
 </div>
 
-<!-- 📌 แถบปุ่มลอยด้านล่าง -->
+<!-- 📌 แถบปุ่มลอยด้านล่าง (หน้า type มีแค่ปุ่มย้อนกลับอันเดียว หน้าอื่นมี 2 ปุ่ม) -->
 <div class="bottom-floating-nav" id="bottomFloatingNav">
   <button class="bottom-nav-btn btn-back-left" id="btnBackOnly" onclick="goBack()">← ย้อนกลับ</button>
   <button class="bottom-nav-btn btn-type-right" id="btnTypeSelect" onclick="goToTypeSelect()">เลือกประเภท ≡</button>
@@ -583,6 +591,8 @@ async function backgroundFetchSharedStatus() {
     const activePage = document.querySelector(".page.active");
     if (activePage && activePage.id === "page-stage") {
       renderStages();
+    } else if (activePage && activePage.id === "page-type") {
+      renderTypes();
     }
   } catch (e) {
     console.log("Fetch shared status error:", e);
@@ -601,7 +611,6 @@ function showPage(id){
 
   if(id === "type" || id === "stage" || id === "subtype" || id === "form") {
     floatingNav.style.display = "flex";
-    // ถ้าอยู่หน้า type ให้แสดงแค่ปุ่มย้อนกลับอันเดียว
     if(id === "type") {
       btnTypeSelect.style.display = "none";
     } else {
@@ -715,13 +724,67 @@ function renderTypes(){
   const grid = document.getElementById("typeGrid");
   grid.innerHTML="";
   const types = STATION_DATA[nav.group];
+  const groupStatusMap = sharedStatusMap[nav.group] || {};
+
   Object.entries(types).forEach(([typeKey, typeData]) => {
-    const stageCount = Object.keys(typeData.stages).length;
-    const el=document.createElement("div");
-    el.className="nav-card";
-    el.innerHTML=`<div class="nav-icon">${TYPE_ICONS[typeKey]||"📋"}</div><div class="nav-info"><div class="nav-title">${typeData.label}</div><div class="nav-sub">${stageCount} Station</div></div><div class="nav-arrow">›</div>`;
-    el.onclick=()=>{ 
-      nav.type=typeKey; 
+    const stages = typeData.stages;
+    const stageNames = Object.keys(stages);
+    const isRobot = (typeKey === "FANUC" || typeKey === "YASKAWA");
+
+    let doneCount = 0;
+    let totalCount = 0;
+
+    if (isRobot) {
+      // นับแบบรายละเอียดย่อย (Subtype) สำหรับหุ่นยนต์
+      stageNames.forEach(st => {
+        const subs = stages[st];
+        if (subs && subs.length > 0) {
+          totalCount += subs.length;
+          subs.forEach(sub => {
+            if (groupStatusMap[st] && groupStatusMap[st][sub] === "pass") {
+              doneCount++;
+            }
+          });
+        }
+      });
+    } else {
+      // นับแบบ Stage สำหรับประเภทอื่น
+      totalCount = stageNames.length;
+      stageNames.forEach(st => {
+        const subs = stages[st];
+        if (subs && subs.length > 0) {
+          // ถ้ามี Subtype ต้องตรวจครบทุก Subtype ถึงจะนับว่า Stage นั้นผ่าน
+          const allSubPass = subs.every(sub => groupStatusMap[st] && groupStatusMap[st][sub] === "pass");
+          if (allSubPass) doneCount++;
+        } else {
+          if (groupStatusMap[st] && groupStatusMap[st]["_DEFAULT_"] === "pass") {
+            doneCount++;
+          }
+        }
+      });
+    }
+
+    const isComplete = (totalCount > 0 && doneCount === totalCount);
+    const cardClass = isComplete ? "nav-card completed-type" : "nav-card";
+    const countText = `${doneCount}/${totalCount}`;
+    const unitOrStation = isRobot ? `${totalCount} Unit` : `${totalCount} Station`;
+
+    const el = document.createElement("div");
+    el.className = cardClass;
+    el.innerHTML = `
+      <div class="nav-icon">${TYPE_ICONS[typeKey]||"📋"}</div>
+      <div class="nav-info">
+        <div class="nav-title">${typeData.label}</div>
+        <div class="nav-sub">${unitOrStation}</div>
+      </div>
+      <div class="nav-right-info">
+        <span class="type-count">${countText}</span>
+        <div class="nav-arrow">›</div>
+      </div>
+    `;
+
+    el.onclick = () => { 
+      nav.type = typeKey; 
       updateHeader(); 
       renderStages();
       showPage("stage");
@@ -1022,7 +1085,7 @@ function submitWorker(){
     stage_base:nav.stage, 
     subtype:nav.subtype,
     worker, foreman:null,
-    remark:document.getElementById("remarkText").value.trim(),
+    remark:document.getElementById("remarkTest").value.trim(),
     checks: isContactTip()
       ? getContactTipItems().map(w=>({id:w, name:"CONTACT TIP "+w, result:parseInt(checkState[w])>0?"pass":"fail", comment:"", value:checkState[w]||"0"}))
       : currentChecks.map(c=>({id:c.id,name:c.name,result:checkState[c.id].result,comment:checkState[c.id].comment,value:checkState[c.id].value||""})),
