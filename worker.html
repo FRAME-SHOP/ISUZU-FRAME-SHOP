@@ -12,7 +12,7 @@
   --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#4B5563;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:30px;overflow-x:hidden;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
 
 .header{background:var(--red);color:#ffffff;padding:16px 16px 20px;width:100%;box-sizing:border-box;}
 .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;}
@@ -22,7 +22,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 
 .section{margin:16px 14px 0;width:calc(100% - 28px);box-sizing:border-box;}
 .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;}
-.grid{display:flex;flex-direction:column;gap:10px;}
+.grid{display:flex;flex-direction:column;gap:10px;width:100%;box-sizing:border-box;}
 
 .nav-card{
   background:var(--card);border-radius:14px;border:1.5px solid var(--border);
@@ -43,7 +43,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-card.warn-stage .nav-title { color: #92400E; }
 .nav-card.warn-stage .nav-sub { color: #B45309; font-weight: 600; }
 
-.badge-status { font-size: 13px; padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-left: auto; color: #fff; }
+.badge-status { font-size: 13px; padding: 4px 10px; border-radius: 6px; font-weight: 700; margin-left: auto; color: #fff; text-align: right; flex-shrink: 0; }
 .badge-pass { background: var(--pass); }
 .badge-fail { background: var(--red); }
 .badge-warn { background: var(--warn); color: #78350F; }
@@ -52,7 +52,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .nav-info{flex:1;min-width:0;}
 .nav-title{font-size:18px;font-weight:800;}
 .nav-sub{font-size:13px;color:var(--muted);margin-top:3px;}
-.nav-arrow{font-size:22px;color:var(--red);font-weight:700;flex-shrink:0;}
+.nav-arrow{font-size:22px;color:var(--red);font-weight:700;flex-shrink:0;margin-left:auto;}
 
 .subtype-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 14px;width:calc(100% - 28px);box-sizing:border-box;}
 .subtype-chip{
@@ -109,16 +109,18 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .submit-btn{width:100%;margin:18px 0 0 0;background:var(--red);color:#fff;border:none;border-radius:14px;padding:16px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;}
 .submit-btn:hover{background:var(--red-dark);}
 
-/* 🛠️ ปุ่มย้อนกลับและปุ่มลัดด้านบนขวาของหน้าจอภายใน (แทนแถบดำล่าง) */
-.top-action-row {
-  display: flex; gap: 8px; margin: 14px 14px 0 14px; width: calc(100% - 28px); box-sizing: border-box;
+/* 🛠️ แถบปุ่มย้อนกลับด้านล่างซ้าย และปุ่มลัดไปเลือกประเภทด้านขวา */
+.bottom-nav-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+  border-top: 1.5px solid var(--border); padding: 12px 16px; display: flex; gap: 10px;
+  z-index: 99; box-shadow: 0 -4px 16px rgba(0,0,0,.06); box-sizing: border-box;
 }
-.top-action-btn {
-  flex: 1; padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border);
+.bnav-btn {
+  flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border);
   background: #F3F4F6; color: var(--text); font-family: 'Sarabun', sans-serif;
   font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; box-sizing: border-box;
 }
-.top-action-btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
+.bnav-btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
 
 .success-screen{display:none;padding:40px 20px;text-align:center;width:100%;box-sizing:border-box;}
 .success-screen.show{display:block;}
@@ -129,7 +131,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-sizing:border-box;}
 .home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-sizing:border-box;}
 
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
 
@@ -152,21 +154,18 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="breadcrumb" id="breadcrumb"></div>
 </div>
 
-<!-- 🛠️ แถบปุ่มย้อนกลับและปุ่มลัดไปเลือกประเภท (วางไว้ด้านบนเพื่อไม่ให้มีแถบดำล่างกวนใจ) -->
-<div class="top-action-row" id="topActionRow" style="display:none;">
-  <button class="top-action-btn" onclick="goBack()">← ย้อนกลับ</button>
-  <button class="top-action-btn primary" id="shortcutTypeBtn" onclick="goToTypes()" style="display:none;">📋 ไปหน้าเลือกประเภท</button>
-</div>
-
 <!-- PAGE 0: หน้าแรกบังคับเลือก วันที่ และ Shift A / B ก่อน -->
 <div class="page active" id="page-init">
   <div class="section">
-    <div class="section-title">กำหนดข้อมูลการทำงาน</div>
-    <div class="field-card" style="margin-bottom: 12px;">
+    <div style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px;">ISUZU FRG</div>
+    <div style="font-size:18px; font-weight:800; color:var(--red); margin-bottom:4px;">Worker — ตรวจสอบ</div>
+    <div style="font-size:14px; font-weight:600; color:var(--muted); margin-bottom:16px;">กรุณาเลือกวันที่และกะการทำงาน</div>
+
+    <div class="field-card" style="margin-bottom: 12px; width:100%;">
       <label>วันที่ปฏิบัติงาน</label>
       <input type="date" id="initDate">
     </div>
-    <div class="field-card" style="margin-bottom: 16px;">
+    <div class="field-card" style="margin-bottom: 16px; width:100%;">
       <label>กะทำงาน (Shift)</label>
       <select id="initShift">
         <option value="">-- เลือกกะทำงาน --</option>
@@ -245,6 +244,12 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <div class="success-info" id="successInfo"></div>
   <button class="reset-btn" onclick="resetForm()">+ ตรวจรอบถัดไป (Stage เดิม)</button>
   <button class="home-btn" onclick="goHome()">🏠 กลับหน้าหลัก</button>
+</div>
+
+<!-- 🛠️ แถบปุ่มย้อนกลับล่างซ้าย และปุ่มลัดไปเลือกประเภทด้านขวา -->
+<div class="bottom-nav-bar" id="bottomNavBar" style="display:none;">
+  <button class="bnav-btn" onclick="goBack()">← ย้อนกลับ</button>
+  <button class="bnav-btn primary" id="shortcutTypeBtn" onclick="goToTypes()" style="display:none;">📋 ไปหน้าเลือกประเภท</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -694,7 +699,7 @@ function renderTypes(){
 
     let countText = "";
     if (isRobotType) {
-      countText = `${doneUnits}/${totalUnits}<br><span style="font-size:12px; font-weight:normal;">${totalUnits} Unit</span>`;
+      countText = `${doneUnits}/${totalUnits} Unit`;
     } else {
       const totalStages = Object.keys(stages).length;
       let doneStagesCount = 0;
@@ -706,16 +711,17 @@ function renderTypes(){
           if (doneSubs["_DEFAULT_"] === "pass") doneStagesCount++;
         }
       });
-      countText = `${doneStagesCount}/${totalStages}<br><span style="font-size:12px; font-weight:normal;">${totalStages} Station</span>`;
+      countText = `${doneStagesCount}/${totalStages} Station`;
     }
 
     el.innerHTML=`
       <div class="nav-icon">${TYPE_ICONS[typeKey]||"📋"}</div>
       <div class="nav-info">
         <div class="nav-title">${typeData.label}</div>
-        <div class="nav-sub" style="font-size:14px; margin-top:4px;">สถานะ: <b>${countText}</b></div>
       </div>
-      ${allCompleted ? '<div class="badge-status badge-pass">ตรวจครบ</div>' : '<div class="nav-arrow">›</div>'}
+      <div class="badge-status ${allCompleted ? 'badge-pass' : ''}" style="${allCompleted ? '' : 'color:var(--muted); background:#F3F4F6; border:1px solid var(--border);'}">
+        ${countText} ${allCompleted ? '✓' : ''}
+      </div>
     `;
 
     el.onclick=()=>{ 
