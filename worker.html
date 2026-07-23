@@ -12,9 +12,8 @@
   --bg:#F5F5F5;--card:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:110px;font-size:16px;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;font-size:16px;}
 
-/* 🎨 ปรับแต่ง Header ด้านบนให้จัดเรียงสวยงาม ไม่รก และมีลูกเล่นจัดข้อความบางส่วนไปทางขวา */
 .header{background:var(--red);color:#ffffff;padding:18px 16px 20px;position:relative;}
 .header-top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
 .logo{font-size:18px;font-weight:800;letter-spacing:.05em;color:#ffffff;}
@@ -120,7 +119,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .submit-btn{width:calc(100% - 28px);margin:16px 14px 0;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-family:'Sarabun',sans-serif;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--red-dark);}
 
-/* 📌 แถบปุ่มลอยติดด้านล่าง พร้อมเว้นขอบ Safe Area (ไม่ทับแถบดำมือถือ) */
+/* 📌 แถบปุ่มลอยติดด้านล่าง (แก้ไขให้ปุ่มยืดเต็มเมื่อมีปุ่มเดียว หรือแบ่งครึ่งเมื่อมี 2 ปุ่ม) */
 .bottom-floating-nav {
   position: fixed;
   bottom: 0;
@@ -128,7 +127,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   right: 0;
   background: #ffffff;
   border-top: 1.5px solid var(--border);
-  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)) 14px;
+  padding: 10px 14px;
   display: none;
   gap: 12px;
   z-index: 900;
@@ -173,7 +172,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .reset-btn{width:100%;background:#F3F4F6;color:var(--text);border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-bottom:10px;}
 .home-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;cursor:pointer;}
 
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;border-radius:12px;padding:13px 20px;font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s;z-index:999;text-align:center;min-width:260px;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--pass);}.toast.err{background:var(--red);}
 
@@ -289,10 +288,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   <button class="home-btn" onclick="goHome()">🏠 กลับหน้าหลัก</button>
 </div>
 
-<!-- 📌 แถบปุ่มลอยติดด้านล่าง (เว้นขอบ Safe Area ป้องกันชนขอบดำด้านล่าง) -->
+<!-- 📌 แถบปุ่มลอยด้านล่าง -->
 <div class="bottom-floating-nav" id="bottomFloatingNav">
-  <button class="bottom-nav-btn btn-back-left" onclick="goBack()">← ย้อนกลับ</button>
-  <button class="bottom-nav-btn btn-type-right" onclick="goToTypeSelect()">เลือกประเภท ≡</button>
+  <button class="bottom-nav-btn btn-back-left" id="btnBackOnly" onclick="goBack()">← ย้อนกลับ</button>
+  <button class="bottom-nav-btn btn-type-right" id="btnTypeSelect" onclick="goToTypeSelect()">เลือกประเภท ≡</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -598,8 +597,16 @@ function showPage(id){
   document.getElementById("page-form").style.display = (id === "form") ? "block" : "";
 
   const floatingNav = document.getElementById("bottomFloatingNav");
-  if(id === "stage" || id === "subtype" || id === "form") {
+  const btnTypeSelect = document.getElementById("btnTypeSelect");
+
+  if(id === "type" || id === "stage" || id === "subtype" || id === "form") {
     floatingNav.style.display = "flex";
+    // ถ้าอยู่หน้า type ให้แสดงแค่ปุ่มย้อนกลับอันเดียว
+    if(id === "type") {
+      btnTypeSelect.style.display = "none";
+    } else {
+      btnTypeSelect.style.display = "flex";
+    }
   } else {
     floatingNav.style.display = "none";
   }
