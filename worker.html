@@ -283,7 +283,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
       <input type="text" id="workerName" placeholder="พิมพ์ชื่อ-สกุล...">
     </div>
   </div>
-  <button class="submit-btn" onclick="submitWorker()">ส่งให้ Foreman อนุมัติ →</button>
+  <button type="button" class="submit-btn" id="submitWorkerBtn">ส่งให้ Foreman อนุมัติ →</button>
 </div>
 
 <!-- SUCCESS -->
@@ -637,7 +637,7 @@ function updateHeader(){
     document.getElementById("headerSub").textContent = "กรุณาเลือกประเภทรายการ";
     bc.innerHTML = `<span>Group ${nav.group}</span>`;
   } else if(!nav.stage){
-    const typeLabel = TYPE_META[nav.type]?.label || nav.type;
+    const typeLabel = (TYPE_META[nav.type] && TYPE_META[nav.type].label) || nav.type;
     document.getElementById("headerLabel").textContent = typeLabel;
     document.getElementById("headerName").textContent = "เลือก Stage";
     document.getElementById("headerSub").textContent = "กรุณาเลือก Stage";
@@ -1062,9 +1062,10 @@ function buildFullStageName(){
 }
 
 function submitWorker(){
-  const worker=document.getElementById("workerName").value.trim();
-  const date=nav.date;
-  const shift=nav.shift;
+  try {
+    const worker=document.getElementById("workerName").value.trim();
+    const date=nav.date;
+    const shift=nav.shift;
 
   let undoneCount = 0;
   if(isContactTip()){
@@ -1097,9 +1098,23 @@ function submitWorker(){
     status:"pending"
   };
 
-  const all=JSON.parse(localStorage.getItem("isuzu_submissions")||"[]");
+  let all = [];
+  try {
+    const saved = localStorage.getItem("isuzu_submissions");
+    all = saved ? JSON.parse(saved) : [];
+    if (!Array.isArray(all)) all = [];
+  } catch (storageReadError) {
+    console.warn("อ่านข้อมูลเดิมจาก localStorage ไม่สำเร็จ:", storageReadError);
+    all = [];
+  }
+
   all.push(entry);
-  localStorage.setItem("isuzu_submissions",JSON.stringify(all));
+
+  try {
+    localStorage.setItem("isuzu_submissions", JSON.stringify(all));
+  } catch (storageWriteError) {
+    console.warn("บันทึก localStorage ไม่สำเร็จ:", storageWriteError);
+  }
 
   const hasFail = entry.checks.some(c => c.result === "fail");
   const subKey = nav.subtype ? nav.subtype : "_DEFAULT_";
@@ -1133,6 +1148,16 @@ function submitWorker(){
   document.getElementById("page-form").style.display="none";
   document.getElementById("successScreen").classList.add("show");
   window.scrollTo(0,0);
+  } catch (error) {
+    console.error("submitWorker error:", error);
+    showToast("เกิดข้อผิดพลาดขณะส่งข้อมูล: " + (error.message || error), "err");
+  }
+}
+
+// ผูกปุ่มส่งด้วย Event Listener เพื่อป้องกันปัญหา onclick ไม่ทำงานในบาง Browser
+const submitWorkerBtn = document.getElementById("submitWorkerBtn");
+if (submitWorkerBtn) {
+  submitWorkerBtn.addEventListener("click", submitWorker);
 }
 
 function resetForm(){
