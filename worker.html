@@ -457,7 +457,7 @@ const FANUC_CHECKS = [
 const AIR_CHECKS = [
   {id:1, name:"AIR FILTER (ตัวกรอง)",                         method:"สายตา",              standard:"ไม่มีน้ำหรือเศษผงอยู่ในถ้วยดักน้ำ"},
   {id:2, name:"AIR PRESSURE (ค่าแรงดันลม)",                   method:"สายตา",              standard:"0.45-0.55 Mpa", numeric:true, unit:"Mpa", min:0.45, max:0.55},
-  {id:3, name:"น้ำมันหล่อลื่น (ตรวจเฉพาะแบบเก่า แบบใหม่กด O ได้เลย)",             method:"สายตา",              standard:"อยู่ในขีดบน-ล่าง และไม่มีน้ำมันรั่ว"},
+  {id:3, name:"น้ำมันหล่อลื่น (ตรวจเฉพาะแบบเก่า)",             method:"สายตา",              standard:"อยู่ในขีดบน-ล่าง และไม่มีน้ำมันรั่ว"},
   {id:4, name:"หน้าปัดแรงดันลม",                               method:"สายตา",              standard:"มีฝาครอบ, มีขีดบอกค่า MAX-MIN"},
   {id:5, name:"ลมรั่ว",                                       method:"ฟังเสียง, สัมผัส",   standard:"ไม่มีลมรั่ว"},
   {id:6, name:"สายไฟส่งสัญญาณเช็คค่าแรงดันลม",                 method:"สายตา, สัมผัส",      standard:"ไม่ถลอก, ไม่แตกชำรุด"},
@@ -1090,7 +1090,7 @@ function submitWorker(){
     stage_base:nav.stage, 
     subtype:nav.subtype,
     worker, foreman:null,
-    remark:document.getElementById("remarkTest").value.trim(),
+    remark:document.getElementById("remarkText").value.trim(),
     checks: isContactTip()
       ? getContactTipItems().map(w=>({id:w, name:"CONTACT TIP "+w, result:parseInt(checkState[w])>0?"pass":"fail", comment:"", value:checkState[w]||"0"}))
       : currentChecks.map(c=>({id:c.id,name:c.name,result:checkState[c.id].result,comment:checkState[c.id].comment,value:checkState[c.id].value||""})),
