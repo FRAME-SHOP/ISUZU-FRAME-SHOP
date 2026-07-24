@@ -650,7 +650,14 @@ function updateHeader(){
     bc.innerHTML = `<span>${nav.group}</span> › <span>${typeLabel}</span> › <span>${nav.stage}</span>`;
   } else {
     const typeLabel = TYPE_META[nav.type]?.label || nav.type;
-    const fullName = nav.stage + (nav.subtype ? " ("+nav.subtype+")" : "");
+
+    // แสดง No.1 / NO.1 เป็น W1 เฉพาะบนหน้าจอ
+    // แต่ยังเก็บค่าจริงเป็น No.1 เพื่อไม่ให้กระทบ Google Sheet
+    const displaySubtype = nav.subtype
+      ? String(nav.subtype).replace(/^NO\./i, "W")
+      : "";
+
+    const fullName = nav.stage + (displaySubtype ? " (" + displaySubtype + ")" : "");
     document.getElementById("headerLabel").textContent = typeLabel;
     document.getElementById("headerName").textContent = fullName;
     document.getElementById("headerSub").textContent = `${nav.date} · SHIFT ${nav.shift}`;
